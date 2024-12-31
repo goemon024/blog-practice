@@ -86,7 +86,7 @@ git commit -m 'create top layout'
 package に更新がないか、確認するため、 `npm install` コマンドを実行する。<br/>
 `found 0 vulnerabilities` と表示されれば OK。
 
-**3. `npm run format` と `npm run lint' の実行**
+**3. `npm run format` と `npm run lint` の実行**
 
 - 作業が終わったら `npm run lint` をかけて、Errorが報告されなくなるまで修正を行う。
 - 上記作業が終わった段階で `npm run format` をかけてコードのフォーマットの修正を行う。
