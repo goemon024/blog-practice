@@ -86,7 +86,12 @@ git commit -m 'create top layout'
 package に更新がないか、確認するため、 `npm install` コマンドを実行する。<br/>
 `found 0 vulnerabilities` と表示されれば OK。
 
-**3. プルリクエスト作成時**
+**3. `npm run format` と `npm run lint' の実行**
+
+- 作業が終わったら `npm run lint` をかけて、Errorが報告されなくなるまで修正を行う。
+- 上記作業が終わった段階で `npm run format` をかけてコードのフォーマットの修正を行う。
+
+**4. プルリクエスト作成時**
 
 - `PullRequestTemplate`を使ってください。
 - 作ったブランチから main ブランチへマージするプルリクを作ってください。
@@ -94,7 +99,7 @@ package に更新がないか、確認するため、 `npm install` コマンド
 - レビュアーに Assignees つけてください。
 - レビュー依頼の際は、PR 内にメンションコメント＆Slack にてレビュアーに声掛けお願いします。
 
-**4. マージ**
+**5. マージ**
 
 - マージはスカッシュコミット（プルリク内のコミットを 1 つににまとめてコミット）でお願いします。
   - マージの際に`Marge Pull Request`ではなく`Squash and merge`を選んでマージしてください。
