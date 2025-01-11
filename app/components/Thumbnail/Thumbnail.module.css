@@ -1,0 +1,20 @@
+.postItem {
+  flex: 1 1 calc(33.333% - 20px); /* 横幅を3分割（間隔を考慮） */
+  box-sizing: border-box; /* パディングやボーダーを含めた幅計算 */
+  max-width: 250px; /* アイテムの最大幅 */
+  text-align: center; /* 中央揃え */
+}
+
+.post-item img {
+  width: 100%; /* 画像を親要素に合わせる */
+  height: auto; /* アスペクト比を維持 */
+  object-fit: cover; /* 画像の表示を調整 */
+}
+
+.postItem h2 {
+  text-align: left; /* タイトルを左寄せ */
+  margin: 5px 0; /* タイトル上下に余白を設定 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
