@@ -1,0 +1,132 @@
+/* 検索バー */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin: 30px 0; */
+  margin: 40px auto;
+  max-width: 800px;
+  position: relative;
+}
+
+.search-text {
+  /* font-size: 20px;
+  background-color: #eeeeee;
+  border: 1px solid #999;
+  border-radius: 40px;
+  padding: 20px 30px;
+  width: 800px;
+  height: 80px; */
+  width: 100%;
+  height: 60px;
+  font-size: 16px;
+  background-color: #f5f5f5;
+  border: 2px solid #eee;
+  border-radius: 30px;
+  padding: 0 60px 0 30px;
+  transition: all 0.3s ease;
+}
+
+.search-text:focus {
+  outline: none;
+  border-color: #1bc6ff;
+  box-shadow: 0 0 0 3px rgba(27, 198, 255, 0.1);
+}
+
+.search-button {
+  position: absolute;
+  right: 20px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.search-button:hover {
+  color: #1bc6ff;
+}
+
+/* ブログリスト */
+.blog-list {
+  display: grid;
+  /* grid-template-columns: repeat(3, 1fr);
+  gap: 80px; */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ブログカード */
+.blog-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  /* text-align: left;
+  padding: 15px; */
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 20rem;
+}
+
+.blog-card:hover {
+  /* transform: scale(1.05); */
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.blog-image {
+  /* display: block; */
+  width: 100%;
+  /* height: 300px; */
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 16px;
+}
+
+.blog-title {
+  font-size: 18px;
+  font-weight: bold;
+  /* margin: 10px 0; */
+}
+
+.blog-content {
+  margin-top: auto;
+  font-size: 14px;
+  color: #212121;
+  padding: 0 15px;
+  margin: 10px 0;
+}
+
+.blog-category {
+  font-size: 12px;
+  color: #1bc6ff;
+}
+
+.blog-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0 15px;
+}
+
+.blog-author {
+  font-size: 12px;
+  color: #1bc6ff;
+}
+
+.blog-posted-at {
+  font-size: 12px;
+  color: #888;
+  margin: 5px 0;
+}

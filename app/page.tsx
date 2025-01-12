@@ -1,3 +1,5 @@
+import BlogHome from "./components/BlogHome";
+
 export default function Home() {
-  return <p>Hello World!</p>;
+  return <BlogHome />;
 }
