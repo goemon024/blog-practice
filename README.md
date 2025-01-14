@@ -46,10 +46,14 @@ npm run dev
 
 - fe: フロントエンド
 - be: バックエンド
+- deps: 依存関係（ライブラリー）の変更
 
 - feature: 機能追加
 - fix: コード修正（リファクタリング等）
 - bug: バグ修正
+- add: 依存関係の追加
+- update: 依存関係の更新
+- remove: 依存関係の削除
 
 ※ 該当項目がない場合は適宜追加
 
@@ -59,6 +63,7 @@ npm run dev
 git checkout -b 'fe/feature/todotop_layout'
 git checkout -b 'fe/fix/todotop_layout'
 git checkout -b 'fe/bug/todotop_layout'
+git checkout -b 'deps/add/test-library'
 ```
 
 ### 3. Commit
