@@ -99,7 +99,7 @@ export default function BlogHome() {
       <main className="blog-list">
         {blogs.map((blog) => (
           // ブログ記事クリック時に該当ページに遷移
-          <Link key={blog.id} href={`/blog/${blog.id}`} passHref>
+          <Link key={blog.id} href={`/posts/${blog.id}`} passHref>
             <article className="blog-card">
               <img src={blog.image} alt={blog.title} className="blog-image" />
 

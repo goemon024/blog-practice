@@ -1,8 +1,9 @@
-import Link from "next/link";
 import React from "react";
 import styles from "./Comment.module.css";
 import { BlogComment } from "@/lib/types";
 import calculateTimeAgo from "@/lib/util/calculateTimeAgo";
+import UserIconButton from "../UserIconButton/UserIconButton";
+import { useRouter } from "next/navigation";
 
 type Props = {
   comment: BlogComment;
@@ -10,16 +11,14 @@ type Props = {
 
 const Comment = ({ comment }: Props) => {
   const commentTime = calculateTimeAgo(comment.updatedTime);
+  const router = useRouter();
+
+  const redirectToUserProfile = () => {
+    router.push(`/user/${comment.userName}`);
+  };
   return (
     <div key={comment.id} className={styles.comment}>
-      <Link href={`/user/${comment.userName}`} className={styles.commentUserIcon}>
-        <img
-          src={comment.userImagePath}
-          alt="icon"
-          className={styles.userIcon}
-          aria-label={`Go to ${comment.userName}'s profile`}
-        ></img>
-      </Link>
+      <UserIconButton imagePath={comment.userImagePath} onClick={redirectToUserProfile} />
       <div className={styles.commentContent}>
         <p className={styles.commentText}>{comment.text}</p>
         <span className={styles.commentTime}>{commentTime}</span>
