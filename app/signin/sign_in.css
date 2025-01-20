@@ -1,0 +1,84 @@
+.signin-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.signin-header {
+  font-size: 45px;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #333;
+  margin-bottom: 20px;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  /* text-align: center; */
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #606060;
+  border-radius: 15px;
+  font-size: 16px;
+  background-color: #d7d7d7;
+}
+
+/* 入力フィールドにフォーカス時のスタイル */
+.form-input:focus {
+  border-color: #56a8ff;
+  outline: none;
+}
+
+.signin-button {
+  width: 120px;
+  padding: 10px;
+  margin: 20px auto 0;
+  font-size: 16px;
+  background-color: #56a8ff;
+  color: white;
+  border: none;
+  border-radius: 30px;
+}
+
+.signin-button:hover {
+  background-color: #3898ff;
+}
+
+.signup-container {
+  margin-top: 30px;
+}
+
+.signup-text {
+  font-size: 15px;
+  color: #333;
+}
+
+.signup-link {
+  font-size: 1rem;
+  color: #56a8ff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
