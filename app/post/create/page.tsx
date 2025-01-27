@@ -17,31 +17,12 @@ const PostCreatePage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // const postData: CreatePostInput = {
-    //   title: title,
-    //   textLine: content,
-    // };
-
-    // const formData = {
-    //   user_id: 'e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6',
-    //   title: title,
-    //   content: content
-    // }
-
     const formData = new FormData(e.currentTarget);
-    // formData.append("title", title);
-    // formData.append("content", content);
-    // formData.append("file", image);
-
     const result = await createPost(formData);
+
+    // eslint-disable-next-line no-console
     console.log(result)
-    if (result.success) {
-      // 成功時の処理
-      console.log("success")
-    } else {
-      // エラー処理
-      console.log("error")
-    }
+
   }
 
   if (image != null) {
@@ -50,7 +31,6 @@ const PostCreatePage = () => {
   }
   // eslint-disable-next-line no-console
   console.log({ title, content });
-
 
   return (
     <div className={styles.container}>
