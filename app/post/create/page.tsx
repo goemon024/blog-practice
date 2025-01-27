@@ -6,23 +6,42 @@ import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
 
-import { createPost } from "./PostCreate";
+import { useRouter } from "next/navigation";
+
+// import { createPost } from "./PostCreate";
 // import type { CreatePostInput } from "./PostCreate";
 
 const PostCreatePage = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [category, setCategory] = useState<number>(0);
   const [image, setImage] = useState<File | null>(null);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const formData = new FormData(e.currentTarget);
 
-    const formData = new FormData(e.currentTarget);
-    const result = await createPost(formData);
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    // eslint-disable-next-line no-console
-    console.log(result)
+      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong');
+      }
+
+      // 成功時の処理
+      // router.push('/')
+
+    } catch (error) {
+      console.error('Error:', error);
+      // setError(error instanceof Error ? error.message : '投稿に失敗しました');
+    }
   }
 
   if (image != null) {
@@ -30,12 +49,12 @@ const PostCreatePage = () => {
     console.log(image.name);
   }
   // eslint-disable-next-line no-console
-  console.log({ title, content });
+  console.log({ title, content, category });
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <CreateTitle title={title} setTitle={setTitle} />
+        <CreateTitle title={title} setTitle={setTitle} category={category} setCategory={setCategory} />
         <CreateImage onFileSelect={(file) => setImage(file)} />
         <CreateContent content={content} setContent={setContent} />
       </form>
