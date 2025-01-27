@@ -5,4 +5,6 @@ export type Post = {
   textLine: string;
   userName: string;
   userImagePath: string;
+  category:string;
+  postedAt:string;
 };

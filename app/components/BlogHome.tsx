@@ -13,30 +13,41 @@ export default function PostHome() {
   // データの取得
   useEffect(() => {
     const fetchBlog = async () => {
-      const { data, error } = await supabase.from("posts").select(`
-          id,
-          title,
-          content,
-          image_path,
-          categories(name) as category,
-          users(name) as user,
-          created_at,
-          updatad_at,
-        `);
-      if (error) {
-        console.log("Error fetching posts:", error.message);
-      } else {
+      try {
+        const { data, error } = await supabase
+          .from("posts")
+          .select(
+            `
+            id,
+            title,
+            content,
+            image_path,
+            categories(name) as category,
+            users(name) as author,
+            created_at,
+            updated_at,
+          `,
+          )
+          .order("created_at", { ascending: false }) // 最新順にソート
+          .limit(9); // 最新9件に制限
+
+        if (error) throw new Error(error.message);
+
         console.log("Fetched Data:", data);
-        const formattedData = data.map((blog) => ({
-          id: blog.id,
-          title: blog.title,
-          content: blog.content,
-          image_path: blog.image_path,
-          category: blog.categories?.name || "未分類",
-          author: blog.users?.name || "匿名",
-          postedAt: new Date(blog.created_at).toLocaleString(),
+
+        const formattedData = data.map((post) => ({
+          id: post.id,
+          title: post.title,
+          textLine: post.content,
+          image_path: post.image_path,
+          category: post.categories.name,
+          userName: post.users?.name,
+          postedAt: new Date(post.created_at).toLocaleString(),
         }));
+        console.log("Formatted Data:", formattedData);
         setPosts(formattedData);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
       }
     };
     fetchBlog();
@@ -46,8 +57,8 @@ export default function PostHome() {
   const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.author.toLowerCase().includes(searchTerm.toLowerCase()),
+      post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -76,11 +87,11 @@ export default function PostHome() {
               </div>
 
               <div className="blog-meta">
-                <p className="blog-author">{blog.author}</p>
+                <p className="blog-author">{blog.userName}</p>
                 <p className="blog-posted-at">{blog.postedAt}</p>
               </div>
 
-              <p className="blog-content">{blog.content}</p>
+              <p className="blog-content">{blog.textLine}</p>
             </article>
           </Link>
         ))}
