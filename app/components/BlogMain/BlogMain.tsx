@@ -1,7 +1,7 @@
 import styles from "./BlogMain.module.css";
-import { Post } from "@/lib/types";
 import UserIconButton from "../UserIconButton/UserIconButton";
 import { useRouter } from "next/navigation";
+import { Post } from "lib/types";
 
 type Props = {
   post: Post;
