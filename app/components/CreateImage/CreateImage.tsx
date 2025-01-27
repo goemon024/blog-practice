@@ -35,6 +35,7 @@ const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect }) => {
       <input
         ref={fileInputRef}
         type="file"
+        name="file"
         accept="image/*"
         onChange={handleFileChange}
         style={{ display: "none" }} // ファイル選択ボタンを非表示
