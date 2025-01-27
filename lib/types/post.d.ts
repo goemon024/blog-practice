@@ -1,7 +1,7 @@
 export type Post = {
   id: number;
   title: string;
-  blogImagePath: string;
+  image_path: string;
   textLine: string;
   userName: string;
   userImagePath: string;
