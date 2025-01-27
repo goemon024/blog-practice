@@ -1,10 +1,11 @@
 "use client";
-import BlogMain from "@/app/components/BlogMain/BlogMain";
-import Thumbnail from "@/app/components/Thumbnail/Thumbnail";
+
 import React, { useState } from "react";
 import styles from "./page.module.css";
-import Comment from "@/app/components/Comment/Comment";
-import { BlogComment, Post, ThumbnailPost } from "@/lib/types";
+import { BlogComment, Post, ThumbnailPost } from "lib/types";
+import BlogMain from "@components/BlogMain/BlogMain";
+import Thumbnail from "@components/Thumbnail/Thumbnail";
+import CommentCard from "@components/CommentCard/CommentCard";
 
 // ダミーデータ
 const mainPost: Post = {
@@ -128,7 +129,7 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
           </button>
         </div>
         {commentList.map((comment) => (
-          <Comment comment={comment} key={comment.id} />
+          <CommentCard comment={comment} key={comment.id} />
         ))}
       </section>
     </div>

@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
 import Link from "next/link"; // Linkコンポーネントをインポート
 import EditIcon from "@mui/icons-material/Edit";
-import { User } from "@/lib/types";
 import UserIconButton from "../UserIconButton/UserIconButton";
+import { User } from "lib/types";
 
 // ダミーデータ
 const user: User = {
