@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Thumbnail.module.css";
-import Link from "@/node_modules/next/link";
-import { ThumbnailPost } from "@/lib/types";
+import { ThumbnailPost } from "lib/types";
+import Link from "next/link";
 
 type Props = {
   post: ThumbnailPost;
