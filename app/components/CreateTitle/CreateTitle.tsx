@@ -7,10 +7,7 @@ type CreateTitleProps = {
   setTitle: (value: string) => void;
 };
 
-const CreateTitle: React.FC<CreateTitleProps> = ({
-  title,
-  setTitle,
-}) => {
+const CreateTitle: React.FC<CreateTitleProps> = ({ title, setTitle }) => {
   const [overText, setOverText] = useState<boolean>(false);
 
   const handleInputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
