@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
-
+import CreateCategory from "@components/CreateCategory/CreateCategory";
 import { useRouter } from "next/navigation";
 
 // import { createPost } from "./PostCreate";
@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 const PostCreatePage = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [category, setCategory] = useState<number>(0);
+  const [category, setCategory] = useState<number>(6);
   const [image, setImage] = useState<File | null>(null);
 
   const router = useRouter();
@@ -40,7 +40,6 @@ const PostCreatePage = () => {
 
     } catch (error) {
       console.error('Error:', error);
-      // setError(error instanceof Error ? error.message : '投稿に失敗しました');
     }
   }
 
@@ -54,7 +53,8 @@ const PostCreatePage = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <CreateTitle title={title} setTitle={setTitle} category={category} setCategory={setCategory} />
+        <CreateTitle title={title} setTitle={setTitle} />
+        <CreateCategory category={category} setCategory={setCategory} />
         <CreateImage onFileSelect={(file) => setImage(file)} />
         <CreateContent content={content} setContent={setContent} />
       </form>

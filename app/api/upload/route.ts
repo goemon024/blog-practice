@@ -8,7 +8,11 @@ export async function POST(req: NextRequest) {
         const file = formData.get('file') as File;
         const title = formData.get('title') as string;
         const content = formData.get('content') as string;
-        const category = formData.get('category') as number;
+        const category = formData.get('category') as string;
+
+        if (typeof parseInt(category, 10) !== "number") {
+            throw new Error("カテゴリーが無効です");
+        }
 
         if (!file || !(file instanceof File)) {
             return NextResponse.json(

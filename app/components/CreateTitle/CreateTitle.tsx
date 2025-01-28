@@ -5,12 +5,13 @@ import styles from "./CreateTitle.module.css";
 type CreateTitleProps = {
   title: string;
   setTitle: (value: string) => void;
-  category: number;
-  setCategory: (value: number) => void;
+  // category: number;
+  // setCategory: (value: number) => void;
 };
 
 const CreateTitle: React.FC<CreateTitleProps> = ({
-  title, setTitle, category, setCategory
+  title, setTitle
+  //, category, setCategory
 }) => {
   const [overText, setOverText] = useState<boolean>(false);
 
@@ -25,10 +26,10 @@ const CreateTitle: React.FC<CreateTitleProps> = ({
     }
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-    setCategory(parseInt(e.target.value, 10));
-  };
+  // const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   console.log(e.target.value);
+  //   setCategory(parseInt(e.target.value, 10));
+  // };
 
   return (
     <div>
@@ -52,7 +53,7 @@ const CreateTitle: React.FC<CreateTitleProps> = ({
         onChange={handleInputTitle}
       ></input>
 
-      <label className={styles.SelectorLabel} htmlFor="dropdown">Category :{" "}</label>
+      {/* <label className={styles.SelectorLabel} htmlFor="dropdown">Category :{" "}</label>
       <select className={styles.Selector}
         id="dropdown"
         name="category" // フォームデータのキーとして使用
@@ -65,7 +66,7 @@ const CreateTitle: React.FC<CreateTitleProps> = ({
         <option value="7">health</option>
         <option value="8">study</option>
 
-      </select>
+      </select> */}
     </div>
   );
 };
