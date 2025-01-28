@@ -22,10 +22,10 @@ export default function PostHome() {
             title,
             content,
             image_path,
-            categories(name) as category,
-            users(name) as author,
+            categories(name) ,
+            users(name) ,
             created_at,
-            updated_at,
+            updated_at
           `,
           )
           .order("created_at", { ascending: false }) // 最新順にソート

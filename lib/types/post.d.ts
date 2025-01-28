@@ -1,5 +1,5 @@
 export type Post = {
-  id: number;
+  id: number|string;
   title: string;
   image_path: string;
   textLine: string;
