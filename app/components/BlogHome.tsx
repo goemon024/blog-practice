@@ -33,21 +33,27 @@ export default function PostHome() {
 
         if (error) throw new Error(error.message);
 
-        console.log("Fetched Data:", data);
+        // console.log("Fetched Data:", data);
 
-        const formattedData = data.map((post) => ({
-          id: post.id,
-          title: post.title,
-          textLine: post.content,
-          image_path: post.image_path,
-          category: post.categories.name,
-          userName: post.users?.name,
-          postedAt: new Date(post.created_at).toLocaleString(),
-        }));
-        console.log("Formatted Data:", formattedData);
+        const formattedData = data.map((post) => {
+          const category = post.categories && Array.isArray(post.categories) ? post.categories[0]?.name : "未分類";
+          const author = post.users && Array.isArray(post.users) ? post.users[0]?.name : "匿名";
+          return {
+            id: post.id,
+            title: post.title,
+            textLine: post.content,
+            image_path: post.image_path,
+            category: category,
+            userName: author,
+            userImagePath: "",
+            postedAt: new Date(post.created_at).toLocaleString(),
+          };
+        });
+        // console.log("Formatted Data:", formattedData);
         setPosts(formattedData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        // console.error("Error fetching posts:", error);
       }
     };
     fetchBlog();
