@@ -1,15 +1,15 @@
 import React from "react";
-import styles from "./Comment.module.css";
-import { BlogComment } from "@/lib/types";
-import calculateTimeAgo from "@/lib/util/calculateTimeAgo";
+import styles from "./CommentCard.module.css";
 import UserIconButton from "../UserIconButton/UserIconButton";
 import { useRouter } from "next/navigation";
+import { BlogComment } from "lib/types";
+import calculateTimeAgo from "lib/util/calculateTimeAgo";
 
 type Props = {
   comment: BlogComment;
 };
 
-const Comment = ({ comment }: Props) => {
+const CommentCard = ({ comment }: Props) => {
   const commentTime = calculateTimeAgo(comment.updatedTime);
   const router = useRouter();
 
@@ -27,4 +27,4 @@ const Comment = ({ comment }: Props) => {
   );
 };
 
-export default Comment;
+export default CommentCard;

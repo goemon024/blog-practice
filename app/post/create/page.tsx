@@ -8,9 +8,6 @@ import CreateContent from "@components/CreateContent/CreateContent";
 import CreateCategory from "@components/CreateCategory/CreateCategory";
 import { useRouter } from "next/navigation";
 
-// import { createPost } from "./PostCreate";
-// import type { CreatePostInput } from "./PostCreate";
-
 const PostCreatePage = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
