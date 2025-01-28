@@ -36,8 +36,21 @@ export default function PostHome() {
         // console.log("Fetched Data:", data);
 
         const formattedData = data.map((post) => {
-          const category = post.categories && Array.isArray(post.categories) ? post.categories[0]?.name : "未分類";
-          const author = post.users && Array.isArray(post.users) ? post.users[0]?.name : "匿名";
+          const category = post.categories[0]?.name || "未分類";
+          const author = post.users[0]?.name || "匿名";
+          const postedAt = post.created_at || new Date(post.created_at).toLocaleString();
+
+          // console.log("Formatted Post:", {
+          //   id: post.id,
+          //   title: post.title,
+          //   textLine: post.content,
+          //   image_path: post.image_path,
+          //   category: category,
+          //   userName: author,
+          //   userImagePath: "",
+          //   postedAt: postedAt,
+          // });
+
           return {
             id: post.id,
             title: post.title,
@@ -46,7 +59,7 @@ export default function PostHome() {
             category: category,
             userName: author,
             userImagePath: "",
-            postedAt: new Date(post.created_at).toLocaleString(),
+            postedAt: postedAt,
           };
         });
         // console.log("Formatted Data:", formattedData);
