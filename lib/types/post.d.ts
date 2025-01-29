@@ -6,5 +6,7 @@ export type Post = {
   userName: string;
   userImagePath: string;
   category:string;
+  categories:{name:string}[];
+  users:{name:string}[];
   postedAt:string;
 };
