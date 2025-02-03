@@ -3,14 +3,30 @@ import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { supabase } from "lib/util/supabase";
-import type { Post } from "../../lib/types/index";
+// import type { Post } from "../../lib/types/index";
+import Pagination from "./Pagination/Pagination";
+
+type Post={
+  id: number|string;
+  title: string;
+  textLine: string;
+  image_path: string;
+  category:string;
+  userName: string;
+  userImagePath: string | null;
+  postedAt:string | null;
+}
 
 export default function PostHome() {
-  // ブログ内容の状態管理
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  // データの取得
+  const [allPosts, setAllPosts] = useState<Post[]>([]);  // ブログ総数
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);  // 検索窓を反映して表示対象となる全ブログ
+  const [displayPosts, setDisplayPosts] = useState<Post[]>([]);  // homeで表示される9つのブログ
+  const [searchTerm, setSearchTerm] = useState<string>("");   // 検索ワード 
+
+  const [currentPage, setCurrentPage] = useState<number>(1);  // page番号
+
+  // 初期レンダリング時の総ブログデータ取得
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -28,7 +44,6 @@ export default function PostHome() {
           `,
           )
           .order("created_at", { ascending: false }) // 最新順にソート
-          .limit(9); // 最新9件に制限
 
         if (error) throw new Error(error.message);
 
@@ -62,8 +77,8 @@ export default function PostHome() {
           };
         });
         // console.log("Formatted Data:", formattedData);
-        setPosts(formattedData);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        setAllPosts(formattedData);
+        setFilteredPosts(formattedData);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error fetching posts:", error);
@@ -72,13 +87,25 @@ export default function PostHome() {
     fetchBlog();
   }, []);
 
-  // 検索バーの機能
-  const filteredPosts = posts.filter(
-    (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // 検索窓の状態に応じて表示対象となる全ブログ取得
+  useEffect(()=>{
+    setFilteredPosts(
+      !searchTerm?.trim()
+      ? allPosts
+      : allPosts.filter(
+        (post) =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
+    ));
+    setCurrentPage(1)
+  }, [ searchTerm ])
+
+ 
+  // １ページ当たりの表示データ（９つ）取得。
+  useEffect(()=>{
+    setDisplayPosts(filteredPosts.slice((currentPage-1)*9,currentPage*9));
+  },[ currentPage , filteredPosts])
 
   const TextLength = 100;
 
@@ -96,7 +123,7 @@ export default function PostHome() {
       </div>
 
       <main className="blog-list">
-        {filteredPosts.map((blog) => (
+        {displayPosts.map((blog) => (
           // ブログ記事クリック時に該当ページに遷移
           <Link key={blog.id} href={`/posts/${blog.id}`} passHref>
             <article className="blog-card">
@@ -119,6 +146,8 @@ export default function PostHome() {
           </Link>
         ))}
       </main>
+      <Pagination postNumber={filteredPosts.length} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+
     </>
   );
 }
