@@ -3,8 +3,19 @@ import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { supabase } from "lib/util/supabase";
-import type { Post } from "../../lib/types/index";
+// import type { Post } from "../../lib/types/index";
 import Pagination from "./Pagination/Pagination";
+
+type Post={
+  id: number|string;
+  title: string;
+  textLine: string;
+  image_path: string;
+  category:string;
+  userName: string;
+  userImagePath: string | null;
+  postedAt:string | null;
+}
 
 export default function PostHome() {
 
