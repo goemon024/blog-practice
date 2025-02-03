@@ -65,7 +65,8 @@ export default function PostHome() {
         setPosts(formattedData);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        // console.error("Error fetching posts:", error);
+        // eslint-disable-next-line no-console
+        console.error("Error fetching posts:", error);
       }
     };
     fetchBlog();
@@ -78,6 +79,8 @@ export default function PostHome() {
       post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  const TextLength = 100;
 
   return (
     <>
@@ -109,7 +112,9 @@ export default function PostHome() {
                 <p className="blog-posted-at">{blog.postedAt}</p>
               </div>
 
-              <p className="blog-content">{blog.textLine}</p>
+              <p className="blog-content">
+                {blog.textLine.length > TextLength ? `${blog.textLine.slice(0, TextLength)}...` : blog.textLine}
+              </p>
             </article>
           </Link>
         ))}

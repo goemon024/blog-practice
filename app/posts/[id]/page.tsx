@@ -17,6 +17,8 @@ const mainPost: Post = {
   userImagePath: "/default_icon.jpg",
   category: "",
   postedAt: "",
+  categories: [],
+  users: [],
 };
 
 const thumbnailPosts: ThumbnailPost[] = [
