@@ -1,107 +1,106 @@
 import "./bloghome.css";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
+import { supabase } from "lib/util/supabase";
+import type { Post } from "../../lib/types/index";
 
-const blogs = [
-  {
-    id: 1,
-    title: "ブログタイトル 1",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "技術",
-    author: "田中 太郎",
-    postedAt: "2024-12-01 10:30",
-  },
-  {
-    id: 2,
-    title: "ブログタイトル 2",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "生活",
-    author: "佐藤 花子",
-    postedAt: "2024-12-02 14:15",
-  },
-  {
-    id: 3,
-    title: "ブログタイトル 3",
-    content:
-      "ブログ内容の概要........................................................................................................................",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 4,
-    title: "ブログタイトル 4",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 5,
-    title: "ブログタイトル 5",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 6,
-    title: "ブログタイトル 6",
-    content:
-      "ブログ内容の概要.............................................................................................................",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 7,
-    title: "ブログタイトル 7",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 8,
-    title: "ブログタイトル 8",
-    content: "ブログ内容の概要.............................",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-  {
-    id: 9,
-    title: "ブログタイトル 9",
-    content: "ブログ内容の概要...",
-    image: "https://via.placeholder.com/150",
-    category: "旅行",
-    author: "山田 一郎",
-    postedAt: "2024-12-03 18:45",
-  },
-];
+export default function PostHome() {
+  // ブログ内容の状態管理
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
-export default function BlogHome() {
+  // データの取得
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("posts")
+          .select(
+            `
+            id,
+            title,
+            content,
+            image_path,
+            categories(name) ,
+            users(name) ,
+            created_at
+          `,
+          )
+          .order("created_at", { ascending: false }) // 最新順にソート
+          .limit(9); // 最新9件に制限
+
+        if (error) throw new Error(error.message);
+
+        // console.log("Fetched Data:", data);
+
+        const formattedData = data.map((post) => {
+          const category = post.categories.name || "未分類";
+          const author = post.users.name || "匿名";
+          const postedAt = post.created_at && new Date(post.created_at).toLocaleString();
+
+          // console.log("Formatted Post:", {
+          //   id: post.id,
+          //   title: post.title,
+          //   textLine: post.content,
+          //   image_path: post.image_path,
+          //   category: category,
+          //   userName: author,
+          //   userImagePath: "",
+          //   postedAt: postedAt,
+          // });
+
+          return {
+            id: post.id,
+            title: post.title,
+            textLine: post.content,
+            image_path: post.image_path,
+            category: category,
+            userName: author,
+            userImagePath: "",
+            postedAt: postedAt,
+          };
+        });
+        // console.log("Formatted Data:", formattedData);
+        setPosts(formattedData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchBlog();
+  }, []);
+
+  // 検索バーの機能
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const TextLength = 100;
+
   return (
     <>
       <div className="search-bar">
-        <input type="text" placeholder="Search Blog Post" className="search-text" />
+        <input
+          type="text"
+          placeholder="Search Blog Post"
+          className="search-text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <SearchIcon className="search-button">検索</SearchIcon>
       </div>
 
       <main className="blog-list">
-        {blogs.map((blog) => (
+        {filteredPosts.map((blog) => (
           // ブログ記事クリック時に該当ページに遷移
           <Link key={blog.id} href={`/posts/${blog.id}`} passHref>
             <article className="blog-card">
-              <img src={blog.image} alt={blog.title} className="blog-image" />
+              <img src={blog.image_path} alt={blog.title} className="blog-image" />
 
               <div className="blog-header">
                 <h2 className="blog-title">{blog.title}</h2>
@@ -109,11 +108,13 @@ export default function BlogHome() {
               </div>
 
               <div className="blog-meta">
-                <p className="blog-author">{blog.author}</p>
+                <p className="blog-author">{blog.userName}</p>
                 <p className="blog-posted-at">{blog.postedAt}</p>
               </div>
 
-              <p className="blog-content">{blog.content}</p>
+              <p className="blog-content">
+                {blog.textLine.length > TextLength ? `${blog.textLine.slice(0, TextLength)}...` : blog.textLine}
+              </p>
             </article>
           </Link>
         ))}

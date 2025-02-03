@@ -11,10 +11,14 @@ import CommentCard from "@components/CommentCard/CommentCard";
 const mainPost: Post = {
   id: 0,
   title: "初投稿",
-  blogImagePath: "/main_blog.jpg",
+  image_path: "/main_blog.jpg",
   textLine: "はじめましてジャミーです。これからブログの記事を作成したいと思います。",
   userName: "zameemallik",
   userImagePath: "/default_icon.jpg",
+  category: "",
+  postedAt: "",
+  categories: [],
+  users: [],
 };
 
 const thumbnailPosts: ThumbnailPost[] = [
