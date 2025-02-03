@@ -36,6 +36,7 @@ const CreateTitle: React.FC<CreateTitleProps> = ({ title, setTitle }) => {
         id="BlogTitleInput"
         className={styles.BlogInput}
         type="text"
+        name="title"
         maxLength={50}
         value={title}
         placeholder="タイトルを入力してください"

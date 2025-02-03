@@ -35,6 +35,7 @@ const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect }) => {
       <input
         ref={fileInputRef}
         type="file"
+        name="file"
         accept="image/*"
         onChange={handleFileChange}
         style={{ display: "none" }} // ファイル選択ボタンを非表示
@@ -44,7 +45,10 @@ const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect }) => {
       ) : sizeError ? (
         <p className={styles.alert}>５MB以下の画像を選択してください</p>
       ) : (
-        <p>クリックして画像を選択してください</p>
+        <div className={styles.TextContainer}>
+          <p className={styles.BlogImageText}>Blog Image</p>
+          <p>クリックして画像を選択してください</p>
+        </div>
       )}
     </div>
   );

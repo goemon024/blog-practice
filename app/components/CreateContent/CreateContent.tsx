@@ -35,6 +35,7 @@ const CreateContent: React.FC<CreateContentProps> = ({ content, setContent }) =>
       <textarea
         className={styles.BlogInput}
         id="BlogContentInput"
+        name="content"
         maxLength={2000}
         value={content}
         placeholder="記事の内容を入力してください"
