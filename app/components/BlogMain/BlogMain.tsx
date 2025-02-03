@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./BlogMain.module.css";
 import UserIconButton from "../UserIconButton/UserIconButton";
 import { useRouter } from "next/navigation";
@@ -14,6 +15,10 @@ const BlogMain: React.FC<Props> = ({ post }) => {
     router.push(`/user/${post.userName}`);
   };
 
+  const redirectToEditPage = () => {
+    router.push(`${window.location.pathname}/edit`);
+  };
+
   return (
     <div className={styles.card}>
       {/* Header */}
@@ -26,11 +31,18 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       <div className={styles.mainImage}>
         <img src={`${post.image_path}`} alt="no image" className={styles.mainImageContent}></img>
       </div>
+
       {/* Text Content */}
       <div className={styles.textContent}>
         <p className={styles.textLine}>{post.textLine}</p>
       </div>
+
+      {/* Edit Button */}
+      <button className={styles.editButton} onClick={redirectToEditPage}>
+        編集
+      </button>
     </div>
   );
 };
+
 export default BlogMain;
