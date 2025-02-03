@@ -29,7 +29,7 @@ const BlogMain: React.FC<Props> = ({ post }) => {
 
       {/* Main Image */}
       <div className={styles.mainImage}>
-        <img src={post.blogImagePath} alt="no image" className={styles.mainImageContent} />
+        <img src={`${post.image_path}`} alt="no image" className={styles.mainImageContent}></img>
       </div>
 
       {/* Text Content */}
