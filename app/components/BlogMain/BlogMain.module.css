@@ -4,7 +4,8 @@
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  position: relative; /* 親要素を相対位置に設定 */
+  position: relative;
+  /* 親要素を相対位置に設定 */
 }
 
 .header {
@@ -35,6 +36,11 @@
 
 .textContent {
   overflow: hidden;
+
+  white-space: pre-wrap;
+  /* 改行を保持 */
+  word-wrap: break-word;
+  /* 長い単語の折り返し */
 }
 
 .textLine {
@@ -44,11 +50,17 @@
   word-wrap: break-word;
   overflow: hidden;
   width: 100%;
+
+  white-space: pre-wrap;
 }
+
 .editButton {
-  position: absolute; /* 親要素内での絶対位置 */
-  bottom: 20px; /* 下から20pxの位置 */
-  right: 20px; /* 右から20pxの位置 */
+  position: absolute;
+  /* 親要素内での絶対位置 */
+  bottom: 20px;
+  /* 下から20pxの位置 */
+  right: 20px;
+  /* 右から20pxの位置 */
   background-color: #0070f3;
   color: white;
   border: none;

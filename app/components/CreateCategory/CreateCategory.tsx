@@ -27,10 +27,9 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({ category, setCategory }
         onChange={handleSelectChange} // 値変更時のハンドラー
       >
         <option value="9">{"    "}</option>
-        <option value="5">food</option>
-        <option value="6">technorogy</option>
-        <option value="7">health</option>
-        <option value="8">study</option>
+        <option value="1">food</option>
+        <option value="3">technorogy</option>
+        <option value="2">health</option>
       </select>
     </div>
   );

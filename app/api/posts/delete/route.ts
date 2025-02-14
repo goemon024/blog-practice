@@ -2,7 +2,7 @@ import { supabase } from "lib/util/supabase";
 import { NextResponse } from "next/server";
 
 // DELETEリクエストを処理
-export async function POST(req: Request) {
+export async function DELETE(req: Request) {
   try {
     const { id } = await req.json(); // リクエストボディからIDを取得
     if (!id) {

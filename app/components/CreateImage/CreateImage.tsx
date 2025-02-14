@@ -1,15 +1,24 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./CreateImage.module.css";
 
 type CreateImageProps = {
   onFileSelect: (file: File | null) => void;
+  presetImage: string | null;
 };
 
-const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect }) => {
+const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect, presetImage }) => {
+
   const [sizeError, setSizeError] = useState<boolean>(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(presetImage);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理
+
+  // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
+  useEffect(() => {
+    if (presetImage) {
+      setPreview(presetImage);
+    }
+  }, [presetImage]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

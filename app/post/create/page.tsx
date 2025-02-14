@@ -25,9 +25,7 @@ const PostCreatePage = () => {
         method: "POST",
         body: formData,
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong");
       }
@@ -52,8 +50,14 @@ const PostCreatePage = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <CreateTitle title={title} setTitle={setTitle} />
         <CreateCategory category={category} setCategory={setCategory} />
-        <CreateImage onFileSelect={(file) => setImage(file)} />
+        <CreateImage onFileSelect={(file) => setImage(file)} presetImage={null} />
         <CreateContent content={content} setContent={setContent} />
+
+        <div className={styles.buttonContainer}>
+          <button className={styles.button} type="submit">
+            create blog
+          </button>
+        </div>
       </form>
     </div>
   );

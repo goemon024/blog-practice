@@ -8,10 +8,12 @@ import { User } from "lib/types";
 
 // ダミーデータ
 const user: User = {
-  id: 0,
+  id: "0",
   name: "テスト太郎",
   email: "testtarou@gmail.com",
-  imagePath: "/testtarou.jpg",
+  image_path: "/testtarou.jpg",
+  created_at: "2021-01-01",
+  updated_at: "2021-01-01",
 };
 //ダミーデータ終了
 
@@ -65,7 +67,7 @@ export const Header = () => {
           )}
           {signedInUser && (
             <div className={styles.userSection}>
-              <UserIconButton imagePath={user.imagePath} onClick={() => setIsOpen(!isOpen)} />
+              <UserIconButton imagePath={user.image_path ?? ""} onClick={() => setIsOpen(!isOpen)} />
               {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>
                   <p className={styles.modalUserName}>{signedInUser?.name}</p>

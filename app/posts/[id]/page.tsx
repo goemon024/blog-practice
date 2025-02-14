@@ -1,71 +1,94 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import { BlogComment, Post, ThumbnailPost } from "lib/types";
+import { Comment, Post } from "lib/types";
 import BlogMain from "@components/BlogMain/BlogMain";
 import Thumbnail from "@components/Thumbnail/Thumbnail";
 import CommentCard from "@components/CommentCard/CommentCard";
-
+import { supabase } from "lib/util/supabase";
 // ダミーデータ
-const mainPost: Post = {
-  id: 0,
-  title: "初投稿",
-  image_path: "/main_blog.jpg",
-  textLine: "はじめましてジャミーです。これからブログの記事を作成したいと思います。",
-  userName: "zameemallik",
-  userImagePath: "/default_icon.jpg",
-  category: "",
-  postedAt: "",
-  categories: [],
-  users: [],
+
+// interface Post {
+//   id: string;
+//   title: string;
+//   content: string;
+//   image_path?: string | null;
+//   category_id: number;
+//   user_id: string;
+//   created_at: string;
+//   updated_at?: string;
+// }
+
+// const mainPost: Post = {
+//   id: 0,
+//   title: "初投稿",
+//   image_path: "/main_blog.jpg",
+//   textLine: "はじめましてジャミーです。これからブログの記事を作成したいと思います。",
+//   user_id: "zameemallik",
+//   // userImagePath: "/default_icon.jpg",
+//   category_id: "",
+//   created_at: "",
+//   updated_at: "",
+//   // categories: [],
+//   // users: [],
+// };
+
+// const thumbnailPosts: ThumbnailPost[] = [
+//   {
+//     id: 1,
+//     title: "あいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこ",
+//     imagePath: "/muffler.jpg",
+//   },
+//   { id: 2, title: "Post Title", imagePath: "/muffler.jpg" },
+//   { id: 3, title: "Post Title", imagePath: "/muffler.jpg" },
+// ];
+
+type CommentCustom = Omit<Comment, "post_id" | "created_at"> & {
+  users: { name: string; image_path: string };
 };
 
-const thumbnailPosts: ThumbnailPost[] = [
+// 暫定的なダミーデータ
+const comments: CommentCustom[] = [
   {
     id: 1,
-    title: "あいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこ",
-    imagePath: "/muffler.jpg",
-  },
-  { id: 2, title: "Post Title", imagePath: "/muffler.jpg" },
-  { id: 3, title: "Post Title", imagePath: "/muffler.jpg" },
-];
-
-const comments: BlogComment[] = [
-  {
-    id: 1,
-    userName: "user1",
-    userImagePath: "/default_icon.jpg",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ligula nibh, interdum non enim sit amet, iaculis aliquet nunc.",
-    updatedTime: new Date(),
+    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
+    user_id: "user2_id",                      // 追加
+    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
+    users: {                                  // ユーザー情報をネスト
+      name: "user2",
+      image_path: "/default_icon.jpg"
+    }
   },
   {
     id: 2,
-    userName: "user2",
-    userImagePath: "/default_icon.jpg",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ligula nibh, interdum non enim sit amet, iaculis aliquet nunc.",
-    updatedTime: new Date(new Date().setMinutes(new Date().getMinutes() - 59)),
+    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
+    user_id: "user2_id",                      // 追加
+    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
+    users: {                                  // ユーザー情報をネスト
+      name: "user2",
+      image_path: "/default_icon.jpg"
+    }
   },
   {
     id: 3,
-    userName: "user2",
-    userImagePath: "/default_icon.jpg",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ligula nibh, interdum non enim sit amet, iaculis aliquet nunc.",
-    updatedTime: new Date(new Date().setMinutes(new Date().getMinutes() - 60)),
+    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
+    user_id: "user2_id",                      // 追加
+    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
+    users: {                                  // ユーザー情報をネスト
+      name: "user2",
+      image_path: "/default_icon.jpg"
+    }
   },
   {
     id: 4,
-    userName: "user2",
-    userImagePath: "/default_icon.jpg",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ligula nibh, interdum non enim sit amet, iaculis aliquet nunc.",
-    updatedTime: new Date(new Date().setHours(new Date().getHours() - 23)),
-  },
-  {
-    id: 5,
-    userName: "user2",
-    userImagePath: "/default_icon.jpg",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ligula nibh, interdum non enim sit amet, iaculis aliquet nunc.",
-    updatedTime: new Date(new Date().setHours(new Date().getHours() - 24)),
+    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
+    user_id: "user2_id",                      // 追加
+    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
+    users: {                                  // ユーザー情報をネスト
+      name: "user2",
+      image_path: "/default_icon.jpg"
+    }
   },
 ];
 // ダミーデータ終了
@@ -73,7 +96,34 @@ const comments: BlogComment[] = [
 const BlogPage = ({ params }: { params: { id: string } }) => {
   // npm run lint実行時の”Error: 'params' is defined but never used.”エラー回避用に一時的にparamsをconsoleで出力する。
   // eslint-disable-next-line no-console
-  console.log(params.id);
+
+  const [post, setPost] = useState<Post | null>(null);
+  const [thumbnailPosts, setThumbnailPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", params.id)
+        .single();
+
+      if (error) {
+        return;
+      }
+      if (data) {
+        setPost(data);
+        const { data: thumbnails, error } = await supabase
+          .from("posts")
+          .select("*")
+          .neq("id", params.id)
+          .order('created_at', { ascending: false })
+          .limit(3);
+        setThumbnailPosts(thumbnails || [])
+      }
+    };
+    fetchPost();
+  }, [params.id]);
 
   // ここで、idをもとにblogの詳細情報を取得してくる。
   // const mainPost = getMainBlogFromId(params.id)
@@ -85,27 +135,27 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
   // const comments = getComments(params.id)
 
   const [commentText, setCommentText] = useState("");
-  const [commentList, setCommentList] = useState(comments);
+  const [commentList, setCommentList] = useState<CommentCustom[]>(comments);
 
   const handleCommentSubmit = () => {
     //本来はAPIでデータ追加。
-    if (commentText.trim()) {
-      const newComment = {
-        id: commentList.length + 1,
-        userName: "currentUser", // 現在のユーザー名を設定
-        userImagePath: "", //現在ユーザーのプロフィール画像pathを設定。
-        text: commentText,
-        updatedTime: new Date(),
-      };
-      setCommentList([...commentList, newComment]);
-      setCommentText("");
-    }
+    // if (commentText.trim()) {
+    //   const newComment = {
+    //     id: commentList.length + 1,
+    //     userName: "currentUser", // 現在のユーザー名を設定
+    //     userImagePath: "", //現在ユーザーのプロフィール画像pathを設定。
+    //     text: commentText,
+    //     updatedTime: new Date(),
+    //   };
+    //   setCommentList([...commentList, newComment]);
+    //   setCommentText("");
+    // }
     //データ追加後、pageリロード。
   };
   return (
     <div className={styles.container}>
       {/* Main Post */}
-      <BlogMain post={mainPost}></BlogMain>
+      {post && <BlogMain post={post} />}
       {/* More Posts */}
       <section className={styles.thumbnailSection}>
         <h2 className={styles.thumbnailHeaderTitle}>More Posts</h2>

@@ -3,82 +3,83 @@ import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { supabase } from "lib/util/supabase";
-// import type { Post } from "../../lib/types/index";
+import type { Post } from "lib/types/index";
 import Pagination from "./Pagination/Pagination";
 
-type Post={
-  id: number|string;
-  title: string;
-  textLine: string;
-  image_path: string;
-  category:string;
-  userName: string;
-  userImagePath: string | null;
-  postedAt:string | null;
+// type Post = {
+//   id: number | string;
+//   title: string;
+//   textLine: string;
+//   image_path: string;
+//   category: string;
+//   userName: string;
+//   userImagePath: string | null;
+//   postedAt: string | null;
+// }
+
+
+// export interface Post {
+//   id: string;
+//   title: string;
+//   content: string;
+//   image_path?: string | null;
+//   category_id: number;
+//   user_id: string;
+//   created_at: string;
+//   updated_at?: string;
+// }
+
+type PostCustom = Post & {
+  users: { name: string | null; }
+  categories: { name: string | null; }
 }
 
 export default function PostHome() {
 
-  const [allPosts, setAllPosts] = useState<Post[]>([]);  // ブログ総数
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);  // 検索窓を反映して表示対象となる全ブログ
-  const [displayPosts, setDisplayPosts] = useState<Post[]>([]);  // homeで表示される9つのブログ
+  const [allPosts, setAllPosts] = useState<PostCustom[]>([]);  // ブログ総数
+  const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]);  // 検索窓を反映して表示対象となる全ブログ
+  const [displayPosts, setDisplayPosts] = useState<PostCustom[]>([]);  // homeで表示される9つのブログ
   const [searchTerm, setSearchTerm] = useState<string>("");   // 検索ワード 
 
-  const [currentPage, setCurrentPage] = useState<number>(1);  // page番号
+  const [currentPage, setCurrentPage] = useState<number>(1);  // page番号。pagenationにpropsとして渡す。
 
   // 初期レンダリング時の総ブログデータ取得
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error }: {
+          data: PostCustom[] | null;
+          error: any;
+        } = await supabase
           .from("posts")
-          .select(
-            `
-            id,
-            title,
-            content,
-            image_path,
-            categories(name) ,
-            users(name) ,
-            created_at
-          `,
-          )
+          .select("*")
           .order("created_at", { ascending: false }) // 最新順にソート
 
         if (error) throw new Error(error.message);
 
         // console.log("Fetched Data:", data);
 
-        const formattedData = data.map((post) => {
-          const category = post.categories.name || "未分類";
-          const author = post.users.name || "匿名";
+        const formattedData = data?.map((post): PostCustom => {
+          const category = post.categories?.name || "未分類";
+          const author = post.users?.name || "匿名";
           const postedAt = post.created_at && new Date(post.created_at).toLocaleString();
-
-          // console.log("Formatted Post:", {
-          //   id: post.id,
-          //   title: post.title,
-          //   textLine: post.content,
-          //   image_path: post.image_path,
-          //   category: category,
-          //   userName: author,
-          //   userImagePath: "",
-          //   postedAt: postedAt,
-          // });
 
           return {
             id: post.id,
             title: post.title,
-            textLine: post.content,
+            content: post.content,
             image_path: post.image_path,
-            category: category,
-            userName: author,
-            userImagePath: "",
-            postedAt: postedAt,
+            category_id: post.category_id,
+            user_id: post.user_id,
+            created_at: postedAt,
+            updated_at: post.updated_at,
+            users: { name: author },
+            categories: { name: category },
           };
         });
         // console.log("Formatted Data:", formattedData);
-        setAllPosts(formattedData);
-        setFilteredPosts(formattedData);
+        setAllPosts(formattedData || []);
+        setFilteredPosts(formattedData || []);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error fetching posts:", error);
@@ -88,24 +89,24 @@ export default function PostHome() {
   }, []);
 
   // 検索窓の状態に応じて表示対象となる全ブログ取得
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredPosts(
       !searchTerm?.trim()
-      ? allPosts
-      : allPosts.filter(
-        (post) =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.textLine.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.userName.toLowerCase().includes(searchTerm.toLowerCase()),
-    ));
+        ? allPosts
+        : allPosts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.users.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+        ));
     setCurrentPage(1)
-  }, [ searchTerm ])
+  }, [searchTerm])
 
- 
+
   // １ページ当たりの表示データ（９つ）取得。
-  useEffect(()=>{
-    setDisplayPosts(filteredPosts.slice((currentPage-1)*9,currentPage*9));
-  },[ currentPage , filteredPosts])
+  useEffect(() => {
+    setDisplayPosts(filteredPosts.slice((currentPage - 1) * 9, currentPage * 9));
+  }, [currentPage, filteredPosts])
 
   const TextLength = 100;
 
@@ -125,28 +126,28 @@ export default function PostHome() {
       <main className="blog-list">
         {displayPosts.map((blog) => (
           // ブログ記事クリック時に該当ページに遷移
-          <Link key={blog.id} href={`/posts/${blog.id}`} passHref>
+          <Link key={blog.id} href={`/posts/${blog.id}`}>
             <article className="blog-card">
-              <img src={blog.image_path} alt={blog.title} className="blog-image" />
+              <img src={blog.image_path ?? ""} alt={blog.title} className="blog-image" />
 
               <div className="blog-header">
                 <h2 className="blog-title">{blog.title}</h2>
-                <span className="blog-category">{blog.category}</span>
+                <span className="blog-category">{blog.categories.name}</span>
               </div>
 
               <div className="blog-meta">
-                <p className="blog-author">{blog.userName}</p>
-                <p className="blog-posted-at">{blog.postedAt}</p>
+                <p className="blog-author">{blog.users.name}</p>
+                <p className="blog-posted-at">{blog.created_at}</p>
               </div>
 
               <p className="blog-content">
-                {blog.textLine.length > TextLength ? `${blog.textLine.slice(0, TextLength)}...` : blog.textLine}
+                {blog.content.length > TextLength ? `${blog.content.slice(0, TextLength)}...` : blog.content}
               </p>
             </article>
           </Link>
         ))}
       </main>
-      <Pagination postNumber={filteredPosts.length} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+      <Pagination postNumber={filteredPosts.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
     </>
   );

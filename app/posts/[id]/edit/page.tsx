@@ -22,11 +22,12 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState(6);
   const [image, setImage] = useState<File | null>(null);
-  const [imagePath, setImagePath] = useState("");
+  const [imagePath, setImagePath] = useState<string | null>("");
 
   // 投稿データの取得
   useEffect(() => {
     const fetchPost = async () => {
+
       const { data, error } = await supabase
         .from("posts")
         .select("title, content, category_id, image_path")
@@ -40,71 +41,103 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
       setTitle(data.title);
       setContent(data.content);
       setCategory(data.category_id);
-      setImagePath(data.image_path || "");
+      setImagePath(data.image_path);
     };
-
     fetchPost();
   }, [id]);
 
-  const handleImageUpload = async (file: File): Promise<string> => {
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${id}.${fileExt}`;
-    const filePath = `${fileName}`;
-
-    const { error } = await supabase.storage.from("blog-images").upload(filePath, file, { upsert: true });
-
-    if (error) {
-      throw error;
-    }
-
-    const { data } = supabase.storage.from("blog-images").getPublicUrl(filePath);
-
-    if (!data) {
-      throw new Error("Failed to retrieve public URL");
-    }
-
-    return data.publicUrl;
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("更新ボタンが押されました");
 
     try {
+      const formData = new FormData(e.currentTarget);
+      const newTitle = formData.get('title') as string;
+      const newContent = formData.get('content') as string;
+
+      const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement
+      const newImage = fileInput.files?.[0];
+      // const newImage = image;
+      // const newImage = formData.get('image') as File | null;
+
+
+      let response;
+      console.log("formData", formData.get("image"))
       let updatedImagePath = imagePath;
 
-      if (image) {
-        // 画像をアップロードし、公開 URL を取得
-        updatedImagePath = await handleImageUpload(image);
+      if (newImage && newImage.size > 0) {
+        console.log("file case")
+        formData.append('id', id);
+        formData.append('user_id', "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6");
+        formData.append("category_id", category.toString());
+        formData.append("updated_at", new Date().toISOString());
+        formData.append("image", newImage);
+
+        const response = await fetch("/api/posts/[id]", {
+          method: "PUT",
+          body: formData,
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
+      } else {
+
+        console.log("not file case")
+        setTitle(formData.get('title') as string);
+        setContent(formData.get('content') as string);
+
+        const response = await fetch(`/api/posts/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id,
+            title: newTitle,
+            content: newContent,
+            image_path: updatedImagePath,
+            user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
+            category_id: category,
+            updated_at: new Date().toISOString()
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: "不明なエラー" }));
+          throw new Error(errorData.error);
+        }
       }
-
-      const updates = {
-        title,
-        content,
-        category_id: category,
-        image_path: updatedImagePath,
-        updated_at: new Date(),
-      };
-
-      const { error } = await supabase.from("posts").update(updates).eq("id", id);
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      // 成功時の処理
       router.push(`/posts/${id}`);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
     }
+
+
+
+    // if (image) {
+    //   // 画像をアップロードし、公開 URL を取得
+    //   updatedImagePath = await handleImageUpload(image);
+    // }
+
+
+    // 成功時の処理
+
+    // } catch (error) {
+    //   // eslint-disable-next-line no-console
+    //   console.log(error);
+    // }
+
   };
 
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <CreateTitle title={title} setTitle={setTitle} />
-        <CreateImage onFileSelect={(file) => setImage(file)} />
-        {imagePath && <img src={imagePath} alt="Post Image" className={styles.imagePreview} />}
+        <CreateImage onFileSelect={(file) => setImage(file)} presetImage={imagePath} />
         <CreateContent content={content} setContent={setContent} />
         <button type="submit">更新</button>
       </form>

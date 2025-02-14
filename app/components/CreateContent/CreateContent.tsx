@@ -42,11 +42,6 @@ const CreateContent: React.FC<CreateContentProps> = ({ content, setContent }) =>
         onChange={handleInputContent}
       />
 
-      <div className={styles.buttonContainer}>
-        <button className={styles.button} type="submit">
-          create blog
-        </button>
-      </div>
     </div>
   );
 };

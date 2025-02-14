@@ -34,15 +34,3 @@
   max-height: 450px;
 }
 
-.buttonContainer {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.button {
-  width: 100px;
-  min-height: 30px;
-  justify-content: flex-end;
-  margin-right: 20px;
-}

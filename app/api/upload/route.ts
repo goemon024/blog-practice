@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         title,
         content,
         image_path: fileUrl,
-        user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
+        user_id: "c6de3bba-4c2a-4202-9ab0-535f3697c87b",
         category_id: category,
       },
     ]);
