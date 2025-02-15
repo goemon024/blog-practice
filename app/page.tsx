@@ -10,7 +10,6 @@ export default function Home() {
       <BlogHome />
       {/* <Pagination postNumber={137} />; */}
       {/* postNumberに任意の数字が入力されるようにする */}
-
     </div>
   );
 }

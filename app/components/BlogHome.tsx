@@ -17,7 +17,6 @@ import Pagination from "./Pagination/Pagination";
 //   postedAt: string | null;
 // }
 
-
 // export interface Post {
 //   id: string;
 //   title: string;
@@ -30,30 +29,29 @@ import Pagination from "./Pagination/Pagination";
 // }
 
 type PostCustom = Post & {
-  users: { name: string | null; }
-  categories: { name: string | null; }
-}
+  users: { name: string | null };
+  categories: { name: string | null };
+};
 
 export default function PostHome() {
+  const [allPosts, setAllPosts] = useState<PostCustom[]>([]); // ブログ総数
+  const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]); // 検索窓を反映して表示対象となる全ブログ
+  const [displayPosts, setDisplayPosts] = useState<PostCustom[]>([]); // homeで表示される9つのブログ
+  const [searchTerm, setSearchTerm] = useState<string>(""); // 検索ワード
 
-  const [allPosts, setAllPosts] = useState<PostCustom[]>([]);  // ブログ総数
-  const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]);  // 検索窓を反映して表示対象となる全ブログ
-  const [displayPosts, setDisplayPosts] = useState<PostCustom[]>([]);  // homeで表示される9つのブログ
-  const [searchTerm, setSearchTerm] = useState<string>("");   // 検索ワード 
-
-  const [currentPage, setCurrentPage] = useState<number>(1);  // page番号。pagenationにpropsとして渡す。
+  const [currentPage, setCurrentPage] = useState<number>(1); // page番号。pagenationにpropsとして渡す。
 
   // 初期レンダリング時の総ブログデータ取得
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const { data, error }: {
+        const {
+          data,
+          error,
+        }: {
           data: PostCustom[] | null;
           error: any;
-        } = await supabase
-          .from("posts")
-          .select("*")
-          .order("created_at", { ascending: false }) // 最新順にソート
+        } = await supabase.from("posts").select("*").order("created_at", { ascending: false }); // 最新順にソート
 
         if (error) throw new Error(error.message);
 
@@ -98,15 +96,15 @@ export default function PostHome() {
             post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.users.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-        ));
-    setCurrentPage(1)
-  }, [searchTerm])
-
+        ),
+    );
+    setCurrentPage(1);
+  }, [searchTerm, allPosts]);
 
   // １ページ当たりの表示データ（９つ）取得。
   useEffect(() => {
     setDisplayPosts(filteredPosts.slice((currentPage - 1) * 9, currentPage * 9));
-  }, [currentPage, filteredPosts])
+  }, [currentPage, filteredPosts]);
 
   const TextLength = 100;
 
@@ -148,7 +146,6 @@ export default function PostHome() {
         ))}
       </main>
       <Pagination postNumber={filteredPosts.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-
     </>
   );
 }

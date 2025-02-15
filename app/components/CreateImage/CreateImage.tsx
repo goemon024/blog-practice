@@ -8,7 +8,6 @@ type CreateImageProps = {
 };
 
 const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect, presetImage }) => {
-
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(presetImage);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理

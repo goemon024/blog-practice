@@ -52,43 +52,47 @@ type CommentCustom = Omit<Comment, "post_id" | "created_at"> & {
 const comments: CommentCustom[] = [
   {
     id: 1,
-    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
-    user_id: "user2_id",                      // 追加
-    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
-    users: {                                  // ユーザー情報をネスト
+    content: "Lorem ipsum dolor sit amet...", // textをcontentに
+    user_id: "user2_id", // 追加
+    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
+    users: {
+      // ユーザー情報をネスト
       name: "user2",
-      image_path: "/default_icon.jpg"
-    }
+      image_path: "/default_icon.jpg",
+    },
   },
   {
     id: 2,
-    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
-    user_id: "user2_id",                      // 追加
-    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
-    users: {                                  // ユーザー情報をネスト
+    content: "Lorem ipsum dolor sit amet...", // textをcontentに
+    user_id: "user2_id", // 追加
+    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
+    users: {
+      // ユーザー情報をネスト
       name: "user2",
-      image_path: "/default_icon.jpg"
-    }
+      image_path: "/default_icon.jpg",
+    },
   },
   {
     id: 3,
-    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
-    user_id: "user2_id",                      // 追加
-    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
-    users: {                                  // ユーザー情報をネスト
+    content: "Lorem ipsum dolor sit amet...", // textをcontentに
+    user_id: "user2_id", // 追加
+    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
+    users: {
+      // ユーザー情報をネスト
       name: "user2",
-      image_path: "/default_icon.jpg"
-    }
+      image_path: "/default_icon.jpg",
+    },
   },
   {
     id: 4,
-    content: "Lorem ipsum dolor sit amet...",  // textをcontentに
-    user_id: "user2_id",                      // 追加
-    updated_at: new Date().toISOString(),     // updatedTimeをupdated_atに
-    users: {                                  // ユーザー情報をネスト
+    content: "Lorem ipsum dolor sit amet...", // textをcontentに
+    user_id: "user2_id", // 追加
+    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
+    users: {
+      // ユーザー情報をネスト
       name: "user2",
-      image_path: "/default_icon.jpg"
-    }
+      image_path: "/default_icon.jpg",
+    },
   },
 ];
 // ダミーデータ終了
@@ -102,24 +106,20 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("id", params.id)
-        .single();
+      const { data, error } = await supabase.from("posts").select("*").eq("id", params.id).single();
 
       if (error) {
         return;
       }
       if (data) {
         setPost(data);
-        const { data: thumbnails, error } = await supabase
+        const { data: thumbnails } = await supabase
           .from("posts")
           .select("*")
           .neq("id", params.id)
-          .order('created_at', { ascending: false })
+          .order("created_at", { ascending: false })
           .limit(3);
-        setThumbnailPosts(thumbnails || [])
+        setThumbnailPosts(thumbnails || []);
       }
     };
     fetchPost();
@@ -135,7 +135,7 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
   // const comments = getComments(params.id)
 
   const [commentText, setCommentText] = useState("");
-  const [commentList, setCommentList] = useState<CommentCustom[]>(comments);
+  const [commentList] = useState<CommentCustom[]>(comments);
 
   const handleCommentSubmit = () => {
     //本来はAPIでデータ追加。

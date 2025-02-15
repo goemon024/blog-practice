@@ -11,7 +11,7 @@ import CreateCategory from "@components/CreateCategory/CreateCategory";
 const PostCreatePage = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [category, setCategory] = useState<number>(6);
+  const [category, setCategory] = useState<number>(3);
   const [image, setImage] = useState<File | null>(null);
 
   // const router = useRouter();

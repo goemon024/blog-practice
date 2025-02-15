@@ -41,7 +41,6 @@ const CreateContent: React.FC<CreateContentProps> = ({ content, setContent }) =>
         placeholder="記事の内容を入力してください"
         onChange={handleInputContent}
       />
-
     </div>
   );
 };

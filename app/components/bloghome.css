@@ -70,7 +70,7 @@
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   width: 20rem;
-  height:22.5rem;
+  height: 22.5rem;
 }
 
 .blog-card:hover {

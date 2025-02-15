@@ -21,13 +21,12 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState(6);
-  const [image, setImage] = useState<File | null>(null);
+  const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
 
   // 投稿データの取得
   useEffect(() => {
     const fetchPost = async () => {
-
       const { data, error } = await supabase
         .from("posts")
         .select("title, content, category_id, image_path")
@@ -46,30 +45,32 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
     fetchPost();
   }, [id]);
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // eslint-disable-next-line no-console
     console.log("更新ボタンが押されました");
 
     try {
       const formData = new FormData(e.currentTarget);
-      const newTitle = formData.get('title') as string;
-      const newContent = formData.get('content') as string;
+      const newTitle = formData.get("title") as string;
+      const newContent = formData.get("content") as string;
 
-      const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement
+      const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement;
       const newImage = fileInput.files?.[0];
       // const newImage = image;
       // const newImage = formData.get('image') as File | null;
 
+      // let response;
+      // eslint-disable-next-line no-console
+      console.log("formData", formData.get("image"));
 
-      let response;
-      console.log("formData", formData.get("image"))
-      let updatedImagePath = imagePath;
+      const updatedImagePath = imagePath;
 
       if (newImage && newImage.size > 0) {
-        console.log("file case")
-        formData.append('id', id);
-        formData.append('user_id', "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6");
+        // eslint-disable-next-line no-console
+        console.log("file case");
+        formData.append("id", id);
+        formData.append("user_id", "c6de3bba-4c2a-4202-9ab0-535f3697c87b");
         formData.append("category_id", category.toString());
         formData.append("updated_at", new Date().toISOString());
         formData.append("image", newImage);
@@ -82,17 +83,16 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
         if (!response.ok) {
           throw new Error(data.error || "Something went wrong");
         }
-
       } else {
-
-        console.log("not file case")
-        setTitle(formData.get('title') as string);
-        setContent(formData.get('content') as string);
+        // eslint-disable-next-line no-console
+        console.log("not file case");
+        setTitle(formData.get("title") as string);
+        setContent(formData.get("content") as string);
 
         const response = await fetch(`/api/posts/${id}`, {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             id,
@@ -101,8 +101,8 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
             image_path: updatedImagePath,
             user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
             category_id: category,
-            updated_at: new Date().toISOString()
-          })
+            updated_at: new Date().toISOString(),
+          }),
         });
 
         if (!response.ok) {
@@ -116,13 +116,10 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
       console.log(error);
     }
 
-
-
     // if (image) {
     //   // 画像をアップロードし、公開 URL を取得
     //   updatedImagePath = await handleImageUpload(image);
     // }
-
 
     // 成功時の処理
 
@@ -130,7 +127,6 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
     //   // eslint-disable-next-line no-console
     //   console.log(error);
     // }
-
   };
 
   return (
