@@ -14,6 +14,29 @@ interface UpdatePostRequest {
   image?: File | null;
 }
 
+// DELETEメソッドのハンドラ
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  try {
+    const id = params.id;
+    //  await req.json(); // リクエストボディからIDを取得
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    const { error } = await supabase.from("posts").delete().eq("id", id);
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json({ message: `Post with ID ${id} deleted successfully` });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+
+
+
 // PUTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
   try {
