@@ -4,53 +4,43 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
-import { signIn } from "../auth";
-import { useRouter } from "next/navigation";
+export default function SignInPage() {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
 
-export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
+      })
 
-  // メールアドレスの入力を確認する
-  const inputEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    // メールアドレスの形式を確認する
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (value === "") {
-      setEmailError("メールアドレスを入力してください");
-    } else if (!emailRegex.test(value)) {
-      setEmailError("正しいメールアドレスを入力してください");
-    } else {
-      setEmailError("");
+      if (result?.error) {
+        setError('ログインに失敗しました')
+        return
+      }
+      console.log('Sign in result:', result)
+
+      router.push('/')
+      router.refresh()
+    } catch (error) {
+      setError('エラーが発生しました')
     }
-  };
 
-  // パスワードの入力確認
-  const inputPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-
-    // パスワードの入力形式確認
-    if (value === "") {
-      setPasswordError("パスワードを入力してください");
-    } else if (value.length < 8) {
-      setPasswordError("パスワードは8文字以上で入力してください");
-    } else {
-      setPasswordError("");
-    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="メールアドレス"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="ユーザー名"
           required
         />
       </div>
@@ -68,6 +58,7 @@ export default function SignIn() {
     </form>
   )
 }
+
 
 // import React, { useState } from "react";
 // import Link from "next/link";

@@ -1,54 +1,76 @@
-import NextAuth from "next-auth"
-import type { NextAuthConfig } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
+
+import CredentialsProvider from "next-auth/providers/credentials"
 import { supabase } from "../lib/util/supabase"
 
 
 
 export const authConfig = {
     providers: [
-        Credentials({
+        CredentialsProvider({
+            name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email" },
+                username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) return null
+            async authorize(credentials, req) {
+                console.log("認証開始:", credentials?.password)
+                if (!credentials?.username || !credentials?.password) {
+                    console.log("ユーザー名またはパスワードが不足しています")
+                    throw new Error("ユーザー名またはパスワードが不足しています")
+                }
+
+                // ユーザーを検索
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('id,email,username')
+                    .eq('username', credentials.username)
+                    .single()
+
+                // .eq('username', credentials.username)
+                // .single()
+
+                console.log(userData)
+
+                if (userError || !userData) {
+                    console.log("ユーザーが見つかりません")
+                    throw new Error("ユーザーが見つかりません")
+                }
 
                 const { data: { user }, error } = await supabase.auth.signInWithPassword({
-                    email: credentials.email as string,
-                    password: credentials.password as string,
+                    email: userData.email,
+                    password: credentials.password
                 })
 
-                if (error || !user) return null
-
                 return {
-                    id: user.id,
-                    email: user.email,
-                    name: user.user_metadata.name,
+                    id: userData.id,
+                    username: userData.username,
                 }
             }
         })
-
-    ], // 認証プロバイダーを設定
-    pages: {
-        signIn: '/signin',  // カスタムログインページ
+    ],
+    session: {
+        strategy: "jwt",
     },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id
+                token.username = user.username
             }
             return token
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string
+                session.user.username = token.username as string
             }
             return session
         }
     },
+    pages: {
+        signIn: '/signin',
+    },
     secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthConfig
 
-export const { auth, signIn, signOut } = NextAuth(authConfig)
+

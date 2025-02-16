@@ -6,20 +6,32 @@ import EditIcon from "@mui/icons-material/Edit";
 import UserIconButton from "../UserIconButton/UserIconButton";
 import { User } from "lib/types";
 
+import { useSession, signOut } from "next-auth/react";
+
 // ダミーデータ
-const user: User = {
-  id: "0",
-  name: "テスト太郎",
-  email: "testtarou@gmail.com",
-  image_path: "/testtarou.jpg",
-  created_at: "2021-01-01",
-  updated_at: "2021-01-01",
-};
+// const user: User = {
+//   id: "0",
+//   name: "テスト太郎",
+//   email: "testtarou@gmail.com",
+//   image_path: "/testtarou.jpg",
+//   created_at: "2021-01-01",
+//   updated_at: "2021-01-01",
+// };
 //ダミーデータ終了
 
 export const Header = () => {
   // 本来はSessionか何かから、User情報の取得を行う。
-  const [signedInUser, setSignedInUser] = useState<User | null>(user);
+  const [signedInUser, setSignedInUser] = useState<User | null>(null);
+  const { data: session, status } = useSession();
+
+
+  useEffect(() => {
+    console.log('Session status:', status);
+    console.log('Session data:', session);
+  }, [session, status]);
+
+
+
 
   // モーダルの開閉状態を管理
   const [isOpen, setIsOpen] = useState(false);
@@ -54,26 +66,30 @@ export const Header = () => {
           <Link href="/" passHref>
             <button className={`${styles.navButton} ${styles.primary}`}>Home</button>
           </Link>
+
           <Link href="/post/create" passHref>
             <button className={`${styles.navButton} ${styles.primary}`}>
               <EditIcon sx={{ fontSize: 10, marginRight: 1 }}></EditIcon>
               Create
             </button>
           </Link>
-          {!signedInUser && (
+
+          {!session && (
             <Link href="/signin" passHref>
               <button className={styles.navButton}>Sign In</button>
             </Link>
           )}
-          {signedInUser && (
+
+          {session && (
             <div className={styles.userSection}>
-              <UserIconButton imagePath={user.image_path ?? ""} onClick={() => setIsOpen(!isOpen)} />
+              <UserIconButton imagePath={session.user?.image ?? "https://juceetuimzeniwkjzsdt.supabase.co/storage/v1/object/public/blog-images/1739551189067-img_paple_01.jpg"
+              } onClick={() => setIsOpen(!isOpen)} />
               {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>
-                  <p className={styles.modalUserName}>{signedInUser?.name}</p>
+                  <p className={styles.modalUserName}>{session?.user?.name}</p>
                   <button
                     // 本来はSignedOutApi呼び出しなどを行う。
-                    onClick={() => setSignedInUser(null)}
+                    onClick={() => signOut()}
                     className={styles.modalLogoutButton}
                   >
                     Logout
