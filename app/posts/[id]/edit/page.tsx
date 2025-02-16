@@ -99,7 +99,8 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
             title: newTitle,
             content: newContent,
             image_path: updatedImagePath,
-            user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
+            // user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
+            user_id: "c6de3bba-4c2a-4202-9ab0-535f3697c87b",
             category_id: category,
             updated_at: new Date().toISOString(),
           }),
@@ -129,13 +130,27 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
     // }
   };
 
+  const handleDelete = async () => {
+    // 削除の実装
+    const response = await fetch(`/api/posts/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete post");
+    }
+    router.push("/");
+  };
+
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <CreateTitle title={title} setTitle={setTitle} />
         <CreateImage onFileSelect={(file) => setImage(file)} presetImage={imagePath} />
         <CreateContent content={content} setContent={setContent} />
-        <button type="submit">更新</button>
+        <div className={styles.buttonContainer}>
+          <button type="submit" className={styles.buttonPrimary}>更新</button>
+          <button type="button" onClick={handleDelete} className={styles.buttonDelete}>削除</button>
+        </div>
       </form>
     </div>
   );
