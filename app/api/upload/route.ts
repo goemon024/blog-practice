@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
+import { getToken } from "next-auth/jwt";
 
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
   try {
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const category = formData.get("category") as string;
+    const userId = token.sub as string;
 
     if (typeof parseInt(category, 10) !== "number") {
       throw new Error("カテゴリーが無効です");
@@ -37,7 +44,7 @@ export async function POST(req: NextRequest) {
         title,
         content,
         image_path: fileUrl,
-        user_id: "c6de3bba-4c2a-4202-9ab0-535f3697c87b",
+        user_id: userId,
         category_id: category,
       },
     ]);

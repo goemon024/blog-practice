@@ -22,7 +22,7 @@ export const authConfig = {
                 // ユーザーを検索
                 const { data: userData, error: userError } = await supabase
                     .from('users')
-                    .select('id,email,username')
+                    .select('id,email,username,image_path')
                     .eq('username', credentials.username)
                     .single()
 
@@ -44,6 +44,7 @@ export const authConfig = {
                 return {
                     id: userData.id,
                     username: userData.username,
+                    image: userData.image_path
                 }
             }
         })
@@ -56,6 +57,7 @@ export const authConfig = {
             if (user) {
                 token.id = user.id
                 token.username = user.username
+                token.image = user.image
             }
             return token
         },
@@ -63,6 +65,7 @@ export const authConfig = {
             if (session.user) {
                 session.user.id = token.id as string
                 session.user.username = token.username as string
+                session.user.image = token.image as string
             }
             return session
         }

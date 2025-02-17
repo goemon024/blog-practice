@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     // 🔹 認証が不要なページ
-    const publicPaths = ["/", "/auth/signin", "/auth/signup"];
+    const publicPaths = ["/", "/signin", "/signup"];
 
     if (publicPaths.includes(req.nextUrl.pathname)) {
         return NextResponse.next(); // そのままアクセスを許可
@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
 
     // 🔹 認証が必要なページにアクセスした場合
     if (!token) {
-        return NextResponse.redirect(new URL("/auth/signin", req.url));
+        return NextResponse.redirect(new URL("/signin", req.url));
     }
 
     return NextResponse.next(); // 認証済みならアクセス許可
@@ -30,5 +30,5 @@ export async function middleware(req: NextRequest) {
 
 // 🔹 Middleware を適用するパスを設定
 export const config = {
-    matcher: ["/dashboard/:path*", "/profile/:path*"], // 例: "/dashboard" や "/profile" 以下は認証が必要
+    matcher: ["/dashboard/:path*", "/profile/:path*", "/posts/:id/edit/:path*"], // 例: "/dashboard" や "/profile" 以下は認証が必要
 };

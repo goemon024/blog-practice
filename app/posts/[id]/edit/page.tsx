@@ -8,6 +8,8 @@ import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
 import { supabase } from "lib/util/supabase";
 
+import { Modal } from '@mui/material'
+
 interface PostEditPageProps {
   params: {
     id: string;
@@ -20,16 +22,20 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
   const [category, setCategory] = useState(6);
   const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
+
+  const [error, setError] = useState('');
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   // 投稿データの取得
   useEffect(() => {
     const fetchPost = async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("title, content, category_id, image_path")
+        .select("title, content, category_id, image_path, user_id")
         .eq("id", id)
         .single();
 
@@ -39,6 +45,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
       setTitle(data.title);
       setContent(data.content);
+      setUserId(data.user_id);
       setCategory(data.category_id);
       setImagePath(data.image_path);
     };
@@ -66,79 +73,93 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
       const updatedImagePath = imagePath;
 
-      if (newImage && newImage.size > 0) {
-        // eslint-disable-next-line no-console
-        console.log("file case");
-        formData.append("id", id);
-        formData.append("user_id", "c6de3bba-4c2a-4202-9ab0-535f3697c87b");
-        formData.append("category_id", category.toString());
-        formData.append("updated_at", new Date().toISOString());
-        formData.append("image", newImage);
+      const updatePost = async () => {
+        if (newImage && newImage.size > 0) {
+          // eslint-disable-next-line no-console
+          console.log("file case");
+          formData.append("id", id);
+          formData.append("user_id", userId);
+          formData.append("category_id", category.toString());
+          formData.append("updated_at", new Date().toISOString());
+          formData.append("image", newImage);
 
-        const response = await fetch("/api/posts/[id]", {
-          method: "PUT",
-          body: formData,
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error || "Something went wrong");
+          return await fetch("/api/posts/[id]", {
+            method: "PUT",
+            body: formData,
+          });
+
+          // const data = await response.json();
+          // if (!response.ok) {
+          //   throw new Error(data.error || "Something went wrong");
+          // }
+        } else {
+          // eslint-disable-next-line no-console
+          console.log("not file case");
+          setTitle(formData.get("title") as string);
+          setContent(formData.get("content") as string);
+
+          return await fetch(`/api/posts/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id,
+              title: newTitle,
+              content: newContent,
+              image_path: updatedImagePath,
+              user_id: userId,
+              category_id: category,
+              updated_at: new Date().toISOString(),
+            }),
+          });
+
+          // if (!response.ok) {
+          //   const errorData = await response.json().catch(() => ({ error: "不明なエラー" }));
+          //   throw new Error(errorData.error);
+          // }
         }
-      } else {
-        // eslint-disable-next-line no-console
-        console.log("not file case");
-        setTitle(formData.get("title") as string);
-        setContent(formData.get("content") as string);
+      }
 
-        const response = await fetch(`/api/posts/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id,
-            title: newTitle,
-            content: newContent,
-            image_path: updatedImagePath,
-            // user_id: "e7f11c61-19e0-46b8-8cf4-e464a7ddb2c6",
-            user_id: "c6de3bba-4c2a-4202-9ab0-535f3697c87b",
-            category_id: category,
-            updated_at: new Date().toISOString(),
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: "不明なエラー" }));
-          throw new Error(errorData.error);
+      const response = await updatePost();
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 403) {
+          setError('この投稿の更新権限がありません');
+        } else if (response.status === 401) {
+          setError('認証が必要です');
+        } else {
+          setError(data.error || '更新中にエラーが発生しました');
         }
+        setIsErrorModalOpen(true);
+        return;
       }
       router.push(`/posts/${id}`);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
+      setError('予期せぬエラーが発生しました');
+      setIsErrorModalOpen(true);
     }
-
-    // if (image) {
-    //   // 画像をアップロードし、公開 URL を取得
-    //   updatedImagePath = await handleImageUpload(image);
-    // }
-
-    // 成功時の処理
-
-    // } catch (error) {
-    //   // eslint-disable-next-line no-console
-    //   console.log(error);
-    // }
   };
 
   const handleDelete = async () => {
     // 削除の実装
-    const response = await fetch(`/api/posts/${id}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Failed to delete post");
+    try {
+      const response = await fetch(`/api/posts/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        if (response.status === 403) {
+          setError("この操作を実行する権限がありません");
+          setIsErrorModalOpen(true);
+          return
+        }
+      }
+    } catch (error) {
+      setError("投稿の削除に失敗しました");
+      setIsErrorModalOpen(true);
     }
-    router.push("/");
   };
 
   return (
@@ -152,6 +173,24 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           <button type="button" onClick={handleDelete} className={styles.buttonDelete}>削除</button>
         </div>
       </form>
+
+      <Modal
+        open={isErrorModalOpen}
+        onClose={() => {
+          setIsErrorModalOpen(false)
+          router.push("/")
+        }}
+      >
+        <div className={styles.errorModal}>
+          <h3>エラー</h3>
+          <p>{error}</p>
+          <button onClick={() => {
+            setIsErrorModalOpen(false)
+            router.push("/")
+          }}>閉じる</button>
+        </div>
+      </Modal>
+
     </div>
   );
 };

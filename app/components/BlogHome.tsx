@@ -29,7 +29,7 @@ import Pagination from "./Pagination/Pagination";
 // }
 
 type PostCustom = Post & {
-  users: { name: string | null };
+  users: { username: string | null };
   categories: { name: string | null };
 };
 
@@ -51,7 +51,10 @@ export default function PostHome() {
         }: {
           data: PostCustom[] | null;
           error: any;
-        } = await supabase.from("posts").select("*").order("created_at", { ascending: false }); // 最新順にソート
+        } = await supabase
+          .from("posts")
+          .select("*,categories(*),users(*)")
+          .order("created_at", { ascending: false }); // 最新順にソート
 
         if (error) throw new Error(error.message);
 
@@ -59,7 +62,7 @@ export default function PostHome() {
 
         const formattedData = data?.map((post): PostCustom => {
           const category = post.categories?.name || "未分類";
-          const author = post.users?.name || "匿名";
+          const author = post.users?.username || "匿名";
           const postedAt = post.created_at && new Date(post.created_at).toLocaleString();
 
           return {
@@ -71,7 +74,7 @@ export default function PostHome() {
             user_id: post.user_id,
             created_at: postedAt,
             updated_at: post.updated_at,
-            users: { name: author },
+            users: { username: author },
             categories: { name: category },
           };
         });
@@ -95,7 +98,7 @@ export default function PostHome() {
           (post) =>
             post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.users.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+            post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
         ),
     );
     setCurrentPage(1);
@@ -134,7 +137,7 @@ export default function PostHome() {
               </div>
 
               <div className="blog-meta">
-                <p className="blog-author">{blog.users.name}</p>
+                <p className="blog-author">{blog.users.username}</p>
                 <p className="blog-posted-at">{blog.created_at}</p>
               </div>
 

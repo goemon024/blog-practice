@@ -67,23 +67,29 @@ export const Header = () => {
             <button className={`${styles.navButton} ${styles.primary}`}>Home</button>
           </Link>
 
-          <Link href="/post/create" passHref>
-            <button className={`${styles.navButton} ${styles.primary}`}>
-              <EditIcon sx={{ fontSize: 10, marginRight: 1 }}></EditIcon>
-              Create
-            </button>
-          </Link>
+          {session && (
+            <Link href="/post/create" passHref>
+              <button className={`${styles.navButton} ${styles.primary}`}>
+                <EditIcon sx={{ fontSize: 10, marginRight: 1 }}></EditIcon>
+                Create
+              </button>
+            </Link>
+          )}
 
           {!session && (
-            <Link href="/signin" passHref>
-              <button className={styles.navButton}>Sign In</button>
-            </Link>
+            <div className={styles.navButtonSection}>
+              <Link href="/signup" passHref>
+                <button className={styles.navButton}>Sign Up</button>
+              </Link>
+              <Link href="/signin" passHref>
+                <button className={styles.navButton}>Sign In</button>
+              </Link>
+            </div>
           )}
 
           {session && (
             <div className={styles.userSection}>
-              <UserIconButton imagePath={session.user?.image ?? "https://juceetuimzeniwkjzsdt.supabase.co/storage/v1/object/public/blog-images/1739551189067-img_paple_01.jpg"
-              } onClick={() => setIsOpen(!isOpen)} />
+              <UserIconButton imagePath={session.user?.image ?? ""} onClick={() => setIsOpen(!isOpen)} />
               {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>
                   <p className={styles.modalUserName}>{session?.user?.name}</p>

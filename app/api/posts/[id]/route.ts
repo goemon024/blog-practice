@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
+import { getToken } from "next-auth/jwt";
 
 // import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 // import { cookies } from 'next/headers';
@@ -15,19 +16,38 @@ interface UpdatePostRequest {
 }
 
 // DELETEメソッドのハンドラ
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // トークン認証の追加
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
     const id = params.id;
-    //  await req.json(); // リクエストボディからIDを取得
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    // 投稿の所有者確認を追加
+    const { data: post } = await supabase
+      .from("posts")
+      .select("user_id")
+      .eq("id", id)
+      .single();
+
+    if (!post) {
+      return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
+    }
+
+    if (post.user_id !== token.sub) {
+      return NextResponse.json({ error: "投稿の所有者ではありません" }, { status: 403 });
     }
 
     const { error } = await supabase.from("posts").delete().eq("id", id);
     if (error) {
       throw error;
     }
-
     return NextResponse.json({ message: `Post with ID ${id} deleted successfully` });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -40,6 +60,11 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 // PUTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
   try {
+    const token = await getToken({ req });
+    if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
     let updateData: UpdatePostRequest;
 
     const contentType = req.headers.get("content-type");
@@ -93,6 +118,13 @@ export async function PUT(req: NextRequest) {
         image_path: jsonData.image_path,
       };
     }
+
+    if (updateData.user_id !== token.sub) {
+      return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
+    }
+
+
+
 
     const { data, error } = await supabase
       .from("posts")

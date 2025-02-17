@@ -7,42 +7,8 @@ import BlogMain from "@components/BlogMain/BlogMain";
 import Thumbnail from "@components/Thumbnail/Thumbnail";
 import CommentCard from "@components/CommentCard/CommentCard";
 import { supabase } from "lib/util/supabase";
-// ダミーデータ
 
-// interface Post {
-//   id: string;
-//   title: string;
-//   content: string;
-//   image_path?: string | null;
-//   category_id: number;
-//   user_id: string;
-//   created_at: string;
-//   updated_at?: string;
-// }
-
-// const mainPost: Post = {
-//   id: 0,
-//   title: "初投稿",
-//   image_path: "/main_blog.jpg",
-//   textLine: "はじめましてジャミーです。これからブログの記事を作成したいと思います。",
-//   user_id: "zameemallik",
-//   // userImagePath: "/default_icon.jpg",
-//   category_id: "",
-//   created_at: "",
-//   updated_at: "",
-//   // categories: [],
-//   // users: [],
-// };
-
-// const thumbnailPosts: ThumbnailPost[] = [
-//   {
-//     id: 1,
-//     title: "あいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこあいうえおかきくけこ",
-//     imagePath: "/muffler.jpg",
-//   },
-//   { id: 2, title: "Post Title", imagePath: "/muffler.jpg" },
-//   { id: 3, title: "Post Title", imagePath: "/muffler.jpg" },
-// ];
+import { useSession } from "next-auth/react";
 
 type CommentCustom = Omit<Comment, "post_id" | "created_at"> & {
   users: { name: string; image_path: string };
@@ -100,6 +66,9 @@ const comments: CommentCustom[] = [
 const BlogPage = ({ params }: { params: { id: string } }) => {
   // npm run lint実行時の”Error: 'params' is defined but never used.”エラー回避用に一時的にparamsをconsoleで出力する。
   // eslint-disable-next-line no-console
+
+  const { data: session } = useSession();
+
 
   const [post, setPost] = useState<Post | null>(null);
   const [thumbnailPosts, setThumbnailPosts] = useState<Post[]>([]);
@@ -178,7 +147,8 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
             onChange={(e) => setCommentText(e.target.value)}
             maxLength={1000}
           />
-          <button className={styles.commentButton} onClick={handleCommentSubmit}>
+          <button className={session ? styles.commentButton : styles.commentButtonDisabled}
+            onClick={handleCommentSubmit} disabled={!session}>
             Comment
           </button>
         </div>
