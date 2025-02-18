@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import styles from "./signIn.module.css"
 
 export default function SignInPage() {
   const [username, setUsername] = useState('')
@@ -34,28 +35,35 @@ export default function SignInPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="ユーザー名"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="パスワード"
-          required
-        />
-      </div>
-      {error && <p className="text-red-500">{error}</p>}
-      <button type="submit">ログイン</button>
-    </form>
+    <div className={styles.signinContainer}>
+      <h1 className={styles.signinHeader}>sign in</h1>
+      <form className={styles.signinForm} onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <p className={styles.formLabel}>ユーザー名</p>
+          <input
+            className={styles.formInput}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="ユーザー名"
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <p className={styles.formLabel}>パスワード</p>
+          <input
+            className={styles.formInput}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="パスワード"
+            required
+          />
+        </div>
+        {error && <p className="text-red-500">{error}</p>}
+        <button className={styles.signinButton} type="submit">ログイン</button>
+      </form>
+    </div>
   )
 }
 

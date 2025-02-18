@@ -1,12 +1,14 @@
-.signin-container {
-  max-width: 500px;
+.signinContainer {
+  max-width: 400px;
   margin: 50px auto;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
+
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
-.signin-header {
+.signinHeader {
   font-size: 45px;
   font-weight: bold;
   color: #333;
@@ -14,18 +16,18 @@
   margin-bottom: 20px;
 }
 
-.signin-form {
+.signinForm {
   display: flex;
   flex-direction: column;
   gap: 30px;
   /* text-align: center; */
 }
 
-.form-group {
+.formGroup {
   text-align: left;
 }
 
-.form-label {
+.formLabel {
   font-size: 1rem;
   font-weight: bold;
   color: #333;
@@ -33,52 +35,67 @@
   display: block;
 }
 
-.form-input {
+.formInput {
   width: 100%;
-  padding: 15px;
-  border: 1px solid #606060;
-  border-radius: 15px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 16px;
-  background-color: #d7d7d7;
+  margin-bottom: 15px;
+  /* transition: all 0.1s ease-in-out; */
+  /* background-color: #333; */
 }
 
 /* 入力フィールドにフォーカス時のスタイル */
-.form-input:focus {
+.formInput:focus {
   border-color: #56a8ff;
+  border: 1px solid #56a8ff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   outline: none;
 }
 
-.signin-button {
-  width: 120px;
+.signinButton {
+  /* width: 120px;
   padding: 10px;
   margin: 20px auto 0;
   font-size: 16px;
   background-color: #56a8ff;
   color: white;
   border: none;
-  border-radius: 30px;
+  border-radius: 30px; */
+
+  width: 100%;
+  background-color: #56a8ff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 15px;
 }
 
-.signin-button:hover {
+.signinButton:hover {
   background-color: #3898ff;
 }
 
-.signup-container {
+.signupContainer {
   margin-top: 30px;
 }
 
-.signup-text {
+.signupText {
   font-size: 15px;
   color: #333;
 }
 
-.signup-link {
+.signupLink {
   font-size: 1rem;
   color: #56a8ff;
   font-weight: bold;
   text-decoration: none;
 }
 
-.signup-link:hover {
+.signupLink:hover {
   text-decoration: underline;
 }

@@ -9,6 +9,7 @@ import CommentCard from "@components/CommentCard/CommentCard";
 import { supabase } from "lib/util/supabase";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type CommentCustom = Omit<Comment, "post_id" | "created_at"> & {
   users: { name: string; image_path: string };
@@ -69,17 +70,29 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
 
   const { data: session } = useSession();
 
-
   const [post, setPost] = useState<Post | null>(null);
   const [thumbnailPosts, setThumbnailPosts] = useState<Post[]>([]);
 
+  // error message for comment submit
+  const [error, setError] = useState<string | null>(null);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
     const fetchPost = async () => {
+      //ブログ記事取得
       const { data, error } = await supabase.from("posts").select("*").eq("id", params.id).single();
 
       if (error) {
         return;
       }
+
+      const { commentData, error } = await supabase
+        .from("comment")
+        .select("*")
+        .eq("id", params.id);
+
+      // サムネイル取得
       if (data) {
         setPost(data);
         const { data: thumbnails } = await supabase
@@ -106,20 +119,39 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
   const [commentText, setCommentText] = useState("");
   const [commentList] = useState<CommentCustom[]>(comments);
 
-  const handleCommentSubmit = () => {
-    //本来はAPIでデータ追加。
-    // if (commentText.trim()) {
-    //   const newComment = {
-    //     id: commentList.length + 1,
-    //     userName: "currentUser", // 現在のユーザー名を設定
-    //     userImagePath: "", //現在ユーザーのプロフィール画像pathを設定。
-    //     text: commentText,
-    //     updatedTime: new Date(),
-    //   };
-    //   setCommentList([...commentList, newComment]);
-    //   setCommentText("");
-    // }
-    //データ追加後、pageリロード。
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim()) return;
+
+    try {
+      const response = await fetch(`/api/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          post_id: params.id,  // 現在の投稿ID
+          content: commentText,
+          created_at: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError('コメントを投稿するにはログインが必要です');
+          setIsErrorModalOpen(true);
+          return;
+        }
+        throw new Error('コメントの投稿に失敗しました');
+      }
+
+      // コメント投稿成功
+      setCommentText('');  // 入力フィールドをクリア
+      router.refresh();    // ページを更新して新しいコメントを表示
+
+    } catch (error) {
+      setError('コメントの投稿中にエラーが発生しました');
+      setIsErrorModalOpen(true);
+    }
   };
   return (
     <div className={styles.container}>
@@ -145,7 +177,7 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
             className={styles.commentInput}
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            maxLength={1000}
+            maxLength={300}
           />
           <button className={session ? styles.commentButton : styles.commentButtonDisabled}
             onClick={handleCommentSubmit} disabled={!session}>

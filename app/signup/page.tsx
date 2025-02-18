@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/util/supabase'
+import styles from './signUp.module.css'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -50,37 +51,46 @@ export default function SignUpPage() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="メールアドレス"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="ユーザー名"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="パスワード"
-          required
-        />
-      </div>
-      {error && <p className="text-red-500">{error}</p>}
-      <button type="submit">アカウント作成</button>
-    </form>
+    <div className={styles.signupContainer}>
+      <h1 className={styles.signupHeader}>sign up</h1>
+      <form className={styles.signupForm} onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <p className={styles.formLabel}>メールアドレス</p>
+          <input
+            className={styles.formInput}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="メールアドレス"
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <p className={styles.formLabel}>ユーザー名</p>
+          <input
+            className={styles.formInput}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="ユーザー名"
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <p className={styles.formLabel}>パスワード</p>
+          <input
+            className={styles.formInput}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="パスワード"
+            required
+          />
+        </div>
+        {error && <p className="text-red-500">{error}</p>}
+        <button className={styles.signupButton} type="submit">アカウント作成</button>
+      </form>
+    </div>
   )
 }
 

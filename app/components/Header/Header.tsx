@@ -89,7 +89,9 @@ export const Header = () => {
 
           {session && (
             <div className={styles.userSection}>
+              <p>{session.user?.username}</p>
               <UserIconButton imagePath={session.user?.image ?? ""} onClick={() => setIsOpen(!isOpen)} />
+
               {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>
                   <p className={styles.modalUserName}>{session?.user?.name}</p>
