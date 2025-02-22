@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import style from "./Pagination.module.css";
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";

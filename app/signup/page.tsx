@@ -1,54 +1,51 @@
-
-'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '../../lib/util/supabase'
-import styles from './signUp.module.css'
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/util/supabase";
+import styles from "./signUp.module.css";
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       // まずSupabase Authでユーザーを作成
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
-      })
+      });
 
       if (authError) {
-        setError(authError.message)
-        return
+        setError(authError.message);
+        return;
       }
 
       if (authData.user?.id) {
         // 次にusersテーブルにユーザー情報を保存
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert([
-            {
-              id: authData.user.id,
-              email: email,
-              username: username,
-            }
-          ])
+        const { error: profileError } = await supabase.from("users").insert([
+          {
+            id: authData.user.id,
+            email: email,
+            username: username,
+          },
+        ]);
 
         if (profileError) {
-          setError(profileError.message)
-          return
+          setError(profileError.message);
+          return;
         }
 
-        router.push('/signin')
+        router.push("/signin");
       }
     } catch (error) {
-      setError('エラーが発生しました')
+      setError("エラーが発生しました");
     }
-  }
+  };
 
   return (
     <div className={styles.signupContainer}>
@@ -88,10 +85,12 @@ export default function SignUpPage() {
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <button className={styles.signupButton} type="submit">アカウント作成</button>
+        <button className={styles.signupButton} type="submit">
+          アカウント作成
+        </button>
       </form>
     </div>
-  )
+  );
 }
 
 // import styles from "./styles.module.css";

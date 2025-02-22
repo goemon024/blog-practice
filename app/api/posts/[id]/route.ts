@@ -30,11 +30,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
 
     // 投稿の所有者確認を追加
-    const { data: post } = await supabase
-      .from("posts")
-      .select("user_id")
-      .eq("id", id)
-      .single();
+    const { data: post } = await supabase.from("posts").select("user_id").eq("id", id).single();
 
     if (!post) {
       return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
@@ -53,9 +49,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
-
-
 
 // PUTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
@@ -122,9 +115,6 @@ export async function PUT(req: NextRequest) {
     if (updateData.user_id !== token.sub) {
       return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
     }
-
-
-
 
     const { data, error } = await supabase
       .from("posts")

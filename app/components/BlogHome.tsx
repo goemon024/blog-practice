@@ -1,3 +1,5 @@
+"use client";
+
 import "./bloghome.css";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
@@ -6,27 +8,6 @@ import { supabase } from "lib/util/supabase";
 import type { Post } from "lib/types/index";
 import Pagination from "./Pagination/Pagination";
 
-// type Post = {
-//   id: number | string;
-//   title: string;
-//   textLine: string;
-//   image_path: string;
-//   category: string;
-//   userName: string;
-//   userImagePath: string | null;
-//   postedAt: string | null;
-// }
-
-// export interface Post {
-//   id: string;
-//   title: string;
-//   content: string;
-//   image_path?: string | null;
-//   category_id: number;
-//   user_id: string;
-//   created_at: string;
-//   updated_at?: string;
-// }
 
 type PostCustom = Post & {
   users: { username: string | null };
@@ -51,10 +32,7 @@ export default function PostHome() {
         }: {
           data: PostCustom[] | null;
           error: any;
-        } = await supabase
-          .from("posts")
-          .select("*,categories(*),users(*)")
-          .order("created_at", { ascending: false }); // 最新順にソート
+        } = await supabase.from("posts").select("*,categories(*),users(*)").order("created_at", { ascending: false }); // 最新順にソート
 
         if (error) throw new Error(error.message);
 

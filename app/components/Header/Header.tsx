@@ -24,14 +24,10 @@ export const Header = () => {
   const [signedInUser, setSignedInUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
 
-
   useEffect(() => {
-    console.log('Session status:', status);
-    console.log('Session data:', session);
+    console.log("Session status:", status);
+    console.log("Session data:", session);
   }, [session, status]);
-
-
-
 
   // モーダルの開閉状態を管理
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +86,9 @@ export const Header = () => {
           {session && (
             <div className={styles.userSection}>
               <p>{session.user?.username}</p>
-              <UserIconButton imagePath={session.user?.image ?? ""} onClick={() => setIsOpen(!isOpen)} />
+              <Link href={`/profile/${session.user?.username}`}>
+                <UserIconButton imagePath={session.user?.image ?? ""} onClick={() => setIsOpen(!isOpen)} />
+              </Link>
 
               {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>

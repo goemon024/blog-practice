@@ -11,58 +11,16 @@ import { supabase } from "lib/util/supabase";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-type CommentCustom = Omit<Comment, "post_id" | "created_at"> & {
-  users: { name: string; image_path: string };
-};
+// id: number;
+// user_id: string;
+// post_id: string;
+// content: string;
+// created_at: string;
+// updated_at: string | null;
 
-// 暫定的なダミーデータ
-const comments: CommentCustom[] = [
-  {
-    id: 1,
-    content: "Lorem ipsum dolor sit amet...", // textをcontentに
-    user_id: "user2_id", // 追加
-    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
-    users: {
-      // ユーザー情報をネスト
-      name: "user2",
-      image_path: "/default_icon.jpg",
-    },
-  },
-  {
-    id: 2,
-    content: "Lorem ipsum dolor sit amet...", // textをcontentに
-    user_id: "user2_id", // 追加
-    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
-    users: {
-      // ユーザー情報をネスト
-      name: "user2",
-      image_path: "/default_icon.jpg",
-    },
-  },
-  {
-    id: 3,
-    content: "Lorem ipsum dolor sit amet...", // textをcontentに
-    user_id: "user2_id", // 追加
-    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
-    users: {
-      // ユーザー情報をネスト
-      name: "user2",
-      image_path: "/default_icon.jpg",
-    },
-  },
-  {
-    id: 4,
-    content: "Lorem ipsum dolor sit amet...", // textをcontentに
-    user_id: "user2_id", // 追加
-    updated_at: new Date().toISOString(), // updatedTimeをupdated_atに
-    users: {
-      // ユーザー情報をネスト
-      name: "user2",
-      image_path: "/default_icon.jpg",
-    },
-  },
-];
-// ダミーデータ終了
+type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
+  users: { username: string | null; image_path: string | null };
+};
 
 const BlogPage = ({ params }: { params: { id: string } }) => {
   // npm run lint実行時の”Error: 'params' is defined but never used.”エラー回避用に一時的にparamsをconsoleで出力する。
@@ -74,8 +32,10 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
   const [thumbnailPosts, setThumbnailPosts] = useState<Post[]>([]);
 
   // error message for comment submit
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  // コメント群取得
+  const [comments, setComments] = useState<CommentCustom[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -87,10 +47,33 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
         return;
       }
 
-      const { commentData, error } = await supabase
-        .from("comment")
-        .select("*")
-        .eq("id", params.id);
+      // コメント取得
+      if (data) {
+        const { data: commentData, error: commentError } = await supabase
+          .from("comment")
+          .select<string, CommentCustom>(`
+          id,
+          content,
+          created_at,
+          users(
+            username,
+            image_path
+          )`)
+          .eq('post_id', params.id)
+          .order('created_at', { ascending: false });
+
+        const formattedComments: CommentCustom[] = (commentData || []).map(comment => ({
+          id: comment.id,
+          content: comment.content,
+          created_at: comment.created_at,
+          users: {
+            username: comment.users.username,
+            image_path: comment.users.image_path
+          }
+        }));
+
+        setComments(formattedComments || []);
+      }
 
       // サムネイル取得
       if (data) {
@@ -137,7 +120,7 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
 
       if (!response.ok) {
         if (response.status === 401) {
-          setError('コメントを投稿するにはログインが必要です');
+          setErrorMessage('コメントを投稿するにはログインが必要です');
           setIsErrorModalOpen(true);
           return;
         }
@@ -146,13 +129,36 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
 
       // コメント投稿成功
       setCommentText('');  // 入力フィールドをクリア
-      router.refresh();    // ページを更新して新しいコメントを表示
+      // router.push(`/posts/${params.id}`);    // ページを更新して新しいコメントを表示
+      // router.refresh();
+      window.location.reload();
 
     } catch (error) {
-      setError('コメントの投稿中にエラーが発生しました');
+      setErrorMessage('コメントの投稿中にエラーが発生しました');
       setIsErrorModalOpen(true);
     }
   };
+
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const response = await fetch(`/api/comment/${commentId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('コメントの削除に失敗しました');
+      }
+
+      // 成功したら、コメントリストを更新
+      setComments(prevComments =>
+        prevComments.filter(comment => comment.id !== commentId)
+      );
+    } catch (error) {
+      setErrorMessage('コメントの削除中にエラーが発生しました');
+      setIsErrorModalOpen(true);
+    }
+  };
+
   return (
     <div className={styles.container}>
       {/* Main Post */}
@@ -184,8 +190,8 @@ const BlogPage = ({ params }: { params: { id: string } }) => {
             Comment
           </button>
         </div>
-        {commentList.map((comment) => (
-          <CommentCard comment={comment} key={comment.id} />
+        {comments.map((comment) => (
+          <CommentCard comment={comment} key={comment.id} onDelete={handleDeleteComment} />
         ))}
       </section>
     </div>

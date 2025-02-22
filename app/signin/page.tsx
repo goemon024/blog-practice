@@ -1,38 +1,37 @@
 "use client";
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import styles from "./signIn.module.css"
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import styles from "./signIn.module.css";
 
 export default function SignInPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
-      })
+      });
 
       if (result?.error) {
-        setError('ログインに失敗しました')
-        return
+        setError("ログインに失敗しました");
+        return;
       }
-      console.log('Sign in result:', result)
+      console.log("Sign in result:", result);
 
-      router.push('/')
-      router.refresh()
+      router.push("/");
+      router.refresh();
     } catch (error) {
-      setError('エラーが発生しました')
+      setError("エラーが発生しました");
     }
-
-  }
+  };
 
   return (
     <div className={styles.signinContainer}>
@@ -61,12 +60,13 @@ export default function SignInPage() {
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <button className={styles.signinButton} type="submit">ログイン</button>
+        <button className={styles.signinButton} type="submit">
+          ログイン
+        </button>
       </form>
     </div>
-  )
+  );
 }
-
 
 // import React, { useState } from "react";
 // import Link from "next/link";

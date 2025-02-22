@@ -3,6 +3,6 @@ export interface User {
   name: string;
   email: string;
   image_path: string | null;
-  created_at: string | null;
+  created_at: string;
   updated_at: string | null;
 }

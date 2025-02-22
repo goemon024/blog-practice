@@ -8,7 +8,7 @@ import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
 import { supabase } from "lib/util/supabase";
 
-import { Modal } from '@mui/material'
+import { Modal } from "@mui/material";
 
 interface PostEditPageProps {
   params: {
@@ -27,7 +27,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
   const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   // 投稿データの取得
@@ -119,17 +119,17 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           //   throw new Error(errorData.error);
           // }
         }
-      }
+      };
 
       const response = await updatePost();
       const data = await response.json();
       if (!response.ok) {
         if (response.status === 403) {
-          setError('この投稿の更新権限がありません');
+          setError("この投稿の更新権限がありません");
         } else if (response.status === 401) {
-          setError('認証が必要です');
+          setError("認証が必要です");
         } else {
-          setError(data.error || '更新中にエラーが発生しました');
+          setError(data.error || "更新中にエラーが発生しました");
         }
         setIsErrorModalOpen(true);
         return;
@@ -138,7 +138,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
-      setError('予期せぬエラーが発生しました');
+      setError("予期せぬエラーが発生しました");
       setIsErrorModalOpen(true);
     }
   };
@@ -153,7 +153,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
         if (response.status === 403) {
           setError("この操作を実行する権限がありません");
           setIsErrorModalOpen(true);
-          return
+          return;
         }
       }
     } catch (error) {
@@ -169,28 +169,35 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
         <CreateImage onFileSelect={(file) => setImage(file)} presetImage={imagePath} />
         <CreateContent content={content} setContent={setContent} />
         <div className={styles.buttonContainer}>
-          <button type="submit" className={styles.buttonPrimary}>更新</button>
-          <button type="button" onClick={handleDelete} className={styles.buttonDelete}>削除</button>
+          <button type="submit" className={styles.buttonPrimary}>
+            更新
+          </button>
+          <button type="button" onClick={handleDelete} className={styles.buttonDelete}>
+            削除
+          </button>
         </div>
       </form>
 
       <Modal
         open={isErrorModalOpen}
         onClose={() => {
-          setIsErrorModalOpen(false)
-          router.push("/")
+          setIsErrorModalOpen(false);
+          router.push("/");
         }}
       >
         <div className={styles.errorModal}>
           <h3>エラー</h3>
           <p>{error}</p>
-          <button onClick={() => {
-            setIsErrorModalOpen(false)
-            router.push("/")
-          }}>閉じる</button>
+          <button
+            onClick={() => {
+              setIsErrorModalOpen(false);
+              router.push("/");
+            }}
+          >
+            閉じる
+          </button>
         </div>
       </Modal>
-
     </div>
   );
 };
