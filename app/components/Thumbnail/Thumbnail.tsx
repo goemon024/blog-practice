@@ -7,17 +7,6 @@ type Props = {
   post: Post;
 };
 
-// interface Post {
-//   id: string;
-//   title: string;
-//   content: string;
-//   image_path?: string | null;
-//   category_id: number;
-//   user_id: string;
-//   created_at: string;
-//   updated_at?: string;
-// }
-
 const Thumbnail: React.FC<Props> = ({ post }) => {
   const imagePath = post.image_path ?? "/default_icon.jpg";
   return (

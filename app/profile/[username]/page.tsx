@@ -25,7 +25,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
     .order("created_at", { ascending: false })
     .returns<PostCustom[]>();
 
-  return <ProfileContent initialUserData={userData} initialPosts={postData ?? []} />;
+  return <ProfileContent userProfile={userData} initialPosts={postData ?? []} />;
 }
 
 

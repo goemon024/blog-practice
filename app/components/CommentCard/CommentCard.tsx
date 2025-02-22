@@ -24,10 +24,10 @@ const CommentCard = ({ comment, onDelete }: Props) => {
   const { data: session } = useSession();
 
   const router = useRouter();
-  const redirectToUserProfile = () => {
-    // router.push(`/user/${comment.user_id}`);
-    router.push(`/`);
-  };
+  // const redirectToUserProfile = () => {
+  //   // router.push(`/user/${comment.user_id}`);
+  //   router.push(`/`);
+  // };
 
   const handleDelete = () => {
     if (onDelete) {
@@ -39,7 +39,9 @@ const CommentCard = ({ comment, onDelete }: Props) => {
     <div key={comment.id} className={styles.comment}>
       <div className={styles.userSection}>
         <Link href={`/profile/${comment.users.username}`}>
-          <UserIconButton imagePath={comment.users.image_path ?? ''} onClick={redirectToUserProfile} />
+          <UserIconButton imagePath={comment.users.image_path ?? ''}
+          // onClick={redirectToUserProfile} 
+          />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>
       </div>

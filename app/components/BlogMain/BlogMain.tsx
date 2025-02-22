@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import styles from "./BlogMain.module.css";
 // import UserIconButton from "../UserIconButton/UserIconButton";
