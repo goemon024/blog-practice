@@ -8,24 +8,22 @@ type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
   // データフェッチをサーバーサイドに移動
-  const { data: post } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("id", params.id)
-    .single();
+  const { data: post } = await supabase.from("posts").select("*").eq("id", params.id).single();
 
   const { data: commentData } = await supabase
     .from("comment")
-    .select(`
+    .select(
+      `
       id,
       content,
       created_at,
       users(
         username,
         image_path
-      )`)
-    .eq('post_id', params.id)
-    .order('created_at', { ascending: false })
+      )`,
+    )
+    .eq("post_id", params.id)
+    .order("created_at", { ascending: false })
     .returns<CommentCustom[]>();
 
   const { data: thumbnails } = await supabase
@@ -35,14 +33,8 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
     .order("created_at", { ascending: false })
     .limit(3);
 
-  return <BlogContent
-    initialPost={post}
-    initialComments={commentData ?? []}
-    thumbnailPosts={thumbnails ?? []}
-  />;
+  return <BlogContent initialPost={post} initialComments={commentData ?? []} thumbnailPosts={thumbnails ?? []} />;
 }
-
-
 
 // const BlogPage = ({ params }: { params: { id: string } }) => {
 

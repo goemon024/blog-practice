@@ -87,10 +87,23 @@ export const Header = () => {
             <div className={styles.userSection}>
               <p>{session.user?.username}</p>
               <Link href={`/profile/${session.user?.username}`}>
-                <UserIconButton imagePath={session.user?.image ?? ""} onClick={() => setIsOpen(!isOpen)} />
+                <div className={styles.iconContainer}>
+                  <UserIconButton
+                    imagePath={session.user?.image ?? ""}
+                    //  onClick={() => setIsOpen(!isOpen)}
+                  />
+                  <div className={styles.dropdownMenu}>
+                    {/* <div className={styles.modalBox} ref={modalRef}> */}
+                    <p className={styles.modalUserName}>{session?.user?.name}</p>
+                    <button className={styles.modalLogoutButton} onClick={() => signOut()}>
+                      Logout
+                    </button>
+                  </div>
+                  {/* </div> */}
+                </div>
               </Link>
 
-              {isOpen && (
+              {/* {isOpen && (
                 <div className={styles.modalBox} ref={modalRef}>
                   <p className={styles.modalUserName}>{session?.user?.name}</p>
                   <button
@@ -101,7 +114,7 @@ export const Header = () => {
                     Logout
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </nav>

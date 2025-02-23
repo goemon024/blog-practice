@@ -15,7 +15,7 @@ const DEFAULT_IMAGE_PATH = process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL;
 
 const ProfileImage: React.FC<ProfileImageProps> = ({
   // onFileSelect,
-  presetImage = DEFAULT_IMAGE_PATH
+  presetImage = DEFAULT_IMAGE_PATH,
 }) => {
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(presetImage);
@@ -63,7 +63,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       const event = new Event("visibilitychange");
       document.dispatchEvent(event);
       router.refresh();
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error:", error);

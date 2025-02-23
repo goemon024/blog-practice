@@ -3,12 +3,12 @@ import { supabase } from "lib/util/supabase";
 import { ProfileContent } from "./ProfileContent";
 import { User, Post } from "lib/types";
 
-type UserCustom = Omit<User, "id" | "created_at" | "updated_at">
+type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
 
-type PostCustom = Pick<Post, "image_path" | "id" | "title" | 'created_at'> & {
+type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
   users: { username: string };
   categories: { name: string | null };
-}
+};
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
   // サーバーサイドでのデータフェッチ
@@ -27,8 +27,6 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
   return <ProfileContent userProfile={userData} initialPosts={postData ?? []} />;
 }
-
-
 
 // "use client";
 
@@ -61,7 +59,6 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
 //   const [displayPosts, setDisplayPosts] = useState<PostCustom[]>([]); // homeで表示される9つのブログ
 //   const [currentPage, setCurrentPage] = useState<number>(1); // page番号。pagenationにpropsとして渡す。
-
 
 //   // const userName = params["username"];
 
@@ -98,15 +95,10 @@ export default async function ProfilePage({ params }: { params: { username: stri
 //     fetchUserProfile();
 //   }, [session, status, params.username]);
 
-
 //   // １ページ当たりの表示データ（９つ）取得。
 //   useEffect(() => {
 //     setDisplayPosts(posts.slice((currentPage - 1) * 9, currentPage * 9));
 //   }, [currentPage, posts]);
-
-
-
-
 
 //   // const filteredPosts = DUMMY_POSTS.filter((post) => post.user_id === userName);
 

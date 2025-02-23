@@ -13,7 +13,6 @@ type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
   users: { username: string | null; image_path: string | null };
 };
 
-
 type Props = {
   comment: CommentCustom;
   onDelete?: (commentId: number) => void;
@@ -39,8 +38,9 @@ const CommentCard = ({ comment, onDelete }: Props) => {
     <div key={comment.id} className={styles.comment}>
       <div className={styles.userSection}>
         <Link href={`/profile/${comment.users.username}`}>
-          <UserIconButton imagePath={comment.users.image_path ?? ''}
-          // onClick={redirectToUserProfile} 
+          <UserIconButton
+            imagePath={comment.users.image_path ?? ""}
+            // onClick={redirectToUserProfile}
           />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>
@@ -49,9 +49,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
         <p className={styles.commentText}>{comment.content}</p>
         <span className={styles.commentTime}>{commentTime}</span>
       </div>
-      {session?.user?.username === comment.users.username && (
-        <button onClick={handleDelete}>削除</button>
-      )}
+      {session?.user?.username === comment.users.username && <button onClick={handleDelete}>削除</button>}
     </div>
   );
 };

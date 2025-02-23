@@ -7,7 +7,6 @@ import type { Post } from "lib/types/index";
 import { BlogHomeContent } from "./BlogHomeContent";
 // import Pagination from "./Pagination/Pagination";
 
-
 type PostCustom = Post & {
   users: { username: string | null };
   categories: { name: string | null };
@@ -16,7 +15,8 @@ type PostCustom = Post & {
 export default async function PostHome() {
   const { data: posts } = await supabase
     .from("posts")
-    .select(`
+    .select(
+      `
       id,
       title,
       content,
@@ -24,21 +24,15 @@ export default async function PostHome() {
       created_at,
       users (username),
       categories (name)
-    `)
-    .order('created_at', { ascending: false })
+    `,
+    )
+    .order("created_at", { ascending: false })
     .returns<PostCustom[]>();
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*");
+  // const { data: categories } = await supabase.from("categories").select("*");
 
-  return (
-    <BlogHomeContent
-      initialPosts={posts ?? []}
-    />
-  );
+  return <BlogHomeContent initialPosts={posts ?? []} />;
 }
-
 
 // "use client";
 
@@ -49,7 +43,6 @@ export default async function PostHome() {
 // import { supabase } from "lib/util/supabase";
 // import type { Post } from "lib/types/index";
 // import Pagination from "./Pagination/Pagination";
-
 
 // type PostCustom = Post & {
 //   users: { username: string | null };

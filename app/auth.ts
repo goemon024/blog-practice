@@ -9,7 +9,7 @@ export const authConfig = {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // eslint-disable-next-line no-console
         console.log("認証開始:", credentials?.password);
         if (!credentials?.username || !credentials?.password) {
@@ -28,7 +28,6 @@ export const authConfig = {
         // .eq('username', credentials.username)
         // .single()
 
-
         // eslint-disable-next-line no-console
         console.log(userData);
 
@@ -41,7 +40,7 @@ export const authConfig = {
         const {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           data: { user },
-          error: _,
+          // error: _,
         } = await supabase.auth.signInWithPassword({
           email: userData.email,
           password: credentials.password,
@@ -67,9 +66,9 @@ export const authConfig = {
       } else {
         // userがない場合（セッション更新時）は、Supabaseから最新情報を取得
         const { data: userData, error } = await supabase
-          .from('users')
-          .select('username, image_path')
-          .eq('id', token.id)
+          .from("users")
+          .select("username, image_path")
+          .eq("id", token.id)
           .single();
 
         if (userData && !error) {
