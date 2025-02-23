@@ -43,6 +43,8 @@ export default function SignUpPage() {
         router.push("/signin");
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("エラーが発生しました", error);
       setError("エラーが発生しました");
     }
   };

@@ -4,7 +4,7 @@ import styles from "./Header.module.css";
 import Link from "next/link"; // Linkコンポーネントをインポート
 import EditIcon from "@mui/icons-material/Edit";
 import UserIconButton from "../UserIconButton/UserIconButton";
-import { User } from "lib/types";
+// import { User } from "lib/types";
 
 import { useSession, signOut } from "next-auth/react";
 
@@ -21,11 +21,13 @@ import { useSession, signOut } from "next-auth/react";
 
 export const Header = () => {
   // 本来はSessionか何かから、User情報の取得を行う。
-  const [signedInUser, setSignedInUser] = useState<User | null>(null);
+  // const [signedInUser, setSignedInUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log("Session status:", status);
+    // eslint-disable-next-line no-console
     console.log("Session data:", session);
   }, [session, status]);
 
@@ -90,7 +92,7 @@ export const Header = () => {
                 <div className={styles.iconContainer}>
                   <UserIconButton
                     imagePath={session.user?.image ?? ""}
-                    //  onClick={() => setIsOpen(!isOpen)}
+                  //  onClick={() => setIsOpen(!isOpen)}
                   />
                   <div className={styles.dropdownMenu}>
                     {/* <div className={styles.modalBox} ref={modalRef}> */}

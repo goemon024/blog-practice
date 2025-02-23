@@ -8,7 +8,11 @@ type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
   // データフェッチをサーバーサイドに移動
-  const { data: post } = await supabase.from("posts").select("*").eq("id", params.id).single();
+  const { data: post } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("id", params.id)
+    .single() as { data: Post };
 
   const { data: commentData } = await supabase
     .from("comment")

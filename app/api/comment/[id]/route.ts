@@ -33,7 +33,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 
     return NextResponse.json({ message: "削除成功" });
-  } catch (error: unknown) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error:", error);
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }

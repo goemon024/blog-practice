@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import styles from "./BlogContent.module.css";
 import BlogMain from "../../components/BlogMain/BlogMain";
 import { Post, Comment } from "lib/types";
-import { useRouter } from "next/navigation";
 import Thumbnail from "../../components/Thumbnail/Thumbnail";
 import CommentCard from "../../components/CommentCard/CommentCard";
 
@@ -29,11 +28,10 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
 
     // error message for comment submit
 
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const [, setErrorMessage] = useState<string | null>(null);
+    const [, setIsErrorModalOpen] = useState(false);
     // コメント群取得
 
-    const router = useRouter();
 
     // コメント投稿などのインタラクティブな機能
     const handleCommentSubmit = async () => {
@@ -82,6 +80,8 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
             // router.refresh();
             // window.location.reload();
         } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("コメントの投稿中にエラーが発生しました", error);
             setErrorMessage("コメントの投稿中にエラーが発生しました");
             setIsErrorModalOpen(true);
         }
@@ -100,6 +100,8 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
             // 成功したら、コメントリストを更新
             setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
         } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error("コメントの削除中にエラーが発生しました", error);
             setErrorMessage("コメントの削除中にエラーが発生しました");
             setIsErrorModalOpen(true);
         }

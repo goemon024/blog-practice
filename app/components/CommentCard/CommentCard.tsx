@@ -3,7 +3,7 @@
 import React from "react";
 import styles from "./CommentCard.module.css";
 import UserIconButton from "../UserIconButton/UserIconButton";
-import { useRouter } from "next/navigation";
+
 import { Comment } from "lib/types";
 import calculateTimeAgo from "lib/util/calculateTimeAgo";
 import { useSession } from "next-auth/react";
@@ -22,7 +22,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
   const commentTime = calculateTimeAgo(new Date(comment.created_at));
   const { data: session } = useSession();
 
-  const router = useRouter();
+  // const router = useRouter();
   // const redirectToUserProfile = () => {
   //   // router.push(`/user/${comment.user_id}`);
   //   router.push(`/`);
@@ -40,7 +40,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
         <Link href={`/profile/${comment.users.username}`}>
           <UserIconButton
             imagePath={comment.users.image_path ?? ""}
-            // onClick={redirectToUserProfile}
+          // onClick={redirectToUserProfile}
           />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>

@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import styles from "./ProfileImage.module.css";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { supabase } from "lib/util/supabase";
 import { useRouter } from "next/navigation";
 
 type ProfileImageProps = {
@@ -20,7 +19,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(presetImage);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+  // const [isUploading, setIsUploading] = useState<boolean>(false);
   const router = useRouter();
   const { data: session } = useSession();
 

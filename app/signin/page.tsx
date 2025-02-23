@@ -24,11 +24,14 @@ export default function SignInPage() {
         setError("ログインに失敗しました");
         return;
       }
+      // eslint-disable-next-line no-console
       console.log("Sign in result:", result);
 
       router.push("/");
       router.refresh();
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("エラーが発生しました", error);
       setError("エラーが発生しました");
     }
   };

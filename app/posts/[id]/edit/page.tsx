@@ -157,6 +157,8 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
         }
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("投稿の削除中にエラーが発生しました", error);
       setError("投稿の削除に失敗しました");
       setIsErrorModalOpen(true);
     }
