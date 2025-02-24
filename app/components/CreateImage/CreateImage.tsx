@@ -9,7 +9,7 @@ type CreateImageProps = {
 
 const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect, presetImage }) => {
   const [sizeError, setSizeError] = useState<boolean>(false);
-  const [preview, setPreview] = useState<string | null>(presetImage);
+  const [preview, setPreview] = useState<string | null>(presetImage ?? null);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理
 
   // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
