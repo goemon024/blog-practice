@@ -36,7 +36,7 @@ export const ProfileContent = ({ userProfile, initialPosts }: ProfileContentProp
           <ProfileImage presetImage={userProfile?.image_path ?? null} />
 
           <div className={styles.profileInfo}>
-            <p>{userProfile?.username}</p>
+            <p>{userProfile?.name}</p>
             <p>{userProfile?.email ?? ""}</p>
           </div>
         </div>
