@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
       user?: User & {
         id: string;
         username: string;
-        image: string;
+        image?: string | null;
       };
     }) {
       if (user) {
