@@ -27,6 +27,10 @@
       ]
     },
     "incremental": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/next-auth"
+    ],
     "plugins": [
       {
         "name": "next"

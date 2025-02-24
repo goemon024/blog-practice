@@ -5,6 +5,8 @@ import { JWT } from "next-auth/jwt";
 import { User } from "next-auth";
 import { Session } from "next-auth";
 
+import { NextAuthConfig } from "next-auth";
+
 export const authConfig = {
   providers: [
     CredentialsProvider({
@@ -47,7 +49,7 @@ export const authConfig = {
           // error: _,
         } = await supabase.auth.signInWithPassword({
           email: userData.email,
-          password: credentials.password,
+          password: credentials.password as string,
         });
 
         return {
@@ -63,7 +65,8 @@ export const authConfig = {
   },
   callbacks: {
     async jwt({ token, user }: {
-      token: JWT; user?: User & {
+      token: JWT;
+      user?: User & {
         id: string;
         username: string;
         image: string;
