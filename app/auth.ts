@@ -1,6 +1,10 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabase } from "../lib/util/supabase";
 
+import { JWT } from "next-auth/jwt";
+import { User } from "next-auth";
+import { Session } from "next-auth";
+
 export const authConfig = {
   providers: [
     CredentialsProvider({
@@ -58,7 +62,7 @@ export const authConfig = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
@@ -78,7 +82,7 @@ export const authConfig = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.username = token.username as string;
