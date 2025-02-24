@@ -17,7 +17,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   presetImage = DEFAULT_IMAGE_PATH,
 }) => {
   const [sizeError, setSizeError] = useState<boolean>(false);
-  const [preview, setPreview] = useState<string | null>(presetImage);
+  const [preview, setPreview] = useState<string | null>(presetImage ?? null);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理
   // const [isUploading, setIsUploading] = useState<boolean>(false);
   const router = useRouter();
@@ -25,7 +25,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
   useEffect(() => {
-    setPreview(presetImage);
+    setPreview(presetImage ?? null);
   }, [presetImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

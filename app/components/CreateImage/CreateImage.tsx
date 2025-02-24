@@ -4,7 +4,7 @@ import styles from "./CreateImage.module.css";
 
 type CreateImageProps = {
   onFileSelect: (file: File | null) => void;
-  presetImage: string | null;
+  presetImage?: string | null;
 };
 
 const CreateImage: React.FC<CreateImageProps> = ({ onFileSelect, presetImage }) => {
