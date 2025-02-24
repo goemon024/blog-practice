@@ -62,7 +62,13 @@ export const authConfig = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({ token, user }: {
+      token: JWT; user?: User & {
+        id: string;
+        username: string;
+        image: string;
+      }
+    }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
