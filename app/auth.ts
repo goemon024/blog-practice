@@ -1,13 +1,15 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabase } from "../lib/util/supabase";
 
-import { JWT } from "next-auth/jwt";
 import { User } from "next-auth";
 import { Session } from "next-auth";
 
-import { NextAuthConfig } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 
-export const authConfig = {
+
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -70,7 +72,7 @@ export const authConfig = {
         id: string;
         username: string;
         image: string;
-      }
+      };
     }) {
       if (user) {
         token.id = user.id;
@@ -104,4 +106,4 @@ export const authConfig = {
     signIn: "/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
-} satisfies NextAuthConfig;
+} 
