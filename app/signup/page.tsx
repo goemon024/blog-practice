@@ -15,12 +15,15 @@ export default function SignUpPage() {
     e.preventDefault();
     try {
       // まずSupabase Authでユーザーを作成
+      // await supabase.auth.admin.createUser
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (authError) {
+        console.log("signup error:", authError);
         setError(authError.message);
         return;
       }
@@ -35,10 +38,10 @@ export default function SignUpPage() {
           },
         ]);
 
-        if (profileError) {
-          setError(profileError.message);
-          return;
-        }
+        // if (profileError) {
+        //   setError(profileError.message);
+        //   return;
+        // }
 
         router.push("/signin");
       }
