@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
+import prisma from "lib/util/prisma";
 import { getToken } from "next-auth/jwt";
 
 // POSTメソッドのハンドラ
@@ -32,20 +33,29 @@ export async function PUT(req: NextRequest) {
     const fileUrl = supabase.storage.from("profile-images").getPublicUrl(fileName).data.publicUrl;
 
     // データベースへの保存
-    const { error: dbError } = await supabase
-      .from("users")
-      .update([
-        {
-          image_path: fileUrl,
-        },
-      ])
-      .eq("id", userId);
+    await prisma.public_users.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        image_path: fileUrl,
+      },
+    });
 
-    if (dbError) {
-      // eslint-disable-next-line no-console
-      console.error("Database error:", dbError);
-      return NextResponse.json({ error: "データベースの保存に失敗しました" }, { status: 500 });
-    }
+    // const { error: dbError } = await supabase
+    //   .from("users")
+    //   .update([
+    //     {
+    //       image_path: fileUrl,
+    //     },
+    //   ])
+    //   .eq("id", userId);
+
+    // if (dbError) {
+    //   // eslint-disable-next-line no-console
+    //   console.error("Database error:", dbError);
+    //   return NextResponse.json({ error: "データベースの保存に失敗しました" }, { status: 500 });
+    // }
 
     return NextResponse.json({
       success: true,

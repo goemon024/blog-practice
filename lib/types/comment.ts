@@ -1,8 +1,15 @@
+import { Post } from "./post";
+import { User } from "./user";
+
 export interface Comment {
-  id: number;
-  user_id: string;
-  post_id: string;
+
+  id: bigint;
   content: string;
-  created_at: string;
-  updated_at: string | null;
+  user_id: string; // public_users.idと関連
+  post_id: bigint; // posts.idと関連
+  created_at: Date;
+  updated_at?: Date | null;
+  posts?: Post;
+  users?: User;
+
 }

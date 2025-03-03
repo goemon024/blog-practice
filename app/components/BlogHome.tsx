@@ -2,34 +2,69 @@
 // import Link from "next/link";
 // import SearchIcon from "@mui/icons-material/Search";
 // import { useEffect, useState } from "react";
-import { supabase } from "lib/util/supabase";
+// import { supabase } from "lib/util/supabase";
 import type { Post } from "lib/types/index";
 import { BlogHomeContent } from "./BlogHomeContent";
+import prisma from "lib/util/prisma";
 // import Pagination from "./Pagination/Pagination";
 
-type PostCustom = Post & {
-  users: { username: string | null };
-  categories: { name: string | null };
+
+// id: string;
+// title: string;
+// content: string;
+// image_path?: string | null;
+// category_id: number;
+// user_id: string; // public_users.idと関連
+// created_at: Date;
+// updated_at?: Date | null;
+
+type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
+  users: { username: string };
+  categories: { name: string };
 };
 
 export default async function PostHome() {
-  const { data: posts } = await supabase
-    .from("posts")
-    .select(
-      `
-      id,
-      title,
-      content,
-      image_path,
-      created_at,
-      users (username),
-      categories (name)
-    `,
-    )
-    .order("created_at", { ascending: false })
-    .returns<PostCustom[]>();
 
-  // const { data: categories } = await supabase.from("categories").select("*");
+  const posts: PostCustom[] = await prisma.posts.findMany({
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      image_path: true,
+      created_at: true,
+      users: {
+        select: {
+          username: true,
+        },
+      },
+      categories: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      created_at: 'desc', // created_atで降順にソート
+    },
+  })
+  // } catch (error) {
+  //   // eslint-disable-next-line no-console
+  //   console.error("Error fetching posts:", error);
+  // }
+  //   const { data: posts }:{data:PostCustom[]} = await supabase
+  // .from("posts")
+  // .select(
+  //   `
+  //   id,
+  //   title,
+  //   content,
+  //   image_path,
+  //   created_at,
+  //   users (username),
+  //   categories (name)
+  // `,
+  // )
+  // .order("created_at", { ascending: false })
 
   return <BlogHomeContent initialPosts={posts ?? []} />;
 }

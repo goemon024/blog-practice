@@ -13,7 +13,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     const comment = await prisma.comment.findUnique({
       where: {
-        id: parseInt(params.id),
+        id: BigInt(params.id),
       },
       select: {
         id: true,
@@ -45,7 +45,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     const deletedComment = await prisma.comment.delete({
       where: {
-        id: parseInt(params.id),
+        id: BigInt(params.id),
       },
     });
 

@@ -5,18 +5,18 @@ import styles from "./BlogMain.module.css";
 // import UserIconButton from "../UserIconButton/UserIconButton";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-// import { Post } from "lib/types";
+import { Post } from "lib/types";
 
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  image_path?: string | null;
-  category_id: number;
-  user_id: string;
-  created_at: string;
-  updated_at?: string;
-}
+// interface Post {
+//   id: string;
+//   title: string;
+//   content: string;
+//   image_path?: string | null;
+//   category_id: number;
+//   user_id: string;
+//   created_at: string;
+//   updated_at?: string;
+// }
 
 type Props = {
   post: Post;

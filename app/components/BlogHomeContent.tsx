@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import type { Post } from "lib/types/index";
 import Pagination from "./Pagination/Pagination";
 
-type PostCustom = Post & {
+
+type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
   users: { username: string | null };
   categories: { name: string | null };
 };
@@ -15,7 +16,7 @@ interface BlogHomeContentProps {
   initialPosts: PostCustom[];
 }
 
-export const BlogHomeContent = ({ initialPosts }: BlogHomeContentProps) => {
+export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }) => {
   // クライアントサイドの状態管理
   // const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [displayPosts, setDisplayPosts] = useState(initialPosts);
@@ -29,11 +30,11 @@ export const BlogHomeContent = ({ initialPosts }: BlogHomeContentProps) => {
       !searchTerm?.trim()
         ? initialPosts
         : initialPosts.filter(
-            (post) =>
-              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
-          ),
+          (post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
     );
     setCurrentPage(1);
   }, [searchTerm, initialPosts]);
@@ -71,7 +72,7 @@ export const BlogHomeContent = ({ initialPosts }: BlogHomeContentProps) => {
 
               <div className="blog-meta">
                 <p className="blog-author">{blog.users.username}</p>
-                <p className="blog-posted-at">{blog.created_at}</p>
+                <p className="blog-posted-at">{blog.created_at?.toLocaleString()}</p>
               </div>
 
               <p className="blog-content">

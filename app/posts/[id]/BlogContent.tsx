@@ -9,14 +9,17 @@ import Thumbnail from "../../components/Thumbnail/Thumbnail";
 import CommentCard from "../../components/CommentCard/CommentCard";
 
 type BlogContentProps = {
-    initialPost: Post;
+    initialPost: Post | null;
     initialComments: CommentCustom[];
-    thumbnailPosts: Post[];
+    thumbnailPosts: thumnailPost[];
 };
 
-type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
-    users: { username: string | null; image_path: string | null };
+type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
+    users: { username: string; image_path: string | null };
 };
+
+type thumnailPost = Pick<Post, "id" | "title" | "image_path">;
+
 
 export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: BlogContentProps) => {
     const { data: session } = useSession();
@@ -35,7 +38,7 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
 
     // コメント投稿などのインタラクティブな機能
     const handleCommentSubmit = async () => {
-        if (!commentText.trim()) return;
+        if (!commentText.trim() || !initialPost) return;
 
         try {
             const response = await fetch(`/api/comment`, {
@@ -44,7 +47,7 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    post_id: initialPost.id, // 現在の投稿ID
+                    post_id: String(initialPost.id), // 現在の投稿ID
                     content: commentText,
                     created_at: new Date().toISOString(),
                 }),
@@ -98,7 +101,7 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
             }
 
             // 成功したら、コメントリストを更新
-            setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+            setComments((prevComments) => prevComments.filter((comment) => comment.id !== BigInt(commentId)));
         } catch (error) {
             // eslint-disable-next-line no-console
             console.error("コメントの削除中にエラーが発生しました", error);
@@ -141,7 +144,7 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
                         Comment
                     </button>
                 </div>
-                {comments.map((comment) => (
+                {comments?.map((comment) => (
                     <CommentCard comment={comment} key={comment.id} onDelete={handleDeleteComment} />
                 ))}
             </section>

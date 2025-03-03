@@ -8,7 +8,8 @@ import Link from "next/link";
 import BlogCard from "../../components/BlogCard/BlogCard";
 import ProfileImage from "../../components/ProfileImage/ProfileImage";
 
-type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
+// type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
+type UserCustom = Pick<User, "username" | "image_path" | "email">;
 
 type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
   users: { username: string };
@@ -36,7 +37,7 @@ export const ProfileContent = ({ userProfile, initialPosts }: ProfileContentProp
           <ProfileImage presetImage={userProfile?.image_path ?? null} />
 
           <div className={styles.profileInfo}>
-            <p>{userProfile?.name}</p>
+            <p>{userProfile?.username}</p>
             <p>{userProfile?.email ?? ""}</p>
           </div>
         </div>

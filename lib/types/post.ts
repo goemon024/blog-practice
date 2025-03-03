@@ -1,23 +1,19 @@
-// export type Post = {
-//   id: number|string;
-//   title: string;
-//   image_path: string;
-//   textLine: string;
-//   userName: string;
-//   userImagePath: string;
-//   category:string;
-//   categories:{name:string}[];
-//   users:{name:string}[];
-//   postedAt:string;
-// };
+import { Comment } from "./comment";
+import { User } from "./user";
+import { Category } from "./category";
+
 
 export interface Post {
-  id: string;
+  id: bigint;
   title: string;
   content: string;
   image_path?: string | null;
-  category_id: number;
-  user_id: string;
-  created_at: string;
-  updated_at?: string;
+  category_id: bigint;
+  user_id: string; // public_users.idと関連
+  created_at?: Date | null;
+  updated_at?: Date | null;
+  comment?: Comment[];
+  users?: User;
+  categories?: Category;
 }
+

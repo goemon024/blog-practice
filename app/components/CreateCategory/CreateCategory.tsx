@@ -2,15 +2,13 @@ import React from "react";
 import styles from "./CreateCategory.module.css";
 
 type CreateCategoryProps = {
-  category: number;
-  setCategory: (value: number) => void;
+  category: string;
+  setCategory: (value: string) => void;
 };
 
 const CreateCategory: React.FC<CreateCategoryProps> = ({ category, setCategory }) => {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line no-console
-    console.log(e.target.value);
-    setCategory(parseInt(e.target.value, 10));
+    setCategory(e.target.value);
   };
 
   return (

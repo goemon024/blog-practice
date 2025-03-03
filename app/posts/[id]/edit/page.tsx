@@ -6,24 +6,34 @@ import { useRouter } from "next/navigation";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
-import { supabase } from "lib/util/supabase";
+// import { supabase } from "lib/util/supabase";
+// import prisma from "lib/util/prisma";
+// import { Post } from "lib/types";
 
 import { Modal } from "@mui/material";
 
-interface PostEditPageProps {
-  params: {
-    id: string;
-  };
-}
+// interface PostEditPageProps {
+//   params: {
+//     id: string;
+//   };
+// }
 
-const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
+// type PostCustom = Pick<Post, "id" | "title" | "content" | "category_id" | "image_path" | "user_id">;
+
+// interface PostEditPageProps {
+//   post: PostCustom;
+// }
+
+
+
+export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params }) => {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [category, setCategory] = useState(6);
+  const [category, setCategory] = useState<String>("3");
   const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
 
@@ -31,26 +41,29 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   // 投稿データの取得
-  useEffect(() => {
-    const fetchPost = async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("title, content, category_id, image_path, user_id")
-        .eq("id", id)
-        .single();
+  const fetchPost = async () => {
+    try {
+      const response = await fetch(`/api/posts/${id}`)
 
-      if (error) {
-        return;
+      if (!response.ok) {
+        throw new Error('データの取得に失敗しました');
       }
+      const postData = await response.json();
+      setTitle(postData.data.title);
+      setContent(postData.data.content);
+      setUserId(postData.data.user_id);
+      setCategory(postData.data.category_id);
+      setImagePath(postData.data.image_path);
+    } catch (error) {
+      console.error('データの取得に失敗しました', error);
+      setError('データの取得に失敗しました');
+    }
+  };
 
-      setTitle(data.title);
-      setContent(data.content);
-      setUserId(data.user_id);
-      setCategory(data.category_id);
-      setImagePath(data.image_path);
-    };
+  useEffect(() => {
     fetchPost();
   }, [id]);
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,6 +82,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
       // let response;
       // eslint-disable-next-line no-console
+      console.log("formData", formData.get("title"));
       console.log("formData", formData.get("image"));
 
       const updatedImagePath = imagePath;
@@ -79,11 +93,11 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           console.log("file case");
           formData.append("id", id);
           formData.append("user_id", userId);
-          formData.append("category_id", category.toString());
+          formData.append("category_id", String(category));
           formData.append("updated_at", new Date().toISOString());
           formData.append("image", newImage);
 
-          return await fetch("/api/posts/[id]", {
+          return await fetch(`/api/posts/${id}`, {
             method: "PUT",
             body: formData,
           });
@@ -97,6 +111,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           console.log("not file case");
           setTitle(formData.get("title") as string);
           setContent(formData.get("content") as string);
+          console.log("userId:", userId)
 
           return await fetch(`/api/posts/${id}`, {
             method: "PUT",
@@ -104,7 +119,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              id,
+              id: id,
               title: newTitle,
               content: newContent,
               image_path: updatedImagePath,
@@ -123,6 +138,7 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
       const response = await updatePost();
       const data = await response.json();
+
       if (!response.ok) {
         if (response.status === 403) {
           setError("この投稿の更新権限がありません");
@@ -134,7 +150,11 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
         setIsErrorModalOpen(true);
         return;
       }
+
+      await fetchPost();
       router.push(`/posts/${id}`);
+
+
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -203,5 +223,4 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
     </div>
   );
 };
-
 export default PostEditPage;

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       data: {
         content,
         user_id: userId,
-        post_id: parseInt(post_id),
+        post_id: BigInt(post_id),
         created_at: new Date(created_at),
       },
     });

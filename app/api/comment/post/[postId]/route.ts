@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
 
         const comments = await prisma.comment.findMany({
             where: {
-                post_id: parseInt(postId),
+                post_id: BigInt(postId),
             },
             select: {
                 id: true,
@@ -55,7 +55,12 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
         //     return NextResponse.json({ error: "コメントの取得に失敗しました" }, { status: 500 });
         // }
 
-        return NextResponse.json({ data: comments });
+        return NextResponse.json({
+            data: comments.map((comment) => ({
+                ...comment,
+                id: String(comment.id),
+            })),
+        });
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("予期せぬエラー:", error);
