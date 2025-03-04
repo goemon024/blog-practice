@@ -2,6 +2,10 @@ import styles from "./BlogCard.module.css";
 import calculateTimeAgo from "lib/util/calculateTimeAgo";
 import { Post } from "lib/types";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
   users: { username: string | null };
   categories: { name: string | null };
