@@ -8,7 +8,6 @@ import { BlogHomeContent } from "./BlogHomeContent";
 import prisma from "lib/util/prisma";
 // import Pagination from "./Pagination/Pagination";
 
-
 // id: string;
 // title: string;
 // content: string;
@@ -18,8 +17,8 @@ import prisma from "lib/util/prisma";
 // created_at: Date;
 // updated_at?: Date | null;
 
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const revalidate = 0;
 
 type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
@@ -28,7 +27,6 @@ type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "create
 };
 
 export default async function PostHome() {
-
   const posts: PostCustom[] = await prisma.posts.findMany({
     select: {
       id: true,
@@ -48,9 +46,9 @@ export default async function PostHome() {
       },
     },
     orderBy: {
-      created_at: 'desc', // created_atで降順にソート
+      created_at: "desc", // created_atで降順にソート
     },
-  })
+  });
   // } catch (error) {
   //   // eslint-disable-next-line no-console
   //   console.error("Error fetching posts:", error);

@@ -2,7 +2,6 @@ import { Post } from "./post";
 import { User } from "./user";
 
 export interface Comment {
-
   id: bigint;
   content: string;
   user_id: string; // public_users.idと関連
@@ -11,5 +10,4 @@ export interface Comment {
   updated_at?: Date | null;
   posts?: Post;
   users?: User;
-
 }

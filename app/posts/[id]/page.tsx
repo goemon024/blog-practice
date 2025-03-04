@@ -2,10 +2,9 @@ import { Comment, Post } from "lib/types";
 import prisma from "lib/util/prisma";
 import { BlogContent } from "./BlogContent";
 
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const revalidate = 0;
-
 
 type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
   users: { username: string; image_path: string | null };
@@ -29,8 +28,8 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
         select: {
           username: true,
           image_path: true,
-        }
-      }
+        },
+      },
     },
   });
 
@@ -42,7 +41,7 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
       id: true,
       title: true,
       image_path: true,
-    }
+    },
   });
 
   // データフェッチをサーバーサイドに移動

@@ -32,7 +32,7 @@ const PostCreatePage = () => {
 
       // 成功時の処理
       router.refresh();
-      router.push('/')
+      router.push("/");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error:", error);

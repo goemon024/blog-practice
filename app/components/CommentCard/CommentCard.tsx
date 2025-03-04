@@ -40,7 +40,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
         <Link href={`/profile/${comment.users.username}`}>
           <UserIconButton
             imagePath={comment.users.image_path ?? ""}
-          // onClick={redirectToUserProfile}
+            // onClick={redirectToUserProfile}
           />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>

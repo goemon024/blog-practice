@@ -7,8 +7,6 @@ import { Session } from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
-
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -66,7 +64,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: {
+    async jwt({
+      token,
+      user,
+    }: {
       token: JWT;
       user?: User & {
         id: string;
@@ -106,4 +107,4 @@ export const authOptions: NextAuthOptions = {
     signIn: "/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
-} 
+};

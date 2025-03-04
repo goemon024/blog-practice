@@ -14,7 +14,7 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
   isLoading = false,
   // onClick
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [, setImageLoaded] = useState(false);
 
   useEffect(() => {
     if (imagePath) {
@@ -33,9 +33,11 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
   }, []);
 
   if (isLoading) {
-    return <div className={`${styles.userIconButton} ${styles.skeleton}`}>
-      <div className={styles.skeletonAvatar} />
-    </div>;
+    return (
+      <div className={`${styles.userIconButton} ${styles.skeleton}`}>
+        <div className={styles.skeletonAvatar} />
+      </div>
+    );
   }
 
   return (
@@ -46,9 +48,9 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
       <img
         className={styles.userIcon}
         src={imagePath ?? "/default_icon.jpg"}
-      // alt="user icon image"
-      // onLoad={() => setImageLoaded(true)}
-      // onError={() => setImageLoaded(false)}
+        // alt="user icon image"
+        // onLoad={() => setImageLoaded(true)}
+        // onError={() => setImageLoaded(false)}
       />
     </button>
   );

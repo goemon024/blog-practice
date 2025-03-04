@@ -2,7 +2,6 @@ import { Comment } from "./comment";
 import { User } from "./user";
 import { Category } from "./category";
 
-
 export interface Post {
   id: bigint;
   title: string;
@@ -16,4 +15,3 @@ export interface Post {
   users?: User;
   categories?: Category;
 }
-

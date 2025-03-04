@@ -14,7 +14,7 @@ type PostCustom = {
   category_id: string;
   user_id: string;
   image?: File | null;
-}
+};
 
 // type PostCustom = Pick<Post, "id" | "title" | "content" | "category_id" | "image_path" | "user_id"> &
 // { image?: File | null; };
@@ -143,7 +143,6 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-
     // 画像のアップロードが完了するまで待機
     // if (contentType?.includes("multipart/form-data")) {
     //   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -160,7 +159,7 @@ export async function PUT(req: NextRequest) {
         id: updatePost.id.toString(),
         category_id: updatePost.category_id.toString(),
         image_path: updatePost.image_path,
-      }
+      },
     });
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -168,7 +167,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
-
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -191,7 +189,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       },
     });
 
-
     if (!post) {
       return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
     }
@@ -200,9 +197,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: "投稿の所有者ではありません" }, { status: 403 });
     }
 
-
     // eslint-disable-next-line no-console
-    console.log("prisma data", post)
+    console.log("prisma data", post);
 
     return NextResponse.json({
       data: {
@@ -217,7 +213,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     });
   } catch (error: any) {
     // eslint-disable-next-line no-console
-    console.log("error", error)
+    console.log("error", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

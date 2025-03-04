@@ -24,16 +24,14 @@ import { Modal } from "@mui/material";
 //   post: PostCustom;
 // }
 
-
-
-export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params }) => {
+export const PostEditPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [category, setCategory] = useState<String>("3");
+  const [category, setCategory] = useState<string>("3");
   const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
 
@@ -45,10 +43,10 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
   // 投稿データの取得
   const fetchPost = async () => {
     try {
-      const response = await fetch(`/api/posts/${id}`)
+      const response = await fetch(`/api/posts/${id}`);
 
       if (!response.ok) {
-        throw new Error('データの取得に失敗しました');
+        throw new Error("データの取得に失敗しました");
       }
       const postData = await response.json();
       setTitle(postData.data.title);
@@ -57,8 +55,9 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
       setCategory(postData.data.category_id);
       setImagePath(postData.data.image_path);
     } catch (error) {
-      console.error('データの取得に失敗しました', error);
-      setError('データの取得に失敗しました');
+      // eslint-disable-next-line no-console
+      console.error("データの取得に失敗しました", error);
+      setError("データの取得に失敗しました");
     }
   };
 
@@ -66,27 +65,26 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
     fetchPost();
   }, [id]);
 
-
   const checkUpdateComplete = async (postId: string, imagePathParam: string, maxAttempts = 10): Promise<boolean> => {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const response = await fetch(`/api/posts/${postId}`);
         const { data } = await response.json();
+
+        // eslint-disable-next-line no-console
         console.log("path1", imagePath);
+        // eslint-disable-next-line no-console
         console.log("path2", data.image_path);
 
         // 更新されたデータと一致するか確認
-        if (
-          data.title === title
-          && data.content === content
-          && data.image_path === imagePathParam
-        ) {
+        if (data.title === title && data.content === content && data.image_path === imagePathParam) {
           return true;
         }
         // 一致しない場合は少し待って再試行
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
-        console.error('更新確認中のエラー:', error);
+        // eslint-disable-next-line no-console
+        console.error("更新確認中のエラー:", error);
       }
     }
     return false;
@@ -110,6 +108,7 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
       // let response;
       // eslint-disable-next-line no-console
       console.log("formData", formData.get("title"));
+      // eslint-disable-next-line no-console
       console.log("formData", formData.get("image"));
 
       const updatedImagePath = imagePath;
@@ -138,7 +137,9 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
           console.log("not file case");
           setTitle(formData.get("title") as string);
           setContent(formData.get("content") as string);
-          console.log("userId:", userId)
+
+          // eslint-disable-next-line no-console
+          console.log("userId:", userId);
 
           return await fetch(`/api/posts/${id}`, {
             method: "PUT",
@@ -167,6 +168,8 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
       const data = await response.json();
       const newImagePath = data.data.image_path;
       setImagePath(newImagePath);
+
+      // eslint-disable-next-line no-console
       console.log("response imagePath", newImagePath);
 
       if (!response.ok) {
@@ -189,12 +192,10 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
 
       // await fetchPost();
       router.refresh();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       setIsLoading(false);
       router.push(`/posts/${id}`);
       // router.push(`/`);
-
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -263,16 +264,12 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
       </Modal>
 
       {/* Loading表示用のModal */}
-      <Modal
-        open={isLoading}
-      >
+      <Modal open={isLoading}>
         <div className={styles.errorModal}>
           <p>更新中...</p>
           {/* ここにローディングスピナーなどを追加可能 */}
         </div>
       </Modal>
-
-
     </div>
   );
 };

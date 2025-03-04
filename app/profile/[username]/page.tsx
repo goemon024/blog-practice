@@ -1,16 +1,15 @@
 // Server Component
-import { supabase } from "lib/util/supabase";
+
 import prisma from "lib/util/prisma";
 import { ProfileContent } from "./ProfileContent";
 import { User, Post } from "lib/types";
 
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const revalidate = 0;
 
 // type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
 type UserCustom = Pick<User, "username" | "image_path" | "email">;
-
 
 type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
   users: { username: string };
@@ -67,7 +66,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
           name: true,
         },
       },
-    }
+    },
   });
 
   return <ProfileContent userProfile={userData} initialPosts={postData} />;

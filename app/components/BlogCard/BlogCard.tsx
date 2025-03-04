@@ -12,9 +12,7 @@ type Props = {
 };
 
 export default function BlogCard({ post }: Props) {
-  const formattedDate = post.created_at
-    ? calculateTimeAgo(new Date(post.created_at))
-    : "〇〇年〇〇月";
+  const formattedDate = post.created_at ? calculateTimeAgo(new Date(post.created_at)) : "〇〇年〇〇月";
 
   return (
     <div className={styles.card}>

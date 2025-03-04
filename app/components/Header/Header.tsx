@@ -92,7 +92,7 @@ export const Header = () => {
                 <div className={styles.iconContainer}>
                   <UserIconButton
                     imagePath={session.user?.image ?? ""}
-                  //  onClick={() => setIsOpen(!isOpen)}
+                    //  onClick={() => setIsOpen(!isOpen)}
                   />
                   <div className={styles.dropdownMenu}>
                     {/* <div className={styles.modalBox} ref={modalRef}> */}

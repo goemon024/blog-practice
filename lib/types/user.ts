@@ -1,9 +1,7 @@
-import { Post } from './post';
-import { Comment } from './comment';
-
+import { Post } from "./post";
+import { Comment } from "./comment";
 
 export interface User {
-
   id: string; // UUIDは通常stringとして扱う
   username: string; // ユーザー名はユニーク
   email: string; // メールアドレスもユニーク
@@ -13,4 +11,3 @@ export interface User {
   comment?: Comment[]; // コメントは関連するコメントの配列
   posts?: Post[]; // 投稿は関連する投稿の配列
 }
-

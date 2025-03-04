@@ -43,7 +43,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     // コメント削除
     // const { error } = await supabase.from("comment").delete().eq("id", params.id);
 
-    const deletedComment = await prisma.comment.delete({
+    // const deletedComment = await prisma.comment.delete({
+    await prisma.comment.delete({
       where: {
         id: BigInt(params.id),
       },

@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
     // ]);
 
     // データベースへの保存
-    const newComment = await prisma.comment.create({
+    // const newComment = await prisma.comment.create({
+    await prisma.comment.create({
       data: {
         content,
         user_id: userId,
