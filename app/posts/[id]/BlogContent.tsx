@@ -101,7 +101,7 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
             }
 
             // 成功したら、コメントリストを更新
-            setComments((prevComments) => prevComments.filter((comment) => comment.id !== BigInt(commentId)));
+            setComments((prevComments) => prevComments.filter((comment) => comment.id.toString() !== commentId.toString()));
         } catch (error) {
             // eslint-disable-next-line no-console
             console.error("コメントの削除中にエラーが発生しました", error);

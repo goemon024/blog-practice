@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
 import prisma from "lib/util/prisma";
-import { Post } from "lib/types";
+// import { Post } from "lib/types";
 // import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 // import { cookies } from 'next/headers';
 
@@ -126,9 +126,6 @@ export async function PUT(req: NextRequest) {
       };
     }
 
-    console.log("token.sub", token.sub)
-    console.log("updateData.title", updateData.title)
-    console.log("updateData.user_id", updateData.user_id)
     if (updateData.user_id !== token.sub) {
       return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
     }
@@ -146,10 +143,11 @@ export async function PUT(req: NextRequest) {
       },
     });
 
+
     // 画像のアップロードが完了するまで待機
-    if (contentType?.includes("multipart/form-data")) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    // if (contentType?.includes("multipart/form-data")) {
+    //   await new Promise(resolve => setTimeout(resolve, 1000));
+    // }
 
     // if (error) {
     //   return NextResponse.json({ error: "データベースの更新に失敗しました" }, { status: 500 });
@@ -161,6 +159,7 @@ export async function PUT(req: NextRequest) {
         ...updatePost,
         id: updatePost.id.toString(),
         category_id: updatePost.category_id.toString(),
+        image_path: updatePost.image_path,
       }
     });
   } catch (error) {

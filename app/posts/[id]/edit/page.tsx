@@ -40,6 +40,8 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
   const [error, setError] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // 投稿データの取得
   const fetchPost = async () => {
     try {
@@ -65,11 +67,36 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
   }, [id]);
 
 
+  const checkUpdateComplete = async (postId: string, imagePathParam: string, maxAttempts = 10): Promise<boolean> => {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        const response = await fetch(`/api/posts/${postId}`);
+        const { data } = await response.json();
+        console.log("path1", imagePath);
+        console.log("path2", data.image_path);
+
+        // 更新されたデータと一致するか確認
+        if (
+          data.title === title
+          && data.content === content
+          && data.image_path === imagePathParam
+        ) {
+          return true;
+        }
+        // 一致しない場合は少し待って再試行
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (error) {
+        console.error('更新確認中のエラー:', error);
+      }
+    }
+    return false;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // eslint-disable-next-line no-console
     console.log("更新ボタンが押されました");
-
+    setIsLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
       const newTitle = formData.get("title") as string;
@@ -138,6 +165,9 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
 
       const response = await updatePost();
       const data = await response.json();
+      const newImagePath = data.data.image_path;
+      setImagePath(newImagePath);
+      console.log("response imagePath", newImagePath);
 
       if (!response.ok) {
         if (response.status === 403) {
@@ -148,11 +178,21 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
           setError(data.error || "更新中にエラーが発生しました");
         }
         setIsErrorModalOpen(true);
+        setIsLoading(false);
         return;
       }
 
-      await fetchPost();
+      const isUpdateComplete = await checkUpdateComplete(id, newImagePath);
+      if (!isUpdateComplete) {
+        throw new Error("データの更新が確認できませんでした");
+      }
+
+      // await fetchPost();
+      router.refresh();
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setIsLoading(false);
       router.push(`/posts/${id}`);
+      // router.push(`/`);
 
 
     } catch (error) {
@@ -160,6 +200,7 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
       console.log(error);
       setError("予期せぬエラーが発生しました");
       setIsErrorModalOpen(true);
+      setIsLoading(false);
     }
   };
 
@@ -220,6 +261,18 @@ export const PostEditPage: React.FC<({ params: { id: string } })> = ({ params })
           </button>
         </div>
       </Modal>
+
+      {/* Loading表示用のModal */}
+      <Modal
+        open={isLoading}
+      >
+        <div className={styles.errorModal}>
+          <p>更新中...</p>
+          {/* ここにローディングスピナーなどを追加可能 */}
+        </div>
+      </Modal>
+
+
     </div>
   );
 };

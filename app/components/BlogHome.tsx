@@ -18,6 +18,10 @@ import prisma from "lib/util/prisma";
 // created_at: Date;
 // updated_at?: Date | null;
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
   users: { username: string };
   categories: { name: string };

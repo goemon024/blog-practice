@@ -4,6 +4,7 @@ const nextConfig = {
         domains: [
             'juceetuimzeniwkjzsdt.supabase.co',
             'ikfulvnucptdtnflezhq.supabase.co',
+            'tvpohkpjrplmdipfyqmx.supabase.co',
         ],
     },
 };

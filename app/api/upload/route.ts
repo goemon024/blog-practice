@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const category = formData.get("category") as string;
     const userId = token.sub as string;
 
-    if (typeof parseInt(category, 10) !== "number") {
+    if (typeof BigInt(category) !== "bigint") {
       throw new Error("カテゴリーが無効です");
     }
 

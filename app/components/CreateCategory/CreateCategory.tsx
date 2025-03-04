@@ -25,7 +25,7 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({ category, setCategory }
       >
         <option value="9">{"    "}</option>
         <option value="1">food</option>
-        <option value="3">technorogy</option>
+        <option value="3">technology</option>
         <option value="2">health</option>
       </select>
     </div>

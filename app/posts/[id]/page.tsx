@@ -1,7 +1,11 @@
 import { Comment, Post } from "lib/types";
-// import { supabase } from "lib/util/supabase";
 import prisma from "lib/util/prisma";
 import { BlogContent } from "./BlogContent";
+
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 
 type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
   users: { username: string; image_path: string | null };

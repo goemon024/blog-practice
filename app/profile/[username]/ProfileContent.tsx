@@ -34,7 +34,7 @@ export const ProfileContent = ({ userProfile, initialPosts }: ProfileContentProp
       <div className={styles.profileContainer}>
         <h1 className={styles.profileTitle}>Profile</h1>
         <div className={`${styles.profileContainer} ${styles.flexContainer}`}>
-          <ProfileImage presetImage={userProfile?.image_path ?? null} />
+          <ProfileImage userName={userProfile?.username ?? ""} presetImage={userProfile?.image_path ?? null} />
 
           <div className={styles.profileInfo}>
             <p>{userProfile?.username}</p>
