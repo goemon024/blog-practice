@@ -24,7 +24,7 @@ import { Modal } from "@mui/material";
 //   post: PostCustom;
 // }
 
-export const PostEditPage: React.FC<{ params: { id: string } }> = ({ params }) => {
+export default function PostEditPage({ params }: { params: { id: string } }) {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
 
@@ -273,4 +273,3 @@ export const PostEditPage: React.FC<{ params: { id: string } }> = ({ params }) =
     </div>
   );
 };
-export default PostEditPage;
