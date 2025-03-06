@@ -7,6 +7,7 @@
   margin: 40px auto;
   max-width: 800px;
   position: relative;
+  z-index: -1;
 }
 
 .search-text {
@@ -71,6 +72,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   width: 20rem;
   height: 22.5rem;
+  position: relative;
+  z-index: -1;
 }
 
 .blog-card:hover {

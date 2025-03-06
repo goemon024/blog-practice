@@ -4,9 +4,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  schemas  = ["auth", "public"]
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["auth", "public"]
 }
 
 model audit_log_entries {
@@ -330,7 +331,7 @@ model public_users {
   id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   username   String     @unique(map: "users_name_key")
   email      String     @unique
-  image_path String?    @default("https://juceetuimzeniwkjzsdt.supabase.co/storage/v1/object/public/profile-images//avator2.png")
+  image_path String?
   updated_at DateTime?  @default(now()) @db.Timestamp(6)
   created_at DateTime   @default(now()) @db.Timestamptz(6)
   comment    comment[]

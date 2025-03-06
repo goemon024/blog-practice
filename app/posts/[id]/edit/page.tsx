@@ -65,21 +65,42 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
     fetchPost();
   }, [id]);
 
-  const checkUpdateComplete = async (postId: string, imagePathParam: string, maxAttempts = 10): Promise<boolean> => {
+  const checkUpdateComplete = async (
+    postId: string, imagePathParam: string, contentParam: string, maxAttempts = 8
+  ): Promise<boolean> => {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
-        const response = await fetch(`/api/posts/${postId}`);
+        const response = await fetch(`/api/posts/${postId}`, {
+          // Next.jsのキャッシュ層を無効化
+          cache: 'no-store',
+          // ブラウザのキャッシュを無効化
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        }
+        );
         const { data } = await response.json();
 
-        // eslint-disable-next-line no-console
-        console.log("path1", imagePath);
-        // eslint-disable-next-line no-console
-        console.log("path2", data.image_path);
+        // // eslint-disable-next-line no-console
+        // console.log("path1", imagePathParam);
+        // // eslint-disable-next-line no-console
+        // console.log("path2", data.image_path);
+        if (data.title !== title) {
+          console.log("titleが一致しません");
+        }
+        if (data.content !== contentParam) {
+          console.log("contentが一致しません");
+        }
+        if (data.image_path !== imagePathParam) {
+          console.log("image_pathが一致しません");
+        }
+
 
         // 更新されたデータと一致するか確認
-        if (data.title === title && data.content === content && data.image_path === imagePathParam) {
+        if (data.title === title && data.content === contentParam && data.image_path === imagePathParam) {
           return true;
         }
+
         // 一致しない場合は少し待って再試行
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
@@ -97,8 +118,8 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
     setIsLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
-      const newTitle = formData.get("title") as string;
-      const newContent = formData.get("content") as string;
+      const formTitle = formData.get("title") as string;
+      const formContent = formData.get("content") as string;
 
       const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement;
       const newImage = fileInput.files?.[0];
@@ -148,8 +169,8 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
             },
             body: JSON.stringify({
               id: id,
-              title: newTitle,
-              content: newContent,
+              title: formTitle,
+              content: formContent,
               image_path: updatedImagePath,
               user_id: userId,
               category_id: category,
@@ -167,7 +188,8 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       const response = await updatePost();
       const data = await response.json();
       const newImagePath = data.data.image_path;
-      setImagePath(newImagePath);
+      const newContent = data.data.content;
+      // setImagePath(newImagePath);
 
       // eslint-disable-next-line no-console
       console.log("response imagePath", newImagePath);
@@ -185,7 +207,7 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
         return;
       }
 
-      const isUpdateComplete = await checkUpdateComplete(id, newImagePath);
+      const isUpdateComplete = await checkUpdateComplete(id, newImagePath, newContent);
       if (!isUpdateComplete) {
         throw new Error("データの更新が確認できませんでした");
       }
@@ -218,6 +240,12 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
           return;
         }
       }
+
+      router.refresh();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      router.push(`/`);
+
+
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("投稿の削除中にエラーが発生しました", error);

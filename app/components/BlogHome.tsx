@@ -8,67 +8,16 @@ import { BlogHomeContent } from "./BlogHomeContent";
 import prisma from "lib/util/prisma";
 // import Pagination from "./Pagination/Pagination";
 
-// id: string;
-// title: string;
-// content: string;
-// image_path?: string | null;
-// category_id: number;
-// user_id: string; // public_users.idと関連
-// created_at: Date;
-// updated_at?: Date | null;
-
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-export const revalidate = 0;
 
 type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
   users: { username: string };
   categories: { name: string };
 };
 
-export default async function PostHome() {
-  const posts: PostCustom[] = await prisma.posts.findMany({
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      image_path: true,
-      created_at: true,
-      users: {
-        select: {
-          username: true,
-        },
-      },
-      categories: {
-        select: {
-          name: true,
-        },
-      },
-    },
-    orderBy: {
-      created_at: "desc", // created_atで降順にソート
-    },
-  });
-  // } catch (error) {
-  //   // eslint-disable-next-line no-console
-  //   console.error("Error fetching posts:", error);
-  // }
-  //   const { data: posts }:{data:PostCustom[]} = await supabase
-  // .from("posts")
-  // .select(
-  //   `
-  //   id,
-  //   title,
-  //   content,
-  //   image_path,
-  //   created_at,
-  //   users (username),
-  //   categories (name)
-  // `,
-  // )
-  // .order("created_at", { ascending: false })
+export default async function BlogHome({ initialPosts }: { initialPosts: PostCustom[] }) {
 
-  return <BlogHomeContent initialPosts={posts ?? []} />;
+
+  return <BlogHomeContent initialPosts={initialPosts ?? []} />;
 }
 
 // "use client";
