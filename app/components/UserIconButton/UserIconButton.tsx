@@ -47,10 +47,10 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
     >
       <img
         className={styles.userIcon}
-        src={imagePath || "/default_icon.jpg"}
-        // alt="user icon image"
-        // onLoad={() => setImageLoaded(true)}
-        // onError={() => setImageLoaded(false)}
+        src={imagePath || `${process.env.NEXT_PUBLIC_BASE_URL}/default_icon.jpg`}
+      // alt="user icon image"
+      // onLoad={() => setImageLoaded(true)}
+      // onError={() => setImageLoaded(false)}
       />
     </button>
   );
