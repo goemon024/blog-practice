@@ -14,7 +14,6 @@ type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "create
   categories: { name: string };
 };
 
-
 export default async function Home() {
   const posts: PostCustom[] = await prisma.posts.findMany({
     select: {
@@ -38,7 +37,6 @@ export default async function Home() {
       created_at: "desc",
     },
   });
-
 
   return (
     <div>

@@ -1,13 +1,5 @@
-// import "./bloghome.css";
-// import Link from "next/link";
-// import SearchIcon from "@mui/icons-material/Search";
-// import { useEffect, useState } from "react";
-// import { supabase } from "lib/util/supabase";
 import type { Post } from "lib/types/index";
 import { BlogHomeContent } from "./BlogHomeContent";
-import prisma from "lib/util/prisma";
-// import Pagination from "./Pagination/Pagination";
-
 
 type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
   users: { username: string };
@@ -15,8 +7,6 @@ type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "create
 };
 
 export default async function BlogHome({ initialPosts }: { initialPosts: PostCustom[] }) {
-
-
   return <BlogHomeContent initialPosts={initialPosts ?? []} />;
 }
 

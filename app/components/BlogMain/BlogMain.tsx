@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Post } from "lib/types";
 
-
 type Props = {
   post: Post;
 };
@@ -55,7 +54,6 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       >
         編集
       </button>
-
     </div>
   );
 };

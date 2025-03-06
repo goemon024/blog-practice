@@ -59,7 +59,7 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <div className={styles.logo}>LOGO</div>
+        <div className={styles.logo}>Blog</div>
         <nav className={styles.nav}>
           <Link href="/" passHref>
             <button className={`${styles.navButton} ${styles.primary}`}>Home</button>

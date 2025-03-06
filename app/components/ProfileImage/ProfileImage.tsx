@@ -27,9 +27,9 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   const isOwnProfile = session?.user?.username === userName;
 
-
   // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log("useEffect executed - presetImage:", presetImage);
     setPreview(presetImage ?? "/default_icon.jpg");
   }, [presetImage]);

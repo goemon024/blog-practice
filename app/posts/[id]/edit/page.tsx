@@ -3,32 +3,15 @@
 import styles from "./page.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
-// import { supabase } from "lib/util/supabase";
-// import prisma from "lib/util/prisma";
-// import { Post } from "lib/types";
 
 import { Modal } from "@mui/material";
-
-// interface PostEditPageProps {
-//   params: {
-//     id: string;
-//   };
-// }
-
-// type PostCustom = Pick<Post, "id" | "title" | "content" | "category_id" | "image_path" | "user_id">;
-
-// interface PostEditPageProps {
-//   post: PostCustom;
-// }
 
 export default function PostEditPage({ params }: { params: { id: string } }) {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
-  const { data: session, status } = useSession();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -42,7 +25,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
 
   const [isAuthen, setIsAuthen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
 
   // 投稿データの取得
   const fetchPost = async () => {
@@ -67,45 +49,46 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
     }
   };
 
-  if (!isAuthen) {
-    return (<div>Loading...</div>)
-  }
-
   useEffect(() => {
     fetchPost();
   }, [id]);
 
+  if (!isAuthen) {
+    return <div>Loading...</div>;
+  }
+
+
 
   const checkUpdateComplete = async (
-    postId: string, imagePathParam: string, contentParam: string, maxAttempts = 8
+    postId: string,
+    imagePathParam: string,
+    contentParam: string,
+    maxAttempts = 8,
   ): Promise<boolean> => {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const response = await fetch(`/api/posts/${postId}`, {
           // Next.jsのキャッシュ層を無効化
-          cache: 'no-store',
+          cache: "no-store",
           // ブラウザのキャッシュを無効化
           headers: {
-            'Cache-Control': 'no-cache',
+            "Cache-Control": "no-cache",
           },
-        }
-        );
+        });
         const { data } = await response.json();
 
-        // // eslint-disable-next-line no-console
-        // console.log("path1", imagePathParam);
-        // // eslint-disable-next-line no-console
-        // console.log("path2", data.image_path);
         if (data.title !== title) {
+          // eslint-disable-next-line no-console
           console.log("titleが一致しません");
         }
         if (data.content !== contentParam) {
+          // eslint-disable-next-line no-console
           console.log("contentが一致しません");
         }
         if (data.image_path !== imagePathParam) {
+          // eslint-disable-next-line no-console
           console.log("image_pathが一致しません");
         }
-
 
         // 更新されたデータと一致するか確認
         if (data.title === title && data.content === contentParam && data.image_path === imagePathParam) {
@@ -255,7 +238,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       router.refresh();
       await new Promise((resolve) => setTimeout(resolve, 500));
       router.push(`/`);
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("投稿の削除中にエラーが発生しました", error);
@@ -310,4 +292,4 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       </Modal>
     </div>
   );
-};
+}

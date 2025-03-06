@@ -38,10 +38,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("ユーザーが見つかりません");
         }
 
-        const {
-          data: authData,
-          error: authError,
-        } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: userData.email,
           password: credentials.password as string,
         });
