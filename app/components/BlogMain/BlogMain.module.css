@@ -75,9 +75,9 @@
 }
 
 .editDisaledButton {
-  display: none;
-  /* background-color: #777777;
-  color: #bbbbbb; */
+  background-color: #777777;
+  color: #bbbbbb;
+  cursor: default;
 }
 
 .editButton:hover {

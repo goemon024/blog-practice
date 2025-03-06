@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./UserIconButton.module.css";
 
 interface UserIconButtonProps {
-  imagePath: string;
+  imagePath: string | null;
   isLoading: boolean;
   // onClick: () => void;
   className?: string;
@@ -47,10 +47,10 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
     >
       <img
         className={styles.userIcon}
-        src={imagePath ?? "/default_icon.jpg"}
-        // alt="user icon image"
-        // onLoad={() => setImageLoaded(true)}
-        // onError={() => setImageLoaded(false)}
+        src={imagePath || "/default_icon.jpg"}
+      // alt="user icon image"
+      // onLoad={() => setImageLoaded(true)}
+      // onError={() => setImageLoaded(false)}
       />
     </button>
   );

@@ -7,16 +7,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Post } from "lib/types";
 
-// interface Post {
-//   id: string;
-//   title: string;
-//   content: string;
-//   image_path?: string | null;
-//   category_id: number;
-//   user_id: string;
-//   created_at: string;
-//   updated_at?: string;
-// }
 
 type Props = {
   post: Post;
@@ -29,7 +19,7 @@ const BlogMain: React.FC<Props> = ({ post }) => {
   //現在のユーザが投稿者と一致するか確認
   const isAuther = session?.user?.id === post.user_id;
   // eslint-disable-next-line no-console
-  console.log(isAuther);
+  console.log("isAUther", isAuther);
   // const redirectToUserProfile = () => {
   //   router.push(`/user/${post.user_id}`);
   // };
@@ -63,13 +53,9 @@ const BlogMain: React.FC<Props> = ({ post }) => {
         onClick={redirectToEditPage}
         disabled={!isAuther}
       >
-        {/* <button className={styles.editButton} onClick={redirectToEditPage} disabled={!session}> */}
         編集
       </button>
 
-      <button className={styles.editButton} onClick={redirectToEditPage}>
-        編集
-      </button>
     </div>
   );
 };

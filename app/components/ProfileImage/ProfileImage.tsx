@@ -27,9 +27,11 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
   const isOwnProfile = session?.user?.username === userName;
 
+
   // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
   useEffect(() => {
-    setPreview(presetImage ?? null);
+    console.log("useEffect executed - presetImage:", presetImage);
+    setPreview(presetImage ?? "/default_icon.jpg");
   }, [presetImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

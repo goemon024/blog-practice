@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
@@ -27,6 +28,7 @@ import { Modal } from "@mui/material";
 export default function PostEditPage({ params }: { params: { id: string } }) {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -38,7 +40,9 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
   const [error, setError] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
+  const [isAuthen, setIsAuthen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
 
   // 投稿データの取得
   const fetchPost = async () => {
@@ -54,16 +58,23 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       setUserId(postData.data.user_id);
       setCategory(postData.data.category_id);
       setImagePath(postData.data.image_path);
+      setIsAuthen(true);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("データの取得に失敗しました", error);
       setError("データの取得に失敗しました");
+      router.push("/");
     }
   };
+
+  if (!isAuthen) {
+    return (<div>Loading...</div>)
+  }
 
   useEffect(() => {
     fetchPost();
   }, [id]);
+
 
   const checkUpdateComplete = async (
     postId: string, imagePathParam: string, contentParam: string, maxAttempts = 8
@@ -244,7 +255,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       router.refresh();
       await new Promise((resolve) => setTimeout(resolve, 500));
       router.push(`/`);
-
 
     } catch (error) {
       // eslint-disable-next-line no-console
