@@ -1,56 +1,35 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./UserIconButton.module.css";
+import Image from "next/image";
+
 
 interface UserIconButtonProps {
   imagePath: string | null;
-  isLoading: boolean;
+  // isLoading: boolean;
   // onClick: () => void;
   className?: string;
 }
 
 const UserIconButton: React.FC<UserIconButtonProps> = ({
   imagePath,
-  isLoading = false,
+  // isLoading = false,
   // onClick
 }) => {
-  const [, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    if (imagePath) {
-      // 新しい画像をプリロード
-      const img = new Image();
-      img.src = imagePath;
-
-      img.onload = () => {
-        setImageLoaded(true);
-      };
-
-      img.onerror = () => {
-        setImageLoaded(false);
-      };
-    }
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className={`${styles.userIconButton} ${styles.skeleton}`}>
-        <div className={styles.skeletonAvatar} />
-      </div>
-    );
-  }
 
   return (
     <button
-      // onClick={onClick}
       className={styles.userIconButton}
     >
-      <img
+      <Image
         className={styles.userIcon}
-        src={imagePath || `./default_icon.jpg`}
-      // alt="user icon image"
-      // onLoad={() => setImageLoaded(true)}
-      // onError={() => setImageLoaded(false)}
+        src={imagePath || `/default_icon.jpg`}
+        alt="User Icon"
+        width={30}
+        height={30}
+        priority={true}
+        loading="eager"
+        sizes="30px"
       />
     </button>
   );

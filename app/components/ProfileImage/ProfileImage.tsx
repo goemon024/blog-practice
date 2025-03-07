@@ -31,7 +31,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.log("useEffect executed - presetImage:", presetImage);
-    setPreview(presetImage ?? "./default_icon.jpg");
+    setPreview(presetImage ?? "/default_icon.jpg");
   }, [presetImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +106,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       ) : (
         <div className={styles.TextContainer}>
           <p className={styles.BlogImageText}>Profile Image</p>
-          <p>クリックして画像を選択してください</p>
+          <p>クリックして画像選択</p>
         </div>
       )}
     </div>
