@@ -1,5 +1,7 @@
+import { DEFAULT_CIPHERS } from "tls";
 import styles from "./UserIconButton.module.css";
 import Image from "next/image";
+import defaultIcon from "../../../public/default_icon.jpg";
 
 interface UserIconButtonProps {
   imagePath: string | null;
@@ -20,7 +22,7 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
     >
       <Image
         className={styles.userIcon}
-        src={imagePath || `/default_icon.jpg`}
+        src={imagePath || defaultIcon}
         alt="User Icon"
         width={30}
         height={30}
