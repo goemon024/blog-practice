@@ -1,8 +1,5 @@
-"use client";
-import { useState, useEffect } from "react";
 import styles from "./UserIconButton.module.css";
 import Image from "next/image";
-
 
 interface UserIconButtonProps {
   imagePath: string | null;
