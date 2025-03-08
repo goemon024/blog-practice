@@ -1,4 +1,3 @@
-import { DEFAULT_CIPHERS } from "tls";
 import styles from "./UserIconButton.module.css";
 import Image from "next/image";
 import defaultIcon from "../../../public/default_icon.jpg";

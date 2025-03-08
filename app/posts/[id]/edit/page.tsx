@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
-
+import { useCallback } from "react";
 import { Modal } from "@mui/material";
 
 export default function PostEditPage({ params }: { params: { id: string } }) {
@@ -27,7 +27,7 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(false);
 
   // 投稿データの取得
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${id}`);
 
@@ -47,11 +47,12 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       setError("データの取得に失敗しました");
       router.push("/");
     }
-  };
+  }, [id]);
+
 
   useEffect(() => {
     fetchPost();
-  }, [id]);
+  }, [id, fetchPost]);
 
   if (!isAuthen) {
     return <div>Loading...</div>;
