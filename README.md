@@ -10,11 +10,27 @@ NEXT.JS、REACTの理解を深めることを目的としてブログアプリ�
     <!-- フレームワーク -->
     <img src="https://img.shields.io/badge/-React-61DAFB.svg?logo=react&logoColor=black&style=for-the-badge">  
   <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=nextdotjs&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-Prisma-2D3748.svg?logo=prisma&logoColor=FFFFFF&style=for-the-badge">
   <!-- DB -->
   <img src="https://img.shields.io/badge/-Supabase-3ECF8E.svg?logo=supabase&logoColor=white&style=for-the-badge">
   <!-- インフラ -->
   <img src="https://img.shields.io/badge/-Vercel-000000.svg?logo=vercel&style=for-the-badge">
 </p>
+
+## 機能説明  
+・NextAuth.jsとSupabaseを組み合わせた認証システム  
+・ユーザ名/パスワードによるカスタム認証フロー  
+・JWTペースのセッション管理によるユーザー認証  
+・記事一覧表示、詳細表示、検索 、ページネーション  
+・signinユーザによる記事作成、記事編集、削除  
+・signinユーザによるブログ記事コメント付与  
+
+## ブログアプリイメージ
+![トップ画面（記事一覧）](/public/blog-top.png)
+
+![記事詳細画面](/public/blog-detail.png)  
+
+![ユーザプロフィール画面](/public/user-profile.png)
 
 
 **1. git clone**
