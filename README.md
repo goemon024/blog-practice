@@ -1,6 +1,21 @@
-# ドキュメント
+# portfolio
+NEXT.JS、REACTの理解を深めることを目的としてブログアプリを作成。
 
-## 環境構築
+## 使用技術一覧
+<p style="display: inline">
+　<!-- フロントエンドの言語一覧 -->
+    <img src="https://img.shields.io/badge/-HTML-FF5733.svg?logo=html5&logoColor=FFFFFF&style=for-the-badge">
+    <img src="https://img.shields.io/badge/-CSS-2965f1.svg?logo=css3&logoColor=white&style=for-the-badge">
+    <img src="https://img.shields.io/badge/-TypeScript-007ACC.svg?logo=typescript&logoColor=white&style=for-the-badge">
+    <!-- フレームワーク -->
+    <img src="https://img.shields.io/badge/-React-61DAFB.svg?logo=react&logoColor=black&style=for-the-badge">  
+  <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=nextdotjs&style=for-the-badge">
+  <!-- DB -->
+  <img src="https://img.shields.io/badge/-Supabase-3ECF8E.svg?logo=supabase&logoColor=white&style=for-the-badge">
+  <!-- インフラ -->
+  <img src="https://img.shields.io/badge/-Vercel-000000.svg?logo=vercel&style=for-the-badge">
+</p>
+
 
 **1. git clone**
 
