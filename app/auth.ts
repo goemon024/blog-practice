@@ -7,8 +7,6 @@ import { Session } from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
-
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -33,26 +31,21 @@ export const authOptions: NextAuthOptions = {
           .eq("username", credentials.username)
           .single();
 
-        // .eq('username', credentials.username)
-        // .single()
-
         // eslint-disable-next-line no-console
         console.log(userData);
 
         if (userError || !userData) {
-          // eslint-disable-next-line no-console
-          console.log("ユーザーが見つかりません");
           throw new Error("ユーザーが見つかりません");
         }
 
-        const {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          data: { user },
-          // error: _,
-        } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: userData.email,
           password: credentials.password as string,
         });
+
+        if (authError || !authData.user) {
+          throw new Error("パスワードが正しくありません");
+        }
 
         return {
           id: userData.id,
@@ -66,7 +59,10 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: {
+    async jwt({
+      token,
+      user,
+    }: {
       token: JWT;
       user?: User & {
         id: string;
@@ -106,4 +102,4 @@ export const authOptions: NextAuthOptions = {
     signIn: "/signin",
   },
   secret: process.env.NEXTAUTH_SECRET,
-} 
+};

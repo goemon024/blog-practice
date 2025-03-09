@@ -1,41 +1,78 @@
 import { Comment, Post } from "lib/types";
-import { supabase } from "lib/util/supabase";
+import prisma from "lib/util/prisma";
 import { BlogContent } from "./BlogContent";
 
-type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
-  users: { username: string | null; image_path: string | null };
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
+type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
+  users: { username: string; image_path: string | null };
 };
 
+type thumnailPost = Pick<Post, "id" | "title" | "image_path">;
+
 export default async function BlogPage({ params }: { params: { id: string } }) {
+  const post: Post | null = await prisma.posts.findUnique({
+    where: { id: BigInt(params.id) },
+  });
+
+  const commentData: CommentCustom[] = await prisma.comment.findMany({
+    where: { post_id: BigInt(params.id) },
+    orderBy: { created_at: "desc" },
+    select: {
+      id: true,
+      content: true,
+      created_at: true,
+      users: {
+        select: {
+          username: true,
+          image_path: true,
+        },
+      },
+    },
+  });
+
+  const thumbnails: thumnailPost[] = await prisma.posts.findMany({
+    where: { id: { not: BigInt(params.id) } },
+    orderBy: { created_at: "desc" },
+    take: 3,
+    select: {
+      id: true,
+      title: true,
+      image_path: true,
+    },
+  });
+
   // データフェッチをサーバーサイドに移動
-  const { data: post } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("id", params.id)
-    .single() as { data: Post };
+  // const { data: post } = await supabase
+  //   .from("posts")
+  //   .select("*")
+  //   .eq("id", params.id)
+  //   .single() as { data: Post };
 
-  const { data: commentData } = await supabase
-    .from("comment")
-    .select(
-      `
-      id,
-      content,
-      created_at,
-      users(
-        username,
-        image_path
-      )`,
-    )
-    .eq("post_id", params.id)
-    .order("created_at", { ascending: false })
-    .returns<CommentCustom[]>();
+  // const { data: commentData } = await supabase
+  //   .from("comment")
+  //   .select(
+  //     `
+  //     id,
+  //     content,
+  //     created_at,
+  //     users(
+  //       username,
+  //       image_path
+  //     )`,
+  //   )
+  //   .eq("post_id", params.id)
+  //   .order("created_at", { ascending: false })
+  //   .returns<CommentCustom[]>();
 
-  const { data: thumbnails } = await supabase
-    .from("posts")
-    .select("*")
-    .neq("id", params.id)
-    .order("created_at", { ascending: false })
-    .limit(3);
+  // const { data: thumbnails } = await supabase
+  //   .from("posts")
+  //   .select("*")
+  //   .neq("id", params.id)
+  //   .order("created_at", { ascending: false })
+  //   .limit(3);
 
   return <BlogContent initialPost={post} initialComments={commentData ?? []} thumbnailPosts={thumbnails ?? []} />;
 }

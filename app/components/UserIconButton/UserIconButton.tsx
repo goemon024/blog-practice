@@ -1,30 +1,33 @@
-"use client";
-import { useState } from "react";
 import styles from "./UserIconButton.module.css";
+import Image from "next/image";
+import defaultIcon from "../../../public/default_icon.jpg";
 
 interface UserIconButtonProps {
-  imagePath: string;
+  imagePath: string | null;
+  // isLoading: boolean;
   // onClick: () => void;
   className?: string;
 }
 
 const UserIconButton: React.FC<UserIconButtonProps> = ({
   imagePath,
+  // isLoading = false,
   // onClick
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <button
-      // onClick={onClick}
       className={styles.userIconButton}
     >
-      <img
+      <Image
         className={styles.userIcon}
-        src={imageLoaded ? imagePath : "/default_icon.jpg"}
-        alt="user icon image"
-        onLoad={() => setImageLoaded(true)}
-        onError={() => setImageLoaded(false)}
+        src={imagePath || defaultIcon}
+        alt="User Icon"
+        width={30}
+        height={30}
+        priority={true}
+        loading="eager"
+        sizes="30px"
       />
     </button>
   );

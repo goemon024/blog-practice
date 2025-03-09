@@ -9,8 +9,8 @@ import calculateTimeAgo from "lib/util/calculateTimeAgo";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
-  users: { username: string | null; image_path: string | null };
+type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
+  users: { username: string; image_path: string | null };
 };
 
 type Props = {
@@ -30,7 +30,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
 
   const handleDelete = () => {
     if (onDelete) {
-      onDelete(comment.id);
+      onDelete(Number(comment.id));
     }
   };
 
@@ -40,6 +40,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
         <Link href={`/profile/${comment.users.username}`}>
           <UserIconButton
             imagePath={comment.users.image_path ?? ""}
+          // isLoading={false}
           // onClick={redirectToUserProfile}
           />
         </Link>

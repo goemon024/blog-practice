@@ -5,9 +5,11 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+
 type ProfileImageProps = {
   // onFileSelect: (file: File | null) => void;
   presetImage: string | null;
+  userName: string;
 };
 
 const DEFAULT_IMAGE_PATH = process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL;
@@ -15,6 +17,7 @@ const DEFAULT_IMAGE_PATH = process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL;
 const ProfileImage: React.FC<ProfileImageProps> = ({
   // onFileSelect,
   presetImage = DEFAULT_IMAGE_PATH,
+  userName,
 }) => {
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(presetImage ?? null);
@@ -23,9 +26,13 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   const router = useRouter();
   const { data: session } = useSession();
 
+  const isOwnProfile = session?.user?.username === userName;
+
   // edit画面で、親コンポーネントの非同期処理で非表示となるのを防ぐ。
   useEffect(() => {
-    setPreview(presetImage ?? null);
+    // eslint-disable-next-line no-console
+    console.log("useEffect executed - presetImage:", presetImage);
+    setPreview(presetImage ?? "/default_icon.jpg");
   }, [presetImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,11 +76,13 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   };
 
   const handleClick = () => {
-    fileInputRef.current?.click();
+    if (isOwnProfile) {
+      fileInputRef.current?.click();
+    }
   };
 
   return (
-    <div className={styles.uploader} onClick={handleClick}>
+    <div className={isOwnProfile ? styles.uploader : styles.notUploader} onClick={handleClick}>
       <input
         ref={fileInputRef}
         type="file"
@@ -98,7 +107,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       ) : (
         <div className={styles.TextContainer}>
           <p className={styles.BlogImageText}>Profile Image</p>
-          <p>クリックして画像を選択してください</p>
+          <p>クリックして画像選択</p>
         </div>
       )}
     </div>

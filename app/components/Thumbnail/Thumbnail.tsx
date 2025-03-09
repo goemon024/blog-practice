@@ -3,8 +3,10 @@ import styles from "./Thumbnail.module.css";
 import { Post } from "lib/types";
 import Link from "next/link";
 
+type thumnailPost = Pick<Post, "id" | "title" | "image_path">;
+
 type Props = {
-  post: Post;
+  post: thumnailPost;
 };
 
 const Thumbnail: React.FC<Props> = ({ post }) => {

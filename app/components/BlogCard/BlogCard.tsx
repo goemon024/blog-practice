@@ -2,6 +2,10 @@ import styles from "./BlogCard.module.css";
 import calculateTimeAgo from "lib/util/calculateTimeAgo";
 import { Post } from "lib/types";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
   users: { username: string | null };
   categories: { name: string | null };
@@ -12,7 +16,7 @@ type Props = {
 };
 
 export default function BlogCard({ post }: Props) {
-  const formattedDate = calculateTimeAgo(new Date(post.created_at));
+  const formattedDate = post.created_at ? calculateTimeAgo(new Date(post.created_at)) : "〇〇年〇〇月";
 
   return (
     <div className={styles.card}>

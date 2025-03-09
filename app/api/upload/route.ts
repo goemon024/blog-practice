@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
+import { getServerSession } from "next-auth";
+import prisma from "lib/util/prisma";
+import { authOptions } from "../../auth";
 
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
@@ -10,6 +13,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      // eslint-disable-next-line no-console
+      console.log("server session : Unauthorized")
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const title = formData.get("title") as string;
@@ -17,7 +29,7 @@ export async function POST(req: NextRequest) {
     const category = formData.get("category") as string;
     const userId = token.sub as string;
 
-    if (typeof parseInt(category, 10) !== "number") {
+    if (typeof BigInt(category) !== "bigint") {
       throw new Error("カテゴリーが無効です");
     }
 
@@ -38,22 +50,15 @@ export async function POST(req: NextRequest) {
     // 画像URLの取得
     const fileUrl = supabase.storage.from("blog-images").getPublicUrl(fileName).data.publicUrl;
 
-    // データベースへの保存
-    const { error: dbError } = await supabase.from("posts").insert([
-      {
+    await prisma.posts.create({
+      data: {
         title,
         content,
         image_path: fileUrl,
         user_id: userId,
-        category_id: category,
+        category_id: BigInt(category),
       },
-    ]);
-
-    if (dbError) {
-      // eslint-disable-next-line no-console
-      console.error("Database error:", dbError);
-      return NextResponse.json({ error: "データベースの保存に失敗しました" }, { status: 500 });
-    }
+    });
 
     return NextResponse.json({
       success: true,

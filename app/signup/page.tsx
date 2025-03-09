@@ -8,7 +8,9 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error1, setError1] = useState("");
+  const [error2, setError2] = useState("");
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,8 +25,7 @@ export default function SignUpPage() {
       });
 
       if (authError) {
-        console.log("signup error:", authError);
-        setError(authError.message);
+        setError1(authError.message);
         return;
       }
 
@@ -38,17 +39,17 @@ export default function SignUpPage() {
           },
         ]);
 
-        // if (profileError) {
-        //   setError(profileError.message);
-        //   return;
-        // }
+        if (profileError) {
+          setError2(profileError.message);
+          return;
+        }
 
         router.push("/signin");
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("エラーが発生しました", error);
-      setError("エラーが発生しました");
+      // setError("エラーが発生しました");
     }
   };
 
@@ -89,7 +90,8 @@ export default function SignUpPage() {
             required
           />
         </div>
-        {error && <p className="text-red-500">{error}</p>}
+        {error1 && <p className="text-red-500">1.{error1}</p>}
+        {error2 && <p className="text-red-500">2.{error2}</p>}
         <button className={styles.signupButton} type="submit">
           アカウント作成
         </button>

@@ -6,61 +6,115 @@ import { useRouter } from "next/navigation";
 import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
-import { supabase } from "lib/util/supabase";
-
+import { useCallback } from "react";
 import { Modal } from "@mui/material";
 
-interface PostEditPageProps {
-  params: {
-    id: string;
-  };
-}
-
-const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
+export default function PostEditPage({ params }: { params: { id: string } }) {
   const { id } = params; // URLから投稿IDを取得
   const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [category, setCategory] = useState(6);
+  const [category, setCategory] = useState<string>("3");
   const [, setImage] = useState<File | null>(null);
   const [imagePath, setImagePath] = useState<string | null>("");
 
   const [error, setError] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
+  const [isAuthen, setIsAuthen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   // 投稿データの取得
-  useEffect(() => {
-    const fetchPost = async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("title, content, category_id, image_path, user_id")
-        .eq("id", id)
-        .single();
+  const fetchPost = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/posts/${id}`);
 
-      if (error) {
-        return;
+      if (!response.ok) {
+        throw new Error("データの取得に失敗しました");
       }
-
-      setTitle(data.title);
-      setContent(data.content);
-      setUserId(data.user_id);
-      setCategory(data.category_id);
-      setImagePath(data.image_path);
-    };
-    fetchPost();
+      const postData = await response.json();
+      setTitle(postData.data.title);
+      setContent(postData.data.content);
+      setUserId(postData.data.user_id);
+      setCategory(postData.data.category_id);
+      setImagePath(postData.data.image_path);
+      setIsAuthen(true);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("データの取得に失敗しました", error);
+      setError("データの取得に失敗しました");
+      router.push("/");
+    }
   }, [id]);
+
+
+  useEffect(() => {
+    fetchPost();
+  }, [id, fetchPost]);
+
+  if (!isAuthen) {
+    return <div>Loading...</div>;
+  }
+
+
+
+  const checkUpdateComplete = async (
+    postId: string,
+    imagePathParam: string,
+    contentParam: string,
+    maxAttempts = 8,
+  ): Promise<boolean> => {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        const response = await fetch(`/api/posts/${postId}`, {
+          // Next.jsのキャッシュ層を無効化
+          cache: "no-store",
+          // ブラウザのキャッシュを無効化
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
+        const { data } = await response.json();
+
+        if (data.title !== title) {
+          // eslint-disable-next-line no-console
+          console.log("titleが一致しません");
+        }
+        if (data.content !== contentParam) {
+          // eslint-disable-next-line no-console
+          console.log("contentが一致しません");
+        }
+        if (data.image_path !== imagePathParam) {
+          // eslint-disable-next-line no-console
+          console.log("image_pathが一致しません");
+        }
+
+        // 更新されたデータと一致するか確認
+        if (data.title === title && data.content === contentParam && data.image_path === imagePathParam) {
+          return true;
+        }
+
+        // 一致しない場合は少し待って再試行
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("更新確認中のエラー:", error);
+      }
+    }
+    return false;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // eslint-disable-next-line no-console
     console.log("更新ボタンが押されました");
-
+    setIsLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
-      const newTitle = formData.get("title") as string;
-      const newContent = formData.get("content") as string;
+      const formTitle = formData.get("title") as string;
+      const formContent = formData.get("content") as string;
 
       const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement;
       const newImage = fileInput.files?.[0];
@@ -68,6 +122,8 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
       // const newImage = formData.get('image') as File | null;
 
       // let response;
+      // eslint-disable-next-line no-console
+      console.log("formData", formData.get("title"));
       // eslint-disable-next-line no-console
       console.log("formData", formData.get("image"));
 
@@ -79,11 +135,11 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           console.log("file case");
           formData.append("id", id);
           formData.append("user_id", userId);
-          formData.append("category_id", category.toString());
+          formData.append("category_id", String(category));
           formData.append("updated_at", new Date().toISOString());
           formData.append("image", newImage);
 
-          return await fetch("/api/posts/[id]", {
+          return await fetch(`/api/posts/${id}`, {
             method: "PUT",
             body: formData,
           });
@@ -98,15 +154,18 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           setTitle(formData.get("title") as string);
           setContent(formData.get("content") as string);
 
+          // eslint-disable-next-line no-console
+          console.log("userId:", userId);
+
           return await fetch(`/api/posts/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              id,
-              title: newTitle,
-              content: newContent,
+              id: id,
+              title: formTitle,
+              content: formContent,
               image_path: updatedImagePath,
               user_id: userId,
               category_id: category,
@@ -123,6 +182,13 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
 
       const response = await updatePost();
       const data = await response.json();
+      const newImagePath = data.data.image_path;
+      const newContent = data.data.content;
+      // setImagePath(newImagePath);
+
+      // eslint-disable-next-line no-console
+      console.log("response imagePath", newImagePath);
+
       if (!response.ok) {
         if (response.status === 403) {
           setError("この投稿の更新権限がありません");
@@ -132,14 +198,27 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           setError(data.error || "更新中にエラーが発生しました");
         }
         setIsErrorModalOpen(true);
+        setIsLoading(false);
         return;
       }
+
+      const isUpdateComplete = await checkUpdateComplete(id, newImagePath, newContent);
+      if (!isUpdateComplete) {
+        throw new Error("データの更新が確認できませんでした");
+      }
+
+      // await fetchPost();
+      router.refresh();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsLoading(false);
       router.push(`/posts/${id}`);
+      // router.push(`/`);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
       setError("予期せぬエラーが発生しました");
       setIsErrorModalOpen(true);
+      setIsLoading(false);
     }
   };
 
@@ -156,6 +235,10 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           return;
         }
       }
+
+      router.refresh();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      router.push(`/`);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("投稿の削除中にエラーが発生しました", error);
@@ -200,8 +283,14 @@ const PostEditPage: React.FC<PostEditPageProps> = ({ params }) => {
           </button>
         </div>
       </Modal>
+
+      {/* Loading表示用のModal */}
+      <Modal open={isLoading}>
+        <div className={styles.errorModal}>
+          <p>更新中...</p>
+          {/* ここにローディングスピナーなどを追加可能 */}
+        </div>
+      </Modal>
     </div>
   );
-};
-
-export default PostEditPage;
+}
