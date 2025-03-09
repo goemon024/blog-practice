@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
+import { getServerSession } from "next-auth";
 import prisma from "lib/util/prisma";
+import { authOptions } from "../../auth";
 
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
@@ -9,6 +11,15 @@ export async function POST(req: NextRequest) {
     const token = await getToken({ req });
     if (!token) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      // eslint-disable-next-line no-console
+      console.log("server session : Unauthorized")
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
     const formData = await req.formData();
