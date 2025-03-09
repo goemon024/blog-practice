@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 // import { supabase } from "lib/util/supabase";
 import prisma from "lib/util/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../../auth";
 
 // type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
 //   users: { username?: string | null; image_path?: string | null };
@@ -8,6 +10,11 @@ import prisma from "lib/util/prisma";
 
 export async function GET(req: NextRequest, { params }: { params: { postId: string } }) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
     const postId = params.postId;
 
     if (!postId) {

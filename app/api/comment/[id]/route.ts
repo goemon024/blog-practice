@@ -2,12 +2,19 @@ import { NextResponse, NextRequest } from "next/server";
 // import { supabase } from "lib/util/supabase";
 import prisma from "lib/util/prisma";
 import { getToken } from "next-auth/jwt";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../auth";
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     // トークンチェック
     const token = await getToken({ req: request as NextRequest });
     if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 

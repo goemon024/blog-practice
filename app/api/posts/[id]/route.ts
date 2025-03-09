@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
 import prisma from "lib/util/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../auth";
+
 // import { Post } from "lib/types";
 // import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 // import { cookies } from 'next/headers';
@@ -25,6 +28,11 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     // トークン認証の追加
     const token = await getToken({ req });
     if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
@@ -69,6 +77,11 @@ export async function PUT(req: NextRequest) {
   try {
     const token = await getToken({ req });
     if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
@@ -173,6 +186,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // トークン認証の追加
     const token = await getToken({ req });
     if (!token) {
+      return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
+    }
+
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
