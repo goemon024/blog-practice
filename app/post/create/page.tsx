@@ -8,32 +8,22 @@ import CreateContent from "@components/CreateContent/CreateContent";
 import CreateCategory from "@components/CreateCategory/CreateCategory";
 import { useRouter } from "next/navigation";
 
-import { useSession } from "next-auth/react";
-
 const PostCreatePage = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [category, setCategory] = useState<string>("3");
   const [image, setImage] = useState<File | null>(null);
-  const { data: session } = useSession();
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // console.log("session", session)
-    // console.log("user", session?.user)
-    // console.log("JWT token", session?.user?.id)
-
     try {
       const formData = new FormData(e.currentTarget);
 
       const response = await fetch("/api/upload", {
         method: "POST",
-        // headers: {
-        //   "Authorization": `Bearer ${session?.user?.id}`
-        // },
         body: formData,
       });
       const data = await response.json();
