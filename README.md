@@ -26,12 +26,15 @@ NEXT.JS、REACTの理解を深めることを目的としてブログアプリ�
 ・signinユーザによるブログ記事コメント付与  
 
 ## ブログアプリイメージ
-![トップ画面（記事一覧）](/public/blog-top.png)
-
-![記事詳細画面](/public/blog-detail.png)  
-
-![ユーザプロフィール画面](/public/user-profile.png)
-
+トップ画面（記事一覧）  
+![スクリーンショット](/public/blog-top.png)  
+  
+ブログ詳細画面  
+![スクリーンショット](/public/blog-detail.png)  
+  
+ユーザプロフィール画面  
+![スクリーンショット](/public/user-profile.png)  
+  
 
 **1. git clone**
 
