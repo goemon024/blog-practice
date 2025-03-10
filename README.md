@@ -45,7 +45,7 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 ### アプリＵＲＬ
 https://blog-practice-goemon024s-projects.vercel.app/
 <br>
-（簡易sign in）ID：d1, password: test1111
+（簡易sign in）ID：d1, password: test1111  
 （注）supabaseが無料プランであるため、upload処理等でサーバーエラーとなることがあります。
 <br><br><br>
 
@@ -69,8 +69,8 @@ touch .env.local .env
 DATABASE_URL =
 DIRECT_URL =
 ```
-<div style = "margin-bottom : 20px"></div>
 ‐ env.localに記述（supabaseのproject settingsのData APIを表示させて取得する）。  
+
 ‐ NEXTAUTH_SECRETは、openssl rand -base64 32でランダム文字列生成をして入力。  
 
 ```
@@ -115,4 +115,4 @@ npm run dev
 <br><br><br>
 
 ## 今後の開発課題
-blog create処理の際、記事一覧表示への反映が遅れることについて対処する。
+blog create処理の際に記事一覧表示への反映が遅れることについて対処する。
