@@ -4,7 +4,7 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 ### 使用技術一覧
 <!-- <p style="display: inline"> -->
 　<!-- フロントエンドの言語一覧 -->
-<div style = "margin-bottom:10px">
+<div style = "margin-bottom:30px">
     <img src="https://img.shields.io/badge/-HTML-FF5733.svg?logo=html5&logoColor=FFFFFF&style=for-the-badge">
     <img src="https://img.shields.io/badge/-CSS-2965f1.svg?logo=css3&logoColor=white&style=for-the-badge">
     <img src="https://img.shields.io/badge/-TypeScript-007ACC.svg?logo=typescript&logoColor=white&style=for-the-badge">
@@ -13,7 +13,7 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
     <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=nextdotjs&style=for-the-badge">
     <img src="https://img.shields.io/badge/-Prisma-2D3748.svg?logo=prisma&logoColor=FFFFFF&style=for-the-badge">
 </div>
-<div>
+<div style = "margin-bottom:50px">
   <!-- DB -->
   <img src="https://img.shields.io/badge/-Supabase-3ECF8E.svg?logo=supabase&logoColor=white&style=for-the-badge">
   <!-- インフラ -->
