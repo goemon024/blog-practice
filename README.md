@@ -45,6 +45,8 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 https://blog-practice-goemon024s-projects.vercel.app/
 <br><br><br>
 
+
+## 開発環境の構築方法
 **1. git clone**
 
 ```
@@ -74,21 +76,15 @@ SUPABASE_SERVICE_ROLE_KEY =
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET=
 ```
-<div style = "margin-bottom : 50px"></div>
+<br><br>
+
 **4. パッケージインストール**
 
 ```
 npm install
 ```
 
-**5. prismaとsupabaseの同期設定？**
-
-```
-npm run dev
-```
-
-
-**5.supabaseのDB設定**
+**5. supabaseのDB設定**
 ![スクリーンショット](/public/public-table.png)  
 <br>
 1. supabase-table.txtファイルの中身をsupabaseのSQL editorにコピペしてrun。
@@ -96,3 +92,13 @@ npm run dev
 3. Project Settings、Authentication、Sign In/UpのEmailの設定において、Enable Email Providerのみを有効化する（confirm email, Secure email changeを非有効化）。  
 4. 1で作成された4つのpublicテーブルのRLS設定がdisabledになっているのを確認する。  
 <br><br><br>
+
+
+**6. prismaとsupabaseの同期設定？**
+
+
+**7. local サーバ起動**
+
+```
+npm run dev
+```
