@@ -6,6 +6,7 @@ const nextConfig = {
             'ikfulvnucptdtnflezhq.supabase.co',
             'tvpohkpjrplmdipfyqmx.supabase.co',
             'vomulusurexckkrhonbs.supabase.co',
+            'lnnlogqyzhwbpaknlite.supabase.co',
         ],
     },
 };
