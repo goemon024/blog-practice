@@ -79,13 +79,12 @@ SUPABASE_SERVICE_ROLE_KEY =
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET=
 ```
-<br><br>
-
 **4. パッケージインストール**
 
 ```
 npm install
 ```
+<br><br>
 
 **5. supabaseのDB設定**
 ![スクリーンショット](/public/public-table.png)  
@@ -107,13 +106,12 @@ const nextConfig = {
     },
 };
 ```
-<br><br>
-
 **7. local サーバ起動**
 
 ```
 npm run dev
 ```
+<br><br><br>
 
-###　今後の開発課題
+## 今後の開発課題
 blog create処理の際、記事一覧表示への反映が遅れることについて対処する。
