@@ -45,6 +45,7 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 ### アプリＵＲＬ
 https://blog-practice-goemon024s-projects.vercel.app/
 <br>
+（簡易sign in）ID：d1, password: test1111
 （注）supabaseが無料プランであるため、upload処理等でサーバーエラーとなることがあります。
 <br><br><br>
 
@@ -96,7 +97,7 @@ npm install
 <br><br>
 
 
-**6. next.config.mjsファイルにホスト名を入力（NEXT_PUBLIC_SUPABASE_URL）**
+**6. next.config.mjsファイルに、下記のようにホスト名（NEXT_PUBLIC_SUPABASE_URL）を入力**
 ```
 const nextConfig = {
     images: {
