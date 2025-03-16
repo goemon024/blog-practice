@@ -1,6 +1,7 @@
 # PORTFORIO
 NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 
+
 ### 使用技術一覧
 <!-- <p style="display: inline"> -->
 　<!-- フロントエンドの言語一覧 -->
@@ -43,6 +44,9 @@ NEXT.JS、REACTの勉強の一環で、ブログアプリを作成。
 
 ### アプリＵＲＬ
 https://blog-practice-goemon024s-projects.vercel.app/
+<br>
+（簡易sign in）ID：d1, password: test1111  
+（注）supabaseが無料プランであるため、upload処理等でサーバーエラーとなることがあります。
 <br><br><br>
 
 
@@ -56,18 +60,18 @@ git clone https://github.com/goemon024/blog-practice.git
 **2. 環境変数ファイルの作成**
 
 ```
-cp .env.local .env
+touch .env.local .env
 ```
 
-**3. supabaseから以下のAPI_KEYを取得し、env,env.localに記述**
-‐ envに記述  
+**3. supabaseのプロジェクトを作成して、以下の環境変数をenv,env.localに記述**
+‐ envに記述（supabase のconnectタブとORMsタブを表示させて取得する。）  
 ```
 DATABASE_URL =
 DIRECT_URL =
 NEXT_PUBLIC_SUPABASE_HOSTNAME = 
 ```
-<div style = "margin-bottom : 20px"></div>
-‐ env.localに記述。  
+‐ env.localに記述（supabaseのproject settingsのData APIを表示させて取得する）。  
+
 ‐ NEXTAUTH_SECRETは、openssl rand -base64 32でランダム文字列生成をして入力。  
 
 ```
@@ -77,13 +81,12 @@ SUPABASE_SERVICE_ROLE_KEY =
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET=
 ```
-<br><br>
-
 **4. パッケージインストール**
 
 ```
 npm install
 ```
+<br><br>
 
 **5. supabaseのDB設定**
 ![スクリーンショット](/public/public-table.png)  
@@ -92,14 +95,25 @@ npm install
 2. Storageにて、blog-imagesとprofile-imagesという名称のbacketをpublic設定で作成
 3. Project Settings、Authentication、Sign In/UpのEmailの設定において、Enable Email Providerのみを有効化する（confirm email, Secure email changeを非有効化）。  
 4. 1で作成された4つのpublicテーブルのRLS設定がdisabledになっているのを確認する。  
-<br><br><br>
+<br><br>
 
 
-**6. prismaとsupabaseの同期設定？**
-
-
+**6. next.config.mjsファイルに、下記のようにホスト名（NEXT_PUBLIC_SUPABASE_URL）を入力**
+```
+const nextConfig = {
+    images: {
+        domains: [
+            '**********************.supabase.co',
+        ],
+    },
+};
+```
 **7. local サーバ起動**
 
 ```
 npm run dev
 ```
+<br><br><br>
+
+## 今後の開発課題
+blog create処理の際に記事一覧表示への反映が遅れることについて対処する。
