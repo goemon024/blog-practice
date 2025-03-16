@@ -97,18 +97,7 @@ npm install
 4. 1で作成された4つのpublicテーブルのRLS設定がdisabledになっているのを確認する。  
 <br><br>
 
-
-**6. next.config.mjsファイルに、下記のようにホスト名（NEXT_PUBLIC_SUPABASE_URL）を入力**
-```
-const nextConfig = {
-    images: {
-        domains: [
-            '**********************.supabase.co',
-        ],
-    },
-};
-```
-**7. local サーバ起動**
+**6. local サーバ起動**
 
 ```
 npm run dev
