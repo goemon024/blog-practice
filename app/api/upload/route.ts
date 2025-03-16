@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session) {
       // eslint-disable-next-line no-console
-      console.log("server session : Unauthorized")
+      console.log("server session : Unauthorized");
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });

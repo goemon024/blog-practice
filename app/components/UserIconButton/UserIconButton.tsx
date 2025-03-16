@@ -14,11 +14,8 @@ const UserIconButton: React.FC<UserIconButtonProps> = ({
   // isLoading = false,
   // onClick
 }) => {
-
   return (
-    <button
-      className={styles.userIconButton}
-    >
+    <button className={styles.userIconButton}>
       <Image
         className={styles.userIcon}
         src={imagePath || defaultIcon}

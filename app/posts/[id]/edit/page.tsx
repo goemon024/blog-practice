@@ -49,7 +49,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
     }
   }, [id]);
 
-
   useEffect(() => {
     fetchPost();
   }, [id, fetchPost]);
@@ -57,8 +56,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
   if (!isAuthen) {
     return <div>Loading...</div>;
   }
-
-
 
   const checkUpdateComplete = async (
     postId: string,

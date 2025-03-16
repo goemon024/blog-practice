@@ -90,9 +90,7 @@ export const Header = () => {
               <p>{session.user?.username}</p>
               <Link href={`/profile/${session.user?.username}`}>
                 <div className={styles.iconContainer}>
-                  <UserIconButton
-                    imagePath={session.user?.image ?? ""}
-                  />
+                  <UserIconButton imagePath={session.user?.image ?? ""} />
                   <div className={styles.dropdownMenu}>
                     {/* <div className={styles.modalBox} ref={modalRef}> */}
                     <p className={styles.modalUserName}>{session?.user?.name}</p>

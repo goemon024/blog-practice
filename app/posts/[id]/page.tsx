@@ -5,7 +5,6 @@ import { getOnePost, getAllPosts } from "lib/db/posts";
 import { getComment } from "@/lib/db/comment";
 // import { map } from "zod";
 
-
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 export const revalidate = 0;
@@ -21,10 +20,9 @@ type thumnailPost = Pick<Post, "id" | "title" | "image_path">;
 // };
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
-
   const post: Post | null = await getOnePost(params.id);
   if (!post) {
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   //   if (!prePost) {
@@ -42,14 +40,13 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
   //     categories:{
   //       name:prePost.categories.name,
   //     }
-  //    } 
-
+  //    }
 
   // const post: Post | null = await prisma.posts.findUnique({
   //   where: { id: BigInt(params.id) },
   // });
 
-  const commentData = await getComment(params.id)
+  const commentData = await getComment(params.id);
 
   // const commentData: CommentCustom[] = await prisma.comment.findMany({
   //   where: { post_id: BigInt(params.id) },
@@ -67,13 +64,12 @@ export default async function BlogPage({ params }: { params: { id: string } }) {
   //   },
   // });
 
-
-  const preThumbnailPosts = await getAllPosts({ limit: 3 })
+  const preThumbnailPosts = await getAllPosts({ limit: 3 });
   const thumbnails: thumnailPost[] = preThumbnailPosts.map((post) => ({
     id: post.id,
     title: post.title,
     image_path: post.image_path,
-  }))
+  }));
 
   // const thumbnails: thumnailPost[] = await prisma.posts.findMany({
   //   where: { id: { not: BigInt(params.id) } },

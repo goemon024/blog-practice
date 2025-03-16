@@ -1,9 +1,8 @@
 import React from "react";
 
-
 import BlogHome from "./components/BlogHome";
 // import prisma from "lib/util/prisma";
-import { getAllPosts } from "lib/db/posts"
+import { getAllPosts } from "lib/db/posts";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";

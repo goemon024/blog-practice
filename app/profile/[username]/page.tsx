@@ -1,8 +1,7 @@
 // Server Component
 
-import prisma from "lib/util/prisma";
 import { ProfileContent } from "./ProfileContent";
-import { User, Post } from "lib/types";
+// import { User } from "lib/types";
 import { getAllPosts } from "lib/db/posts";
 import getUserProfile from "lib/db/profile";
 export const dynamic = "force-dynamic";
@@ -10,7 +9,7 @@ export const fetchCache = "force-no-store";
 export const revalidate = 0;
 
 // type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
-type UserCustom = Pick<User, "username" | "image_path" | "email">;
+// type UserCustom = Pick<User, "username" | "image_path" | "email">;
 
 // type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
 //   users: { username: string };
@@ -18,7 +17,6 @@ type UserCustom = Pick<User, "username" | "image_path" | "email">;
 // };
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
-
   //   const userData: UserCustom | null = await prisma.public_users.findUnique({
   //     where: {
   //       username: params.username,
