@@ -3,7 +3,8 @@
 import prisma from "lib/util/prisma";
 import { ProfileContent } from "./ProfileContent";
 import { User, Post } from "lib/types";
-
+import { getAllPosts } from "lib/db/posts";
+import getUserProfile from "lib/db/profile";
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 export const revalidate = 0;
@@ -11,63 +12,27 @@ export const revalidate = 0;
 // type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
 type UserCustom = Pick<User, "username" | "image_path" | "email">;
 
-type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
-  users: { username: string };
-  categories: { name: string | null };
-};
+// type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {
+//   users: { username: string };
+//   categories: { name: string | null };
+// };
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
-  // サーバーサイドでのデータフェッチ
-  // const { data: userData } = await supabase
-  //   .from("users")
-  //   .select("username, email, image_path")
-  //   .eq("username", params.username)
-  //   .single<UserCustom>();
 
-  const userData: UserCustom | null = await prisma.public_users.findUnique({
-    where: {
-      username: params.username,
-    },
-    select: {
-      username: true,
-      email: true,
-      image_path: true,
-    },
-  });
+  //   const userData: UserCustom | null = await prisma.public_users.findUnique({
+  //     where: {
+  //       username: params.username,
+  //     },
+  //     select: {
+  //       username: true,
+  //       email: true,
+  //       image_path: true,
+  //     },
+  //   });
 
-  // const { data: postData } = await supabase
-  //   .from("posts")
-  //   .select(`title, image_path, id, created_at, categories(name), users!inner(username)`)
-  //   .eq("users.username", params.username)
-  //   .order("created_at", { ascending: false })
-  //   .returns<PostCustom[]>();
+  const userData = await getUserProfile(params.username);
 
-  const postData: PostCustom[] = await prisma.posts.findMany({
-    where: {
-      users: {
-        username: params.username,
-      },
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-    select: {
-      image_path: true,
-      id: true,
-      title: true,
-      created_at: true,
-      users: {
-        select: {
-          username: true,
-        },
-      },
-      categories: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
+  const postData = await getAllPosts({ username: params.username });
 
   return <ProfileContent userProfile={userData} initialPosts={postData} />;
 }

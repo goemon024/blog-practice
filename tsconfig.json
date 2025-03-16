@@ -28,7 +28,13 @@
       ],
       "@components/*": [
         "app/components/*"
-      ]
+      ],
+      "@/*": [
+        "./*"
+      ], // 追加：ルートからのパス
+      "@lib/*": [
+        "lib/*"
+      ], // 追加：libフォルダへのエイリアス
     },
     "incremental": true,
     "typeRoots": [

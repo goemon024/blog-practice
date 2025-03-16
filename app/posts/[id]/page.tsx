@@ -1,48 +1,90 @@
-import { Comment, Post } from "lib/types";
-import prisma from "lib/util/prisma";
+import { Post } from "lib/types";
+
 import { BlogContent } from "./BlogContent";
+import { getOnePost, getAllPosts } from "lib/db/posts";
+import { getComment } from "@/lib/db/comment";
+// import { map } from "zod";
+
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 export const revalidate = 0;
 
-type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
-  users: { username: string; image_path: string | null };
-};
+// type CommentCustom = Pick<Comment, "id" | "content" | "created_at"> & {
+//   users: { username: string; image_path: string | null };
+// };
 
 type thumnailPost = Pick<Post, "id" | "title" | "image_path">;
+// type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
+//   users: { username: string };
+//   categories: { name: string };
+// };
 
 export default async function BlogPage({ params }: { params: { id: string } }) {
-  const post: Post | null = await prisma.posts.findUnique({
-    where: { id: BigInt(params.id) },
-  });
 
-  const commentData: CommentCustom[] = await prisma.comment.findMany({
-    where: { post_id: BigInt(params.id) },
-    orderBy: { created_at: "desc" },
-    select: {
-      id: true,
-      content: true,
-      created_at: true,
-      users: {
-        select: {
-          username: true,
-          image_path: true,
-        },
-      },
-    },
-  });
+  const post: Post | null = await getOnePost(params.id);
+  if (!post) {
+    throw new Error('Post not found');
+  }
 
-  const thumbnails: thumnailPost[] = await prisma.posts.findMany({
-    where: { id: { not: BigInt(params.id) } },
-    orderBy: { created_at: "desc" },
-    take: 3,
-    select: {
-      id: true,
-      title: true,
-      image_path: true,
-    },
-  });
+  //   if (!prePost) {
+  //     throw new Error('Post not found');
+  // }
+  //   const post: Post = {
+  //     id:prePost.id,
+  //     title:prePost.title,
+  //     content:prePost.content,
+  //     image_path:prePost.image_path,
+  //     created_at:prePost.created_at,
+  //     users:{
+  //       username:prePost.users.username,
+  //     },
+  //     categories:{
+  //       name:prePost.categories.name,
+  //     }
+  //    } 
+
+
+  // const post: Post | null = await prisma.posts.findUnique({
+  //   where: { id: BigInt(params.id) },
+  // });
+
+  const commentData = await getComment(params.id)
+
+  // const commentData: CommentCustom[] = await prisma.comment.findMany({
+  //   where: { post_id: BigInt(params.id) },
+  //   orderBy: { created_at: "desc" },
+  //   select: {
+  //     id: true,
+  //     content: true,
+  //     created_at: true,
+  //     users: {
+  //       select: {
+  //         username: true,
+  //         image_path: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+
+  const preThumbnailPosts = await getAllPosts({ limit: 3 })
+  const thumbnails: thumnailPost[] = preThumbnailPosts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    image_path: post.image_path,
+  }))
+
+  // const thumbnails: thumnailPost[] = await prisma.posts.findMany({
+  //   where: { id: { not: BigInt(params.id) } },
+  //   orderBy: { created_at: "desc" },
+  //   take: 3,
+  //   select: {
+  //     id: true,
+  //     title: true,
+  //     image_path: true,
+  //   },
+  // });
 
   // データフェッチをサーバーサイドに移動
   // const { data: post } = await supabase

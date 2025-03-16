@@ -64,6 +64,7 @@ cp .env.local .env
 ```
 DATABASE_URL =
 DIRECT_URL =
+NEXT_PUBLIC_SUPABASE_HOSTNAME = 
 ```
 <div style = "margin-bottom : 20px"></div>
 ‐ env.localに記述。  
