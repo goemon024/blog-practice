@@ -105,4 +105,4 @@ npm run dev
 <br><br><br>
 
 ## 今後の開発課題
-blog create処理の際に記事一覧表示への反映が遅れることについて対処する。
+blog create処理の際のＵＸ改善。

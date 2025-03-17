@@ -22,12 +22,6 @@ const CommentCard = ({ comment, onDelete }: Props) => {
   const commentTime = calculateTimeAgo(new Date(comment.created_at));
   const { data: session } = useSession();
 
-  // const router = useRouter();
-  // const redirectToUserProfile = () => {
-  //   // router.push(`/user/${comment.user_id}`);
-  //   router.push(`/`);
-  // };
-
   const handleDelete = () => {
     if (onDelete) {
       onDelete(Number(comment.id));
@@ -40,8 +34,6 @@ const CommentCard = ({ comment, onDelete }: Props) => {
         <Link href={`/profile/${comment.users.username}`}>
           <UserIconButton
             imagePath={comment.users.image_path ?? ""}
-            // isLoading={false}
-            // onClick={redirectToUserProfile}
           />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>

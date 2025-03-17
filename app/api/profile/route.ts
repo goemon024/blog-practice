@@ -49,21 +49,6 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    // const { error: dbError } = await supabase
-    //   .from("users")
-    //   .update([
-    //     {
-    //       image_path: fileUrl,
-    //     },
-    //   ])
-    //   .eq("id", userId);
-
-    // if (dbError) {
-    //   // eslint-disable-next-line no-console
-    //   console.error("Database error:", dbError);
-    //   return NextResponse.json({ error: "データベースの保存に失敗しました" }, { status: 500 });
-    // }
-
     return NextResponse.json({
       success: true,
       message: "投稿が完了しました",

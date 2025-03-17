@@ -1,27 +1,14 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./Header.module.css";
-import Link from "next/link"; // Linkコンポーネントをインポート
+import Link from "next/link";
 import EditIcon from "@mui/icons-material/Edit";
 import UserIconButton from "../UserIconButton/UserIconButton";
-// import { User } from "lib/types";
 
 import { useSession, signOut } from "next-auth/react";
 
-// ダミーデータ
-// const user: User = {
-//   id: "0",
-//   name: "テスト太郎",
-//   email: "testtarou@gmail.com",
-//   image_path: "/testtarou.jpg",
-//   created_at: "2021-01-01",
-//   updated_at: "2021-01-01",
-// };
-//ダミーデータ終了
 
 export const Header = () => {
-  // 本来はSessionか何かから、User情報の取得を行う。
-  // const [signedInUser, setSignedInUser] = useState<User | null>(null);
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -92,28 +79,13 @@ export const Header = () => {
                 <div className={styles.iconContainer}>
                   <UserIconButton imagePath={session.user?.image ?? ""} />
                   <div className={styles.dropdownMenu}>
-                    {/* <div className={styles.modalBox} ref={modalRef}> */}
                     <p className={styles.modalUserName}>{session?.user?.name}</p>
                     <button className={styles.modalLogoutButton} onClick={() => signOut()}>
                       Logout
                     </button>
                   </div>
-                  {/* </div> */}
                 </div>
               </Link>
-
-              {/* {isOpen && (
-                <div className={styles.modalBox} ref={modalRef}>
-                  <p className={styles.modalUserName}>{session?.user?.name}</p>
-                  <button
-                    // 本来はSignedOutApi呼び出しなどを行う。
-                    onClick={() => signOut()}
-                    className={styles.modalLogoutButton}
-                  >
-                    Logout
-                  </button>
-                </div>
-              )} */}
             </div>
           )}
         </nav>

@@ -16,9 +16,8 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // まずSupabase Authでユーザーを作成
-      // await supabase.auth.admin.createUser
 
+      // まずSupabase Authでユーザーを作成
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -99,16 +98,3 @@ export default function SignUpPage() {
     </div>
   );
 }
-
-// import styles from "./styles.module.css";
-// import SignUpForm from "../components/SignUpForm/SignUpForm";
-
-// const SignUpPage = () => {
-//   return (
-//     <div className={styles.container}>
-//       <SignUpForm />
-//     </div>
-//   );
-// };
-
-// export default SignUpPage;

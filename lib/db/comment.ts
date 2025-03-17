@@ -22,19 +22,3 @@ export async function getComment(post_id: string): Promise<CommentCustom[]> {
     },
   });
 }
-
-// export default async function getComment(post_id: string)
-//     : Promise<CommentCustom | null> {
-
-//     return await prisma.comment.findMany({
-//         where: {
-//             post_id: post_id,
-//         },
-//         select: {
-//             username: true,
-//             email: true,
-//             image_path: true,
-//         },
-//     });
-
-// }

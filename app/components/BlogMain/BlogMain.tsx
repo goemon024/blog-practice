@@ -2,7 +2,6 @@
 
 import React from "react";
 import styles from "./BlogMain.module.css";
-// import UserIconButton from "../UserIconButton/UserIconButton";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Post } from "lib/types";
@@ -19,9 +18,6 @@ const BlogMain: React.FC<Props> = ({ post }) => {
   const isAuther = session?.user?.id === post.user_id;
   // eslint-disable-next-line no-console
   console.log("isAUther", isAuther);
-  // const redirectToUserProfile = () => {
-  //   router.push(`/user/${post.user_id}`);
-  // };
 
   const redirectToEditPage = () => {
     router.push(`${window.location.pathname}/edit`);
@@ -32,7 +28,6 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.title}>{post.title}</h1>
-        {/* <UserIconButton imagePath={post.userImagePath} onClick={redirectToUserProfile} /> */}
       </div>
 
       {/* Main Image */}
@@ -43,7 +38,6 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       {/* Text Content */}
       <div className={styles.textContent}>
         {post.content}
-        {/* <p className={styles.textLine}>{post.content}</p> */}
       </div>
 
       {/* Edit Button */}

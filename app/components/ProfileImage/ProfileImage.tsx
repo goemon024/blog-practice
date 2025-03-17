@@ -21,7 +21,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   const [sizeError, setSizeError] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(presetImage ?? null);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // useRefでinput要素を管理
-  // const [isUploading, setIsUploading] = useState<boolean>(false);
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -43,7 +42,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       if (file.size < maxSize) {
         setSizeError(false);
         setPreview(URL.createObjectURL(file)); // プレビュー用のURLを生成
-        // onFileSelect(file); // 親コンポーネントにファイルを渡す
       } else {
         setSizeError(true);
       }
@@ -61,9 +59,6 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       if (!response.ok) {
         throw new Error(data.error || "Something went wrong");
       }
-
-      // 成功時の処理
-      // router.push('/')
 
       const event = new Event("visibilitychange");
       document.dispatchEvent(event);
@@ -88,7 +83,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         name="file"
         accept="profile_image/*"
         onChange={handleFileChange}
-        style={{ display: "none" }} // ファイル選択ボタンを非表示
+        style={{ display: "none" }}
       />
       {preview ? (
         <div className={styles.previewContainer}>

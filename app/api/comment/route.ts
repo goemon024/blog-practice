@@ -24,18 +24,6 @@ export async function POST(req: NextRequest) {
     const post_id = data.post_id as string;
     const userId = token.sub as string;
 
-    // データベースへの保存
-    // const { error: dbError } = await supabase.from("comment").insert([
-    //   {
-    //     content,
-    //     user_id: userId,
-    //     post_id: post_id,
-    //     created_at: created_at,
-    //   },
-    // ]);
-
-    // データベースへの保存
-    // const newComment = await prisma.comment.create({
     await prisma.comment.create({
       data: {
         content,
@@ -44,12 +32,6 @@ export async function POST(req: NextRequest) {
         created_at: new Date(created_at),
       },
     });
-
-    // if (dbError) {
-    //   // eslint-disable-next-line no-console
-    //   console.error("Database error:", dbError);
-    //   return NextResponse.json({ error: "データベースの保存に失敗しました" }, { status: 500 });
-    // }
 
     return NextResponse.json({
       success: true,

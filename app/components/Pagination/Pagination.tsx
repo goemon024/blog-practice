@@ -9,22 +9,19 @@ type PaginationProps = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({ postNumber, currentPage, setCurrentPage }) => {
-  // const [currentPage, setCurrentPage] = useState(1);
-  const maxVisiblePages = 10; // 表示するページ番号の最大数を設定する。
+  const maxVisiblePages = 10; // 表示するページ番号の最大数を設定。
   const totalPages = Math.ceil(postNumber / 9); // 表示される最大ポスト数で割る。3×3⁼9を想定
   const startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
   const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      // console.log("Page changed to:", page);
       setCurrentPage(page);
     }
   };
 
   return (
     <div className={style.pagination}>
-      {/* 前へボタン */}
       <button
         className={style.previousButton}
         onClick={() => handlePageChange(currentPage - 1)}
@@ -35,7 +32,6 @@ const Pagination: React.FC<PaginationProps> = ({ postNumber, currentPage, setCur
         Previous Page
       </button>
 
-      {/* ページ番号ボタン */}
       <div className={style.buttonsContainer}>
         {Array.from({ length: endPage - startPage + 1 }, (_, index) => {
           const page = startPage + index;
@@ -52,7 +48,6 @@ const Pagination: React.FC<PaginationProps> = ({ postNumber, currentPage, setCur
         })}
       </div>
 
-      {/* 次へボタン */}
       <button
         className={style.nextButton}
         onClick={() => handlePageChange(currentPage + 1)}

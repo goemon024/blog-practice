@@ -8,7 +8,6 @@ import Link from "next/link";
 import BlogCard from "../../components/BlogCard/BlogCard";
 import ProfileImage from "../../components/ProfileImage/ProfileImage";
 
-// type UserCustom = Omit<User, "id" | "created_at" | "updated_at">;
 type UserCustom = Pick<User, "username" | "image_path" | "email">;
 
 type PostCustom = Pick<Post, "image_path" | "id" | "title" | "created_at"> & {

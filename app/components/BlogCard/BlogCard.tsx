@@ -30,7 +30,8 @@ export default function BlogCard({ post }: Props) {
           <span>{formattedDate} </span>
           <span>{post.users?.username ?? ""}</span>
         </div>
-        {/* <p className={styles.description}>{post.content}</p> */}
+
+
       </div>
     </div>
   );

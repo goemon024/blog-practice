@@ -115,10 +115,7 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
 
       const fileInput = e.currentTarget.querySelector('input[type="file"]') as HTMLInputElement;
       const newImage = fileInput.files?.[0];
-      // const newImage = image;
-      // const newImage = formData.get('image') as File | null;
 
-      // let response;
       // eslint-disable-next-line no-console
       console.log("formData", formData.get("title"));
       // eslint-disable-next-line no-console
@@ -141,10 +138,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
             body: formData,
           });
 
-          // const data = await response.json();
-          // if (!response.ok) {
-          //   throw new Error(data.error || "Something went wrong");
-          // }
         } else {
           // eslint-disable-next-line no-console
           console.log("not file case");
@@ -169,11 +162,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
               updated_at: new Date().toISOString(),
             }),
           });
-
-          // if (!response.ok) {
-          //   const errorData = await response.json().catch(() => ({ error: "不明なエラー" }));
-          //   throw new Error(errorData.error);
-          // }
         }
       };
 
@@ -181,7 +169,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       const data = await response.json();
       const newImagePath = data.data.image_path;
       const newContent = data.data.content;
-      // setImagePath(newImagePath);
 
       // eslint-disable-next-line no-console
       console.log("response imagePath", newImagePath);
@@ -281,11 +268,9 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
         </div>
       </Modal>
 
-      {/* Loading表示用のModal */}
       <Modal open={isLoading}>
         <div className={styles.errorModal}>
           <p>更新中...</p>
-          {/* ここにローディングスピナーなどを追加可能 */}
         </div>
       </Modal>
     </div>

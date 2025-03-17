@@ -5,10 +5,6 @@ import prisma from "lib/util/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
 
-// import { Post } from "lib/types";
-// import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-// import { cookies } from 'next/headers';
-
 type PostCustom = {
   id: string;
   title: string;
@@ -18,9 +14,6 @@ type PostCustom = {
   user_id: string;
   image?: File | null;
 };
-
-// type PostCustom = Pick<Post, "id" | "title" | "content" | "category_id" | "image_path" | "user_id"> &
-// { image?: File | null; };
 
 // DELETEメソッドのハンドラ
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
@@ -40,25 +33,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
-
-    // 投稿の所有者確認を追加
-    // const { data: post } = await supabase.from("posts").select("user_id").eq("id", id).single();
-
-    // const post = await prisma.posts.findUnique({
-    //   where: {
-    //     id: BigInt(id),
-    //   },
-    // });
-
-    // if (!post) {
-    //   return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
-    // }
-
-    // if (post.user_id !== token.sub) {
-    //   return NextResponse.json({ error: "投稿の所有者ではありません" }, { status: 403 });
-    // }
-
-    // const { error } = await supabase.from("posts").delete().eq("id", id);
 
     await prisma.posts.delete({
       where: {
@@ -156,14 +130,6 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    // 画像のアップロードが完了するまで待機
-    // if (contentType?.includes("multipart/form-data")) {
-    //   await new Promise(resolve => setTimeout(resolve, 1000));
-    // }
-
-    // if (error) {
-    //   return NextResponse.json({ error: "データベースの更新に失敗しました" }, { status: 500 });
-    // }
     // 成功時のレスポンスを追加
     return NextResponse.json({
       success: true,

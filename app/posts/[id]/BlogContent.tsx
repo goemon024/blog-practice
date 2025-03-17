@@ -25,14 +25,8 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(initialComments);
 
-  // const [post, setPost] = useState<Post | null>(null);
-  // const [thumbnailPosts, setThumbnailPosts] = useState<Post[]>([]);
-
-  // error message for comment submit
-
   const [, setErrorMessage] = useState<string | null>(null);
   const [, setIsErrorModalOpen] = useState(false);
-  // コメント群取得
 
   // コメント投稿などのインタラクティブな機能
   const handleCommentSubmit = async () => {
@@ -45,15 +39,11 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          post_id: String(initialPost.id), // 現在の投稿ID
+          post_id: String(initialPost.id),
           content: commentText,
           created_at: new Date().toISOString(),
         }),
       });
-
-      // const result = await response.json();
-      // console.log('New comment data:', result.data);  // デバッグ用
-      // setComments(prev => [result.data, ...prev]);
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -67,19 +57,11 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
       const commentResponse = await fetch(`/api/comment/post/${initialPost.id}`);
       const { data: commentData } = await commentResponse.json();
 
-      // const commentResponse = await fetch(`/api/comment/post/${initialPost.id}`)
-      // const { data: commentData } = await commentResponse.json();
-      // console.log('New comment data:', commentResponse);
-
-      // const { data: commentData } = result as { data: CommentCustom };
-
-      //   setComments((prevComments) => [...commentData, ...prevComments]);
       setComments(commentData);
 
       // コメント投稿成功
       setCommentText("");
-      // router.refresh();
-      // window.location.reload();
+
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("コメントの投稿中にエラーが発生しました", error);

@@ -16,24 +16,23 @@ interface BlogHomeContentProps {
 }
 
 export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }) => {
-  // クライアントサイドの状態管理
-  // const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
   const [displayPosts, setDisplayPosts] = useState(initialPosts);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]); // 検索窓を反映して表示対象となる全ブログ
-  const [searchTerm, setSearchTerm] = useState<string>(""); // 検索ワード
+  const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     setFilteredPosts(
       !searchTerm?.trim()
         ? initialPosts
         : initialPosts.filter(
-            (post) =>
-              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
-          ),
+          (post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
     );
     setCurrentPage(1);
   }, [searchTerm, initialPosts]);
