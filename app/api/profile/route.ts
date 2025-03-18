@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
-import prisma from "lib/util/prisma";
+// import prisma from "lib/util/prisma";
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth";
+
+import { updateUserProfile } from "lib/db/profile";
+import { UpdateUserProfileInput } from "lib/types/index";
 
 // POSTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
@@ -40,14 +43,22 @@ export async function PUT(req: NextRequest) {
     const fileUrl = supabase.storage.from("profile-images").getPublicUrl(fileName).data.publicUrl;
 
     // データベースへの保存
-    await prisma.public_users.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        image_path: fileUrl,
-      },
-    });
+
+    const updateInput: UpdateUserProfileInput = {
+      id: userId,
+      image_path: fileUrl,
+    };
+
+    await updateUserProfile(updateInput);
+
+    // await prisma.public_users.update({
+    //   where: {
+    //     id: userId,
+    //   },
+    //   data: {
+    //     image_path: fileUrl,
+    //   },
+    // });
 
     return NextResponse.json({
       success: true,

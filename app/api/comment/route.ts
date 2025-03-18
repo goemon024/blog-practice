@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { supabase } from "lib/util/supabase";
-import prisma from "lib/util/prisma";
+
+import { createComment } from "lib/db/comment";
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth";
+import { CreateCommentInput } from "lib/types/index";
 
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
@@ -24,14 +25,14 @@ export async function POST(req: NextRequest) {
     const post_id = data.post_id as string;
     const userId = token.sub as string;
 
-    await prisma.comment.create({
-      data: {
-        content,
-        user_id: userId,
-        post_id: BigInt(post_id),
-        created_at: new Date(created_at),
-      },
-    });
+    const commentData: CreateCommentInput = {
+      content: content,
+      user_id: userId,
+      post_id: post_id,
+      created_at: created_at
+    }
+
+    await createComment(commentData);
 
     return NextResponse.json({
       success: true,

@@ -1,5 +1,4 @@
-export type { Post } from "./post";
-export type { User } from "./user";
-export type { Comment } from "./comment";
+export type { Post, EditPostInput, CreatePostInput } from "./post";
+export type { User, UpdateUserProfileInput } from "./user";
+export type { Comment, CreateCommentInput } from "./comment";
 export type { Category } from "./category";
-

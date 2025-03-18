@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth";
-import prisma from "lib/util/prisma";
+// import prisma from "lib/util/prisma";
 import { authOptions } from "../../auth";
-
+import { CreatePostInput } from "lib/types/index";
+import { createPost } from "lib/db/posts";
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
   try {
@@ -50,15 +51,25 @@ export async function POST(req: NextRequest) {
     // 画像URLの取得
     const fileUrl = supabase.storage.from("blog-images").getPublicUrl(fileName).data.publicUrl;
 
-    await prisma.posts.create({
-      data: {
-        title,
-        content,
-        image_path: fileUrl,
-        user_id: userId,
-        category_id: BigInt(category),
-      },
-    });
+    const createInput: CreatePostInput = {
+      title,
+      content,
+      image_path: fileUrl,
+      user_id: userId,
+      category_id: category,
+    };
+
+    await createPost(createInput)
+
+    // await prisma.posts.create({
+    //   data: {
+    //     title,
+    //     content,
+    //     image_path: fileUrl,
+    //     user_id: userId,
+    //     category_id: BigInt(category),
+    //   },
+    // });
 
     return NextResponse.json({
       success: true,

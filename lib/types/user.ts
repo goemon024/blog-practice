@@ -11,3 +11,8 @@ export interface User {
   comment?: Comment[]; // コメントは関連するコメントの配列
   posts?: Post[]; // 投稿は関連する投稿の配列
 }
+
+export interface UpdateUserProfileInput {
+  id: string;
+  image_path?: string | null;
+}

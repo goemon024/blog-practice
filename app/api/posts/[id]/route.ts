@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "lib/util/supabase";
 import { getToken } from "next-auth/jwt";
-import prisma from "lib/util/prisma";
+// import prisma from "lib/util/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
+import { deletePost, editPost, getOnePost } from "lib/db/posts";
 
 type PostCustom = {
   id: string;
@@ -34,11 +35,14 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-    await prisma.posts.delete({
-      where: {
-        id: BigInt(id),
-      },
-    });
+
+    await deletePost(id);
+
+    // await prisma.posts.delete({
+    //   where: {
+    //     id: BigInt(id),
+    //   },
+    // });
 
     return NextResponse.json({ message: `Post with ID ${id} deleted successfully` });
   } catch (error: any) {
@@ -117,18 +121,21 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
     }
 
-    const updatePost = await prisma.posts.update({
-      where: {
-        id: BigInt(updateData.id),
-      },
-      data: {
-        title: updateData.title,
-        content: updateData.content,
-        category_id: BigInt(updateData.category_id),
-        user_id: updateData.user_id,
-        image_path: updateData.image_path,
-      },
-    });
+
+    const updatePost = await editPost(updateData);
+
+    // const updatePost = await prisma.posts.update({
+    //   where: {
+    //     id: BigInt(updateData.id),
+    //   },
+    //   data: {
+    //     title: updateData.title,
+    //     content: updateData.content,
+    //     category_id: BigInt(updateData.category_id),
+    //     user_id: updateData.user_id,
+    //     image_path: updateData.image_path,
+    //   },
+    // });
 
     // 成功時のレスポンスを追加
     return NextResponse.json({
@@ -167,11 +174,12 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     // 投稿の所有者確認を追加
     // const { data: post } = await supabase.from("posts").select("*").eq("id", id).single();
-    const post = await prisma.posts.findUnique({
-      where: {
-        id: BigInt(id),
-      },
-    });
+    const post = await getOnePost(id);
+    // const post = await prisma.posts.findUnique({
+    //   where: {
+    //     id: BigInt(id),
+    //   },
+    // });
 
     if (!post) {
       return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });

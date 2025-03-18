@@ -3,6 +3,7 @@ import prisma from "lib/util/prisma";
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
+import { getOneComment, deleteComment } from "lib/db/comment";
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -17,19 +18,21 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "認証が必要です" }, { status: 401 });
     }
 
-    const comment = await prisma.comment.findUnique({
-      where: {
-        id: BigInt(params.id),
-      },
-      select: {
-        id: true,
-        users: {
-          select: {
-            username: true,
-          },
-        },
-      },
-    });
+    const comment = await getOneComment(params.id);
+
+    // const comment = await prisma.comment.findUnique({
+    //   where: {
+    //     id: BigInt(params.id),
+    //   },
+    //   select: {
+    //     id: true,
+    //     users: {
+    //       select: {
+    //         username: true,
+    //       },
+    //     },
+    //   },
+    // });
 
 
     if (!comment) {
@@ -41,11 +44,13 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "削除権限がありません" }, { status: 403 });
     }
 
-    await prisma.comment.delete({
-      where: {
-        id: BigInt(params.id),
-      },
-    });
+    // await prisma.comment.delete({
+    //   where: {
+    //     id: BigInt(params.id),
+    //   },
+    // });
+
+    await deleteComment(params.id);
 
     return NextResponse.json({ message: "削除成功" });
   } catch (error) {

@@ -15,3 +15,20 @@ export interface Post {
   users?: User;
   categories?: Category;
 }
+
+export interface EditPostInput {
+  id: string;
+  title: string;
+  content: string;
+  category_id: string;
+  user_id: string;
+  image_path?: string | null;
+}
+
+export interface CreatePostInput {
+  title: string;
+  content: string;
+  image_path?: string | null;
+  category_id: string;
+  user_id: string;
+}
