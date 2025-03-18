@@ -65,8 +65,8 @@ export async function editPost(updateData: EditPostInput) {
       content: updateData.content,
       category_id: BigInt(updateData.category_id),
       image_path: updateData.image_path,
-    }
-  })
+    },
+  });
 }
 
 export async function createPost(createInput: CreatePostInput) {

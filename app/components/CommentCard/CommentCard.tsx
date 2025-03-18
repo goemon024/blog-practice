@@ -32,9 +32,7 @@ const CommentCard = ({ comment, onDelete }: Props) => {
     <div key={comment.id} className={styles.comment}>
       <div className={styles.userSection}>
         <Link href={`/profile/${comment.users.username}`}>
-          <UserIconButton
-            imagePath={comment.users.image_path ?? ""}
-          />
+          <UserIconButton imagePath={comment.users.image_path ?? ""} />
         </Link>
         <span className={styles.commentName}>{comment.users.username}</span>
       </div>

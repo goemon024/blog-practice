@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       category_id: category,
     };
 
-    await createPost(createInput)
+    await createPost(createInput);
 
     // await prisma.posts.create({
     //   data: {

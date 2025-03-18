@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import prisma from "lib/util/prisma";
+
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
@@ -33,7 +33,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     //     },
     //   },
     // });
-
 
     if (!comment) {
       return NextResponse.json({ error: "コメントが見つかりません" }, { status: 404 });

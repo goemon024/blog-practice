@@ -30,8 +30,6 @@ export default function BlogCard({ post }: Props) {
           <span>{formattedDate} </span>
           <span>{post.users?.username ?? ""}</span>
         </div>
-
-
       </div>
     </div>
   );

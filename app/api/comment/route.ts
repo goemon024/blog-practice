@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
       content: content,
       user_id: userId,
       post_id: post_id,
-      created_at: created_at
-    }
+      created_at: created_at,
+    };
 
     await createComment(commentData);
 

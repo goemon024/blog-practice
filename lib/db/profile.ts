@@ -16,9 +16,7 @@ export async function getUserProfile(username: string): Promise<UserCustom | nul
   });
 }
 
-export async function updateUserProfile(
-  updateInput: UpdateUserProfileInput
-) {
+export async function updateUserProfile(updateInput: UpdateUserProfileInput) {
   await prisma.public_users.update({
     where: {
       id: updateInput.id,

@@ -35,7 +35,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-
     await deletePost(id);
 
     // await prisma.posts.delete({
@@ -120,7 +119,6 @@ export async function PUT(req: NextRequest) {
     if (updateData.user_id !== token.sub) {
       return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
     }
-
 
     const updatePost = await editPost(updateData);
 

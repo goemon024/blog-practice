@@ -21,16 +21,13 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ message: `Post with ID ${id} deleted successfully` });
   } catch (error: any) {
-
-
-
     // エラーの種類に応じて適切なレスポンスを返す
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2025') {
-        return new Response('Post not found', { status: 404 });
+      if (error.code === "P2025") {
+        return new Response("Post not found", { status: 404 });
       }
-      if (error.code === 'P2003') {
-        return new Response('Cannot delete post with existing comments', { status: 400 });
+      if (error.code === "P2003") {
+        return new Response("Cannot delete post with existing comments", { status: 400 });
       }
     }
 

@@ -61,7 +61,6 @@ export const BlogContent = ({ initialPost, initialComments, thumbnailPosts }: Bl
 
       // コメント投稿成功
       setCommentText("");
-
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("コメントの投稿中にエラーが発生しました", error);

@@ -16,7 +16,6 @@ interface BlogHomeContentProps {
 }
 
 export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }) => {
-
   const [displayPosts, setDisplayPosts] = useState(initialPosts);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -28,11 +27,11 @@ export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }
       !searchTerm?.trim()
         ? initialPosts
         : initialPosts.filter(
-          (post) =>
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
-        ),
+            (post) =>
+              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
+          ),
     );
     setCurrentPage(1);
   }, [searchTerm, initialPosts]);

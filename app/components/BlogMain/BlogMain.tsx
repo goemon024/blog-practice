@@ -36,9 +36,7 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       </div>
 
       {/* Text Content */}
-      <div className={styles.textContent}>
-        {post.content}
-      </div>
+      <div className={styles.textContent}>{post.content}</div>
 
       {/* Edit Button */}
       <button

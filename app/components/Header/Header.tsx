@@ -7,7 +7,6 @@ import UserIconButton from "../UserIconButton/UserIconButton";
 
 import { useSession, signOut } from "next-auth/react";
 
-
 export const Header = () => {
   const { data: session, status } = useSession();
 

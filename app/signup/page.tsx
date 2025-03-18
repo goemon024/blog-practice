@@ -16,7 +16,6 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-
       // まずSupabase Authでユーザーを作成
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,

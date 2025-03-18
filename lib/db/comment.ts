@@ -24,7 +24,6 @@ export async function getComment(post_id: string): Promise<CommentCustom[]> {
 }
 
 export async function getOneComment(comment_id: string) {
-
   return await prisma.comment.findUnique({
     where: {
       id: BigInt(comment_id),
@@ -48,8 +47,7 @@ export async function deleteComment(comment_id: string) {
   });
 }
 
-export async function createComment(
-  data: CreateCommentInput) {
+export async function createComment(data: CreateCommentInput) {
   return await prisma.comment.create({
     data: {
       content: data.content,

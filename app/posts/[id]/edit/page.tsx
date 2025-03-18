@@ -47,7 +47,7 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
       setError("データの取得に失敗しました");
       router.push("/");
     }
-  }, [id]);
+  }, [id, router]);
 
   useEffect(() => {
     fetchPost();
@@ -137,7 +137,6 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
             method: "PUT",
             body: formData,
           });
-
         } else {
           // eslint-disable-next-line no-console
           console.log("not file case");
