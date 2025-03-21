@@ -6,6 +6,58 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth";
 import { CreateCommentInput } from "lib/types/index";
 
+
+
+/**
+ * @swagger
+ * /api/comment:
+ *   post:
+ *     summary: コメントを作成
+ *     description: 新しいコメントを作成します
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *               - post_id
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: コメントの内容
+ *               post_id:
+ *                 type: string
+ *                 description: コメントを投稿する投稿のID
+ *               created_at:
+ *                 type: string
+ *                 format: date-time
+ *                 description: コメントの作成日時
+ *     responses:
+ *       201:
+ *         description: コメントの作成に成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "投稿が完了しました"
+ *       401:
+ *         description: 認証が必要です
+ *       400:
+ *         description: リクエストの形式が不正です
+ *       500:
+ *         description: 予期せぬエラーが発生しました
+ */
+
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
   try {
@@ -37,10 +89,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "投稿が完了しました",
+      status: 201,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Error:", error);
+
+    if (error instanceof Error) {
+      // eslint-disable-next-line no-console
+      console.error("Error:", error.message);
+
+      // エラーメッセージに基づいて適切なステータスコードを返す
+      if (error.message.includes("バリデーションエラー") ||
+        error.message.includes("不正なデータ")) {
+        return NextResponse.json(
+          { error: "リクエストデータが不正です" },
+          { status: 400 }
+        );
+      } else {
+        return NextResponse.json(
+          { error: "予期せぬエラーが発生しました" },
+          { status: 500 }
+        );
+      }
+    } else {
+      // eslint-disable-next-line no-console
+      console.error("Error:", error);
+    }
+
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
+
+//     if (error instanceof Error) {
+//       // eslint-disable-next-line no-console
+//       console.error("Error:", error.message);
+//     } else {
+//       // eslint-disable-next-line no-console
+//       console.error("Error:", error);
+//     }
+//     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
+//   }
+// }

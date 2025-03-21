@@ -5,6 +5,42 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
 import { getOneComment, deleteComment } from "lib/db/comment";
 
+/**
+ * @swagger
+ * /api/comment/{id}:
+ *   delete:
+ *     summary: コメントを削除
+ *     description: IDで指定されたコメントを削除します
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: コメントID
+ *     responses:
+ *       200:
+ *         description: コメントの削除に成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "削除成功"
+ *       401:
+ *         description: 認証が必要です
+ *       403:
+ *         description: 削除権限がありません
+ *       404:
+ *         description: コメントが見つかりません
+ *       500:
+ *         description: 予期せぬエラーが発生しました
+ */
+
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     // トークンチェック
@@ -20,20 +56,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     const comment = await getOneComment(params.id);
 
-    // const comment = await prisma.comment.findUnique({
-    //   where: {
-    //     id: BigInt(params.id),
-    //   },
-    //   select: {
-    //     id: true,
-    //     users: {
-    //       select: {
-    //         username: true,
-    //       },
-    //     },
-    //   },
-    // });
-
     if (!comment) {
       return NextResponse.json({ error: "コメントが見つかりません" }, { status: 404 });
     }
@@ -43,15 +65,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "削除権限がありません" }, { status: 403 });
     }
 
-    // await prisma.comment.delete({
-    //   where: {
-    //     id: BigInt(params.id),
-    //   },
-    // });
-
     await deleteComment(params.id);
-
     return NextResponse.json({ message: "削除成功" });
+
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error:", error);

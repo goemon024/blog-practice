@@ -4,10 +4,55 @@ import prisma from "lib/util/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../auth";
 
-// type CommentCustom = Omit<Comment, "post_id" | "user_id" | "updated_at"> & {
-//   users: { username?: string | null; image_path?: string | null };
-// };
-
+/**
+ * @swagger
+ * /api/comment/post/{postId}:
+ *   get:
+ *     summary: 投稿に紐づくコメント一覧を取得
+ *     description: 指定された投稿IDに紐づくすべてのコメントを取得します
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 投稿ID
+ *     responses:
+ *       200:
+ *         description: コメント一覧の取得に成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       content:
+ *                         type: string
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
+ *                       users:
+ *                         type: object
+ *                         properties:
+ *                           username:
+ *                             type: string
+ *                           image_path:
+ *                             type: string
+ *       400:
+ *         description: 投稿IDが必要です
+ *       401:
+ *         description: 認証が必要です
+ *       500:
+ *         description: 予期せぬエラーが発生しました
+ */
 export async function GET(req: NextRequest, { params }: { params: { postId: string } }) {
   try {
     const session = await getServerSession(authOptions);

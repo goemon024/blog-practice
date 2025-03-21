@@ -8,6 +8,53 @@ import { authOptions } from "../../auth";
 import { updateUserProfile } from "lib/db/profile";
 import { UpdateUserProfileInput } from "lib/types/index";
 
+
+/**
+ * @swagger
+ * /api/profile:
+ *   put:
+ *     summary: プロフィール画像を更新
+ *     description: ユーザーのプロフィール画像を更新します
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: アップロードする画像ファイル
+ *     responses:
+ *       200:
+ *         description: プロフィール画像の更新に成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "投稿が完了しました"
+ *                 fileUrl:
+ *                   type: string
+ *                   description: アップロードされた画像のURL
+ *       400:
+ *         description: ファイルが選択されていません
+ *       401:
+ *         description: 認証が必要です
+ *       500:
+ *         description: ファイルのアップロードに失敗しました
+ */
+
 // POSTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
   try {

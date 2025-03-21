@@ -16,7 +16,27 @@ type PostCustom = {
   image?: File | null;
 };
 
-// DELETEメソッドのハンドラ
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   delete:
+ *     summary: 投稿を削除
+ *     description: IDで指定された投稿を削除します
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 投稿ID
+ *     responses:
+ *       200:
+ *         description: 投稿の削除に成功
+ *       401:
+ *         description: 認証が必要です
+ *       404:
+ *         description: 投稿が見つかりません
+ */
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     // トークン認証の追加
@@ -49,7 +69,44 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 }
 
-// PUTメソッドのハンドラ
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   put:
+ *     summary: 投稿を更新
+ *     description: IDで指定された投稿を更新します
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 投稿ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               category_id:
+ *                 type: string
+ *               image_path:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: 投稿の更新に成功
+ *       401:
+ *         description: 認証が必要です
+ *       403:
+ *         description: 投稿の編集権限がありません
+ *       404:
+ *         description: 投稿が見つかりません
+ */
 export async function PUT(req: NextRequest) {
   try {
     const token = await getToken({ req });
@@ -151,6 +208,52 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
+
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   get:
+ *     summary: 特定の投稿を取得
+ *     description: IDで指定された投稿の詳細を取得します
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 投稿ID
+ *     responses:
+ *       200:
+ *         description: 投稿の取得に成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     title:
+ *                       type: string
+ *                     content:
+ *                       type: string
+ *                     image_path:
+ *                       type: string
+ *                     created_at:
+ *                       type: string
+ *                     user_id:
+ *                       type: string
+ *                     category_id:
+ *                       type: string
+ *       401:
+ *         description: 認証が必要です
+ *       403:
+ *         description: 投稿の所有者ではありません
+ *       404:
+ *         description: 投稿が見つかりません
+ */
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
