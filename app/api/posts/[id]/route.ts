@@ -22,6 +22,8 @@ type PostCustom = {
  *   delete:
  *     summary: 投稿を削除
  *     description: IDで指定された投稿を削除します
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -31,11 +33,17 @@ type PostCustom = {
  *         description: 投稿ID
  *     responses:
  *       200:
- *         description: 投稿の削除に成功
+ *         description: 削除成功
+ *       400:
+ *         description: IDが必要です
  *       401:
  *         description: 認証が必要です
+ *       403:
+ *         description: 削除権限がありません
  *       404:
  *         description: 投稿が見つかりません
+ *       500:
+ *         description: サーバーエラー
  */
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -55,6 +63,17 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
+    // 投稿の所有者チェックを追加
+    const post = await getOnePost(id); // 投稿を取得する関数を呼び出し
+    if (!post) {
+      return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });
+    }
+
+    // 投稿の所有者と現在のユーザーを比較
+    if (post.user_id !== session.user.id) {
+      return NextResponse.json({ error: "削除権限がありません" }, { status: 403 });
+    }
+
     await deletePost(id);
 
     // await prisma.posts.delete({
@@ -63,7 +82,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     //   },
     // });
 
-    return NextResponse.json({ message: `Post with ID ${id} deleted successfully` });
+    return NextResponse.json({ message: `投稿削除に成功。Post with ID ${id} deleted successfully` }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

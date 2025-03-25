@@ -66,7 +66,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 
     await deleteComment(params.id);
-    return NextResponse.json({ message: "削除成功" });
+    return NextResponse.json({ message: "削除成功" }, { status: 200 });
 
   } catch (error) {
     // eslint-disable-next-line no-console

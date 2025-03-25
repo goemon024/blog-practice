@@ -111,7 +111,8 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
         ...comment,
         id: String(comment.id),
       })),
-    });
+      message: "コメント一覧取得成功",
+    }, { status: 200 });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("予期せぬエラー:", error);
