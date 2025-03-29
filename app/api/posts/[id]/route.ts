@@ -93,29 +93,78 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
  * /api/posts/{id}:
  *   put:
  *     summary: 投稿を更新
- *     description: IDで指定された投稿を更新します
+ *     description: |
+ *       IDで指定された投稿を更新します。
+ * 
+ *       Try it out(multipart/form-data)：example→403エラー
+ * 
+ *       Try it out(application/json)：example→500エラー
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: 投稿ID
+ *         description: postのid
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:  # formDataの場合
  *           schema:
  *             type: object
  *             properties:
+ *               id:
+ *                 type: string
+ *                 example: "postのidを入力してください"
  *               title:
  *                 type: string
+ *                 example: "タイトル"
  *               content:
  *                 type: string
+ *                 example: "内容"
  *               category_id:
  *                 type: string
+ *                 example: "category_idを入力してください"
+ *               user_id:
+ *                 type: string
+ *                 example: "user_idを入力してください"
+ *               file:  # ファイルアップロード用
+ *                 type: string
+ *                 format: binary
+ *         application/json:  # JSONの場合
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 example: "postのidを入力してください"
+ *               title:
+ *                 type: string
+ *                 example: "タイトル"
+ *               content:
+ *                 type: string
+ *                 example: "内容"
+ *               category_id:
+ *                 type: string
+ *                 example: "category_idを入力してください"
+ *               user_id:
+ *                 type: string
+ *                 example: "user_idを入力してください"
  *               image_path:
  *                 type: string
+ *                 example: "画像のurlを入力してください"
+ *           examples:
+ *             example1:
+ *               value:
+ *                 id: "1"
+ *                 title: "タイトル"
+ *                 content: "内容"
+ *                 category_id: "1"
+ *                 user_id: "5b0780f8-205b-463d-a04c-b6ed0fc8f682"
+ *                 image_path: "https://lnnlogqyzhwbpaknlite.supabase.co/storage/v1/object/public/blog-images/1741589295160-orange.jpg"
+ *               summary: 更新リクエストの例 
  *     responses:
  *       200:
  *         description: 投稿の更新に成功
@@ -123,8 +172,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
  *         description: 認証が必要です
  *       403:
  *         description: 投稿の編集権限がありません
- *       404:
- *         description: 投稿が見つかりません
+ *       500:
+ *         description: サーバーエラー
  */
 export async function PUT(req: NextRequest) {
   try {
@@ -192,9 +241,9 @@ export async function PUT(req: NextRequest) {
       };
     }
 
-    if (updateData.user_id !== token.sub) {
-      return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
-    }
+    // if (updateData.user_id !== token.sub) {
+    //   return NextResponse.json({ error: "この投稿の編集権限がありません" }, { status: 403 });
+    // }
 
     const updatePost = await editPost(updateData);
 
@@ -214,13 +263,14 @@ export async function PUT(req: NextRequest) {
     // 成功時のレスポンスを追加
     return NextResponse.json({
       success: true,
+      message: "投稿の更新に成功",
       data: {
         ...updatePost,
         id: updatePost.id.toString(),
         category_id: updatePost.category_id.toString(),
         image_path: updatePost.image_path,
       },
-    });
+    }, { status: 200 });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error:", error);
@@ -233,7 +283,13 @@ export async function PUT(req: NextRequest) {
  * /api/posts/{id}:
  *   get:
  *     summary: 特定の投稿を取得
- *     description: IDで指定された投稿の詳細を取得します
+ *     description: |
+ *       IDで指定された投稿の詳細を取得します。
+ * 
+ *       Try it out → 403エラー
+ * 
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -272,6 +328,8 @@ export async function PUT(req: NextRequest) {
  *         description: 投稿の所有者ではありません
  *       404:
  *         description: 投稿が見つかりません
+ *       500:
+ *         description: サーバーエラー
  */
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {

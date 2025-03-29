@@ -55,7 +55,7 @@ import { UpdateUserProfileInput } from "lib/types/index";
  *         description: ファイルのアップロードに失敗しました
  */
 
-// POSTメソッドのハンドラ
+// PUTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
   try {
     const token = await getToken({ req });

@@ -66,6 +66,8 @@ export default function PostEditPage({ params }: { params: { id: string } }) {
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const response = await fetch(`/api/posts/${postId}`, {
+          // この行は省略可能
+          method: "GET",
           // Next.jsのキャッシュ層を無効化
           cache: "no-store",
           // ブラウザのキャッシュを無効化
