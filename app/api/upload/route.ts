@@ -61,16 +61,6 @@ export async function POST(req: NextRequest) {
 
     await createPost(createInput);
 
-    // await prisma.posts.create({
-    //   data: {
-    //     title,
-    //     content,
-    //     image_path: fileUrl,
-    //     user_id: userId,
-    //     category_id: BigInt(category),
-    //   },
-    // });
-
     return NextResponse.json({
       success: true,
       message: "投稿が完了しました",
