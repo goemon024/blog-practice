@@ -10,8 +10,6 @@ import { authOptions } from "../../../../auth";
  *   get:
  *     summary: 投稿に紐づくコメント一覧を取得
  *     description: 指定された投稿IDに紐づくすべてのコメントを取得します
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: postId

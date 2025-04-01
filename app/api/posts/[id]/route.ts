@@ -21,7 +21,11 @@ type PostCustom = {
  * /api/posts/{id}:
  *   delete:
  *     summary: 投稿を削除
- *     description: IDで指定された投稿を削除します
+ *     description: |
+ *       IDで指定された投稿を削除します
+ * 
+ *       (Try it out → 403エラー)
+ * 
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -96,9 +100,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
  *     description: |
  *       IDで指定された投稿を更新します。
  * 
- *       Try it out(multipart/form-data)：example→403エラー
+ *       Try it out(multipart/form-data)：example→500エラー
  * 
- *       Try it out(application/json)：example→500エラー
+ *       Try it out(application/json)：example→200
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -158,12 +162,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
  *           examples:
  *             example1:
  *               value:
- *                 id: "1"
+ *                 id: "postのidを入力してください"
  *                 title: "タイトル"
  *                 content: "内容"
- *                 category_id: "1"
- *                 user_id: "5b0780f8-205b-463d-a04c-b6ed0fc8f682"
- *                 image_path: "https://lnnlogqyzhwbpaknlite.supabase.co/storage/v1/object/public/blog-images/1741589295160-orange.jpg"
+ *                 category_id: "category_idを入力してください"
+ *                 user_id: "user_idを入力してください"
+ *                 image_path: "画像のurlを入力してください"
  *               summary: 更新リクエストの例 
  *     responses:
  *       200:

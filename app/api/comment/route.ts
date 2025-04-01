@@ -28,13 +28,14 @@ import { CreateCommentInput } from "lib/types/index";
  *             properties:
  *               content:
  *                 type: string
- *                 description: コメントの内容
+ *                 example: "コメントの内容"
  *               post_id:
  *                 type: string
- *                 description: コメントを投稿する投稿のID
+ *                 example: "1"
  *               created_at:
  *                 type: string
  *                 format: date-time
+ *                 example: "2025-03-30T00:00:00.000Z"
  *                 description: コメントの作成日時
  *     responses:
  *       201:
@@ -88,9 +89,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "投稿が完了しました",
-      status: 201,
-    });
+      message: "投稿が完了しました"
+    }, { status: 201 });
   } catch (error) {
 
     if (error instanceof Error) {
