@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import type { Post } from "lib/types/index";
 import Pagination from "./Pagination/Pagination";
 
+import LoadingModal from "./LoadingModal/LoadingModal";
+
 type PostCustom = Pick<Post, "id" | "title" | "content" | "image_path" | "created_at"> & {
   users: { username: string | null };
   categories: { name: string | null };
@@ -22,18 +24,23 @@ export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }
   const [filteredPosts, setFilteredPosts] = useState<PostCustom[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const [isLoading, setIsLoading] = useState(true);
+
+
   useEffect(() => {
     setFilteredPosts(
       !searchTerm?.trim()
         ? initialPosts
         : initialPosts.filter(
-            (post) =>
-              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
-          ),
+          (post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.users.username?.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
     );
     setCurrentPage(1);
+    setIsLoading(false);
+
   }, [searchTerm, initialPosts]);
 
   useEffect(() => {
@@ -80,6 +87,7 @@ export const BlogHomeContent: React.FC<BlogHomeContentProps> = ({ initialPosts }
         ))}
       </main>
       <Pagination postNumber={filteredPosts.length} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      {isLoading && <LoadingModal />}
     </>
   );
 };

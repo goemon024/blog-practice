@@ -6,6 +6,7 @@ import CreateImage from "@components/CreateImage/CreateImage";
 import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
 import CreateCategory from "@components/CreateCategory/CreateCategory";
+import LoadingModal from "@components/LoadingModal/LoadingModal";
 import { useRouter } from "next/navigation";
 
 const PostCreatePage = () => {
@@ -13,12 +14,13 @@ const PostCreatePage = () => {
   const [content, setContent] = useState<string>("");
   const [category, setCategory] = useState<string>("3");
   const [image, setImage] = useState<File | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
 
@@ -32,11 +34,14 @@ const PostCreatePage = () => {
       }
 
       // 成功時の処理
-      router.refresh();
+      await router.refresh();
+      await new Promise(resolve => setTimeout(resolve, 100));
       router.push("/");
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,11 +61,12 @@ const PostCreatePage = () => {
         <CreateContent content={content} setContent={setContent} />
 
         <div className={styles.buttonContainer}>
-          <button className={styles.button} type="submit">
+          <button className={styles.button} type="submit" disabled={isLoading}>
             create blog
           </button>
         </div>
       </form>
+      {isLoading && <LoadingModal />}
     </div>
   );
 };

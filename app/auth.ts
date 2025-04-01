@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 3, // 3分
   },
   callbacks: {
     async jwt({
@@ -89,14 +90,14 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.username = token.username as string;
-        session.user.image = token.image as string;
-      }
-      return session;
-    },
+    // async session({ session, token }: { session: Session; token: JWT }) {
+    //   if (session.user) {
+    //     session.user.id = token.id as string;
+    //     session.user.username = token.username as string;
+    //     session.user.image = token.image as string;
+    //   }
+    //   return session;
+    // },
   },
   pages: {
     signIn: "/signin",
