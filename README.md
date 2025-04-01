@@ -103,6 +103,3 @@ npm install
 npm run dev
 ```
 <br><br><br>
-
-## 今後の開発課題
-blog create処理の際のＵＸ改善。
