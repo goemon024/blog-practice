@@ -34,8 +34,8 @@ const PostCreatePage = () => {
       }
 
       // 成功時の処理
-      await router.refresh();
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // await router.refresh();
+      // await new Promise((resolve) => setTimeout(resolve, 100));
       // router.push("/");
     } catch (error) {
       // eslint-disable-next-line no-console
