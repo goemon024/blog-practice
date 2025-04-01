@@ -4,7 +4,6 @@ import prisma from "lib/util/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../auth";
 
-
 export async function GET(req: NextRequest, { params }: { params: { postId: string } }) {
   try {
     const session = await getServerSession(authOptions);
@@ -35,13 +34,16 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
       },
     });
 
-    return NextResponse.json({
-      data: comments.map((comment) => ({
-        ...comment,
-        id: String(comment.id),
-      })),
-      message: "コメント一覧取得成功",
-    }, { status: 200 });
+    return NextResponse.json(
+      {
+        data: comments.map((comment) => ({
+          ...comment,
+          id: String(comment.id),
+        })),
+        message: "コメント一覧取得成功",
+      },
+      { status: 200 },
+    );
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("予期せぬエラー:", error);

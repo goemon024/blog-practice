@@ -5,7 +5,6 @@ import styles from "./BlogMain.module.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Post } from "lib/types";
-import Link from "next/link";
 
 type Props = {
   post: Post;
@@ -14,7 +13,6 @@ type Props = {
 const BlogMain: React.FC<Props> = ({ post }) => {
   const router = useRouter();
   const { data: session } = useSession();
-
 
   //現在のユーザが投稿者と一致するか確認
   const isAuther = session?.user?.id === post.user_id;
@@ -49,7 +47,6 @@ const BlogMain: React.FC<Props> = ({ post }) => {
       >
         編集
       </button>
-
     </div>
   );
 };

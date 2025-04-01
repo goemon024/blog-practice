@@ -6,8 +6,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth";
 import { CreateCommentInput } from "lib/types/index";
 
-
-
 // POSTメソッドのハンドラ
 export async function POST(req: NextRequest) {
   try {
@@ -42,23 +40,15 @@ export async function POST(req: NextRequest) {
       status: 201,
     });
   } catch (error) {
-
     if (error instanceof Error) {
       // eslint-disable-next-line no-console
       console.error("Error:", error.message);
 
       // エラーメッセージに基づいて適切なステータスコードを返す
-      if (error.message.includes("バリデーションエラー") ||
-        error.message.includes("不正なデータ")) {
-        return NextResponse.json(
-          { error: "リクエストデータが不正です" },
-          { status: 400 }
-        );
+      if (error.message.includes("バリデーションエラー") || error.message.includes("不正なデータ")) {
+        return NextResponse.json({ error: "リクエストデータが不正です" }, { status: 400 });
       } else {
-        return NextResponse.json(
-          { error: "予期せぬエラーが発生しました" },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
       }
     } else {
       // eslint-disable-next-line no-console
@@ -68,5 +58,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
-
-

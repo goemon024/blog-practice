@@ -53,7 +53,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 }
 
-
 export async function PUT(req: NextRequest) {
   try {
     const token = await getToken({ req });
@@ -126,7 +125,6 @@ export async function PUT(req: NextRequest) {
 
     const updatePost = await editPost(updateData);
 
-
     // 成功時のレスポンスを追加
     return NextResponse.json({
       success: true,
@@ -143,7 +141,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
-
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -165,7 +162,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     // 投稿の所有者確認を追加
     const post = await getOnePost(id);
-
 
     if (!post) {
       return NextResponse.json({ error: "投稿が見つかりません" }, { status: 404 });

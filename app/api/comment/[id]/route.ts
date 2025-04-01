@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth";
 import { getOneComment, deleteComment } from "lib/db/comment";
 
-
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     // トークンチェック
@@ -32,7 +31,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
     await deleteComment(params.id);
     return NextResponse.json({ message: "削除成功" }, { status: 200 });
-
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error:", error);

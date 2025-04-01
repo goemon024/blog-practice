@@ -8,7 +8,6 @@ import { authOptions } from "../../auth";
 import { updateUserProfile } from "lib/db/profile";
 import { UpdateUserProfileInput } from "lib/types/index";
 
-
 // POSTメソッドのハンドラ
 export async function PUT(req: NextRequest) {
   try {
@@ -51,7 +50,6 @@ export async function PUT(req: NextRequest) {
     };
 
     await updateUserProfile(updateInput);
-
 
     return NextResponse.json({
       success: true,
