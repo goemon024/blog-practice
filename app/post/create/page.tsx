@@ -7,7 +7,7 @@ import CreateTitle from "@components/CreateTitle/CreateTitle";
 import CreateContent from "@components/CreateContent/CreateContent";
 import CreateCategory from "@components/CreateCategory/CreateCategory";
 import LoadingModal from "@components/LoadingModal/LoadingModal";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const PostCreatePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -15,7 +15,7 @@ const PostCreatePage = () => {
   const [category, setCategory] = useState<string>("3");
   const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
